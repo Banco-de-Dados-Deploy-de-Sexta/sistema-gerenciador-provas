@@ -22,9 +22,9 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 | Sprint          |    Período    | Documentação                                     |
 | --------------- | :-----------: | :-----------------: |
-| 🔖 **SPRINT 1** | PREENCHER | [Docs](./docs/sprints/sprint-1/README.md) |
-| 🔖 **SPRINT 2** | PREENCHER | [Docs](./docs/sprints/sprint-2/README.md) |
-| 🔖 **SPRINT 3** | PREENCHER | [Docs](./docs/sprints/sprint-3/README.md) |
+| 🔖 **SPRINT 1** | 07/09 - 27/09 | [Docs](./docs/sprints/sprint-1/README.md) |
+| 🔖 **SPRINT 2** | 05/10 - 25/10 | [Docs](./docs/sprints/sprint-2/README.md) |
+| 🔖 **SPRINT 3** | 02/11 - 22/11 | [Docs](./docs/sprints/sprint-3/README.md) |
 
 ---
 
@@ -43,7 +43,6 @@ A PREENCHER...
       ┣ 📁 sprints        
       ┗ 📜 backlog.md
       ┗ 📜 requisitos.md
-      ┗ 📜 documentacao.pdf
     ┗ 📜 README.md
 ```
 
