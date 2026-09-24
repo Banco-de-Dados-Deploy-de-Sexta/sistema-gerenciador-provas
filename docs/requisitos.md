@@ -10,28 +10,30 @@
 - RF2 - Criar e armazenar prova
 - RF3 - Editar prova
 - RF4 - Excluir prova
-- RF5 - Visualizar prova
-- RF6 - Realizar prova
-- RF7 - Agendar prova
-- RF8 - Salvar prova
-- RF9 - Definir peso das questões
-- RF10 - Calcular nota da prova
-- RF11 - Atribuir questão à prova
-- RF12 - Embaralhar alternativas
-- RF13 - Embaralhar questões
-- RF14 - Definir cálculo prova
-- RF15 - Criar e armazenar questão
-- RF16 - Editar questão
-- RF17 - Excluir questão
-- RF18 - Vizualizar questão
-- RF19 - Vizualizar todas as questões disponíves
-- RF20 - Definir tipo de questão
-- RF21 - Escrever pergunta da prova
-- RF22 - Criar e armazenar alternativas
-- RF23 - Editar alternativas
-- RF24 - Excluir alternativas
-- RF25 - Definir alternativa correta
-- RF26 - Salvar questão
+- RF5 - Consultar prova
+- RF6 - Visualizar todas as provas
+- RF6 - Iniciar prova
+- RF7 - Finalizar prova
+- RF8 - Agendar prova
+- RF9 - Salvar prova
+- RF10 - Definir peso das questões
+- RF11 - Calcular nota da prova
+- RF12 - Atribuir questão à prova
+- RF13 - Embaralhar alternativas
+- RF14 - Embaralhar questões
+- RF15 - Definir cálculo prova
+- RF16 - Criar e armazenar questão
+- RF17 - Editar questão
+- RF18 - Excluir questão
+- RF19 - Vizualizar questão
+- RF20 - Vizualizar todas as questões disponíves
+- RF21 - Definir tipo de questão
+- RF22 - Escrever pergunta da prova
+- RF23 - Criar e armazenar alternativas
+- RF24 - Editar alternativas
+- RF25 - Excluir alternativas
+- RF26 - Definir alternativa correta
+- RF27 - Salvar questão
 
 ## Requisitos não funcionais
 
