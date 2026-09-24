@@ -10,14 +10,18 @@ public class Prova {
     private String materia;
     private LocalDate data;
     private String curso;
-    private int bimestre;
+    private Integer bimestre;
 
-    public Prova(String titulo, String materia, LocalDate data, String curso, int bimestre) {
-        this.titulo = titulo;
-        this.materia = materia;
-        this.data = data;
-        this.curso = curso;
-        this.bimestre = bimestre;
+    public Prova() {
+    }
+
+    public Prova(Long codigo, String titulo, String materia, LocalDate data, String curso, Integer bimestre) {
+        setCodigo(codigo);
+        setTitulo(titulo);
+        setMateria(materia);
+        setData(data);
+        setCurso(curso);
+        setBimestre(bimestre);
     }
 
     public Long getCodigo() {
@@ -25,6 +29,8 @@ public class Prova {
     }
 
     public void setCodigo(Long codigo) {
+        if (codigo != null && codigo <= 0) {
+        }
         this.codigo = codigo;
     }
 
@@ -33,6 +39,10 @@ public class Prova {
     }
 
     public void setTitulo(String titulo) {
+        if (titulo == null || titulo.trim().isEmpty()) {
+        }
+        if (titulo.length() > 150) {
+        }
         this.titulo = titulo.trim();
     }
 
@@ -41,6 +51,8 @@ public class Prova {
     }
 
     public void setMateria(String materia) {
+        if (materia == null || materia.trim().isEmpty()) {
+        }
         this.materia = materia.trim();
     }
 
@@ -49,6 +61,10 @@ public class Prova {
     }
 
     public void setData(LocalDate data) {
+        if (data == null) {
+        }
+        if (data.isBefore(LocalDate.now())) {
+        }
         this.data = data;
     }
 
@@ -57,14 +73,18 @@ public class Prova {
     }
 
     public void setCurso(String curso) {
+        if (curso == null || curso.trim().isEmpty()) {
+        }
         this.curso = curso.trim();
     }
 
-    public int getBimestre() {
+    public Integer getBimestre() {
         return bimestre;
     }
 
-    public void setBimestre(int bimestre) {
+    public void setBimestre(Integer bimestre) {
+        if (bimestre == null || bimestre < 1 || bimestre > 4) {
+        }
         this.bimestre = bimestre;
     }
 
