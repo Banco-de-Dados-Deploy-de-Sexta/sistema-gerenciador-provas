@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="914e2f3f-1d46-4dc5-bb9c-de2914956c01" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sistema-gerenciador-provas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sistema-gerenciador-provas.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/modelos/Prova.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/modelos/Prova.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.000000001876121" />
+      <entry key="S30" value="1.0012342370755205" />
+      <entry key="S60" value="1.037527653910792" />
+      <entry key="M2" value="1.3418796990821242" />
+      <entry key="M5" value="3.707836832378536" />
+      <entry key="M10" value="7.213898183733481" />
+      <entry key="M15" value="9.294330055745867" />
+      <entry key="M30" value="12.128169730504858" />
+      <entry key="H1" value="13.912678394870655" />
+      <entry key="H2" value="14.915376179807524" />
+      <entry key="H4" value="15.447029888244044" />
+      <entry key="D1" value="15.90632116355245" />
+      <entry key="W1" value="15.986579664069545" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="2.2885121219267767E-189" />
+      <entry key="MS500" value="1.8702972850538593E-38" />
+      <entry key="S2" value="3.698091571309416E-10" />
+      <entry key="S5" value="1.687295173985087E-4" />
+      <entry key="S10" value="0.012989592657143206" />
+      <entry key="S30" value="0.23507070549151549" />
+      <entry key="S60" value="0.4848409074031558" />
+      <entry key="M2" value="0.6963051826628578" />
+      <entry key="M5" value="0.8652066545705974" />
+      <entry key="M10" value="0.9301648534376028" />
+      <entry key="M15" value="0.9528838149143346" />
+      <entry key="M30" value="0.9761576793296944" />
+      <entry key="H1" value="0.9880069227134466" />
+      <entry key="H2" value="0.9939853734907002" />
+      <entry key="H4" value="0.9969881511285378" />
+      <entry key="D1" value="0.999497394079367" />
+      <entry key="W1" value="0.9999281836832971" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.5509525579383053" />
+      <entry key="MS500" value="0.8876113372694978" />
+      <entry key="S2" value="0.9706344699949144" />
+      <entry key="S5" value="0.9882870620795888" />
+      <entry key="S10" value="1.005821299992263" />
+      <entry key="S30" value="1.2266848519854765" />
+      <entry key="S60" value="1.5134207935631452" />
+      <entry key="M2" value="2.0314597909941097" />
+      <entry key="M5" value="4.5662536918045245" />
+      <entry key="M10" value="8.137322705983612" />
+      <entry key="M15" value="10.241329073488686" />
+      <entry key="M30" value="13.100411537290864" />
+      <entry key="H1" value="14.898414952028872" />
+      <entry key="H2" value="15.908137759055538" />
+      <entry key="H4" value="16.443382539366777" />
+      <entry key="D1" value="16.905709232789647" />
+      <entry key="W1" value="16.986492144709015" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3JkSNDOP0Qekszmd2QLVSlA1UUw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main class.executor": "Run",
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "feat/entidade-prova",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/wjmoraes12/Projetos/sistema-gerenciador-provas",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.10968.63" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="914e2f3f-1d46-4dc5-bb9c-de2914956c01" name="Changes" comment="" />
+      <created>1790203531058</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1790203531058</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
