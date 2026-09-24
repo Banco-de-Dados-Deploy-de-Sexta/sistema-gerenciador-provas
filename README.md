@@ -50,6 +50,8 @@ A PREENCHER...
 
 ## 📁 Pasta de Documentação: [Link](docs) 📄
 
+## Documentação de Tela: [Link](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I/Prot%C3%B3tipo-UI-Sistema-gerenciamento-de-provas-Fatec-API-2%C2%BA-semestre--2026-?node-id=5-753&t=B6q455Wmrz61sSHK-1) 📄
+
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
 A PREENCHER...
