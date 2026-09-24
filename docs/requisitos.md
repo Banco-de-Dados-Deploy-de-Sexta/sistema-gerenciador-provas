@@ -15,10 +15,10 @@
 - RF7 - Agendar prova
 - RF8 - Salvar prova
 - RF9 - Definir peso das questões
-- RF10 - Calcular nota da prova **
+- RF10 - Calcular nota da prova
 - RF11 - Atribuir questão à prova
-- RF12 - Embaralhar alternativas **
-- RF13 - Embaralhar questões **
+- RF12 - Embaralhar alternativas
+- RF13 - Embaralhar questões
 - RF14 - Definir cálculo prova
 - RF15 - Criar e armazenar questão
 - RF16 - Editar questão

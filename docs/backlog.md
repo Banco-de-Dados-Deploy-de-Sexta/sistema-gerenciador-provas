@@ -4,7 +4,7 @@
 - **Épico:** Correção de Provas  
 - **Descrição:** O sistema deve corrigir diferentes questões de uma prova automaticamente.
 - **Critério de Aceitação:** Ao percorrer uma prova o sistema deve corrigir as questões de acordo com a resposta correta definida pelo professor (exceto questões de texto livre).  
-- **Prioridade:**   
+- **Prioridade:** Media
 - **Status:** Backlog  
 
 ---
@@ -13,7 +13,7 @@
 - **Épico:** Gestão de Provas (CRUD)  
 - **Descrição:** O sistema deve permitir a criação e armazenamento de provas.  
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma tela para criação de provas.  
-- **Prioridade:**   
+- **Prioridade:** Media
 - **Status:** Backlog 
 
 ---
@@ -22,7 +22,7 @@
 - **Épico:** Gestão de Provas (CRUD)  
 - **Descrição:** O sistema deve permitir a edição de provas armazenadas.  
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível edita-las.  
-- **Prioridade:**   
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -31,7 +31,7 @@
 - **Épico:** Gestão de Provas (CRUD)  
 - **Descrição:** O sistema deve permitir a exclusão de provas.  
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível exclui-las.  
-- **Prioridade:**   
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -40,7 +40,7 @@
 - **Épico:** Gestão de Provas (CRUD)  
 - **Descrição:** O sistema deve permitir visualização de todas as provas para os professores.  
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.  
-- **Prioridade:**   
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -49,7 +49,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas  
 - **Descrição:** O sistema deve permitir aos alunos a visualização das provas associadas a si.  
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes apos a realização da prova.  
-- **Prioridade:**   
+- **Prioridade:** Media 
 - **Status:** Backlog
 
 ---
@@ -58,7 +58,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas  
 - **Descrição:** O sistema deve permitir o professor a aplicar a prova a um aluno ou grupo de alunos.  
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -67,7 +67,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas  
 - **Descrição:** O sistema deve permitir o professor a agendar uma prova em alguma data de segunda à sexta.  
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -76,7 +76,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas  
 - **Descrição:** O sistema deve permitir aos alunos a realização das provas associadas a seus nomes.  
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -85,7 +85,7 @@
 - **Épico:** Exportação de Arquivos  
 - **Descrição:** O sistema deve permitir aos professores salvar todas as provas em algum formato de arquivo em seus computadores.  
 - **Critério de Aceitação:** Professores devem poder salvar todas as provas armazenadas no sistema em seus computadores.  
-- **Prioridade:**    
+- **Prioridade:** Baixa
 - **Status:** Backlog
 
 ---
@@ -94,7 +94,7 @@
 - **Épico:** Exportação de Arquivos  
 - **Descrição:** O sistema deve permitir aos alunos  salvar as provas que realizaram em algum formato de arquivo em seus computadores.  
 - **Critério de Aceitação:** Alunos devem poder salvar as provas que realizaram em computadores.  
-- **Prioridade:**    
+- **Prioridade:** Baixa
 - **Status:** Backlog
 
 ---
@@ -103,113 +103,140 @@
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor mudar o peso individual de cada questão em uma prova.  
 - **Critério de Aceitação:** O professor pode definir pesos diferentes para cada questão de uma prova.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-13 - Como professor quero atribuir uma questão que criei a uma prova para complementar um modelo de prova que utilizo 
+## PB-13 - Como professor quero que o sistema calcule e aplique uma nota na prova depois de ser corrigida para eu conferir se a nota está correta 
+- **Épico:** Aplicação, Agendamento e Realização de Provas 
+- **Descrição:** O sistema deve calcular uma nota para a prova após sua correção e aplica-la na prova corrigida.  
+- **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.  
+- **Prioridade:** Media
+- **Status:** Backlog
+
+---
+
+## PB-14 - Como professor quero atribuir uma questão que criei a uma prova para complementar um modelo de prova que utilizo 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor atribuir uma questão criada a uma prova existente.  
 - **Critério de Aceitação:** O professor pode atribuir individualmente uma questão a uma ou mais provas.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-14 - Como professor quero criar uma questão e quero que ela fique armazenada para manter um histórico 
+## PB-15 - Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificulta-los de trapacear 
+- **Épico:** Aplicação, Agendamento e Realização de Provas 
+- **Descrição:** O sistema deve embaralhar as questões de uma prova para cada aluno que for realiza-la.  
+- **Critério de Aceitação:** Cada aluno realiza a prova com as questões embaralhadas com critérios aleatórios.  
+- **Prioridade:** Baixa
+- **Status:** Backlog
+
+---
+
+## PB-16 - Como professor quero que as alternativas das questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificulta-los de trapacear 
+- **Épico:** Aplicação, Agendamento e Realização de Provas 
+- **Descrição:** O sistema deve embaralhar as alternativas das questões de uma prova (quando houver) para cada aluno que for realiza-la.   
+- **Critério de Aceitação:** Cada aluno realiza a prova com as alternativas das questões embaralhadas com critérios aleatórios.  
+- **Prioridade:** Baixa
+- **Status:** Backlog
+
+---
+
+## PB-17 - Como professor quero criar uma questão e quero que ela fique armazenada para manter um histórico 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor a criar diversas questões indivualmente e armazena-las.  
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma fucionalidade de criação de questões, com diferentes tipos de questões e definição de resposta correta (se for alternativa).  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-15 - Como professor quero editar uma questão e para trocar seu tipo ou corrigir algum erro de digitação 
+## PB-18 - Como professor quero editar uma questão e para trocar seu tipo ou corrigir algum erro de digitação 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor a editar as questões armazenadas.  
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma fucionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.  
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-16 - Como professor quero excluir uma questão para manter a lista apenas com questões que estou utilizando 
+## PB-19 - Como professor quero excluir uma questão para manter a lista apenas com questões que estou utilizando 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor a excluir as questões armazenadas.  
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma fucionalidade de exclusão de questões armazenadas.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-17 - Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova 
+## PB-20 - Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor a visualizar todas as questões armazenadas.  
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma fucionalidade de visualização da lista de questões armazenadas.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-18 - Como professor quero escolher entre vários tipos ao criar uma questão para criar uma prova dinâmica 
+## PB-21 - Como professor quero escolher entre vários tipos ao criar uma questão para criar uma prova dinâmica 
 - **Épico:** Gestão de Questões (CRUD)  
 - **Descrição:** O sistema deve permitir o professor a optar por diversos tipos durante a criação de uma questão.  
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder escolher entre questões de alternativa (**a*à **e*), questões de associação, ou de texto livre.
-- **Prioridade:**    
+- **Prioridade:** Baixa
 - **Status:** Backlog
 
 ---
 
-## PB-19 - Como professor quero digitar a pergunta da questão para que o aluno entenda corretamente o enunciado
+## PB-22 - Como professor quero digitar a pergunta da questão para que o aluno entenda corretamente o enunciado
 - **Épico:** Gestão de Questões (CRUD) 
 - **Descrição:** O sistema deve permitir o professor a digitar uma pergunta para a questão durante sua criação.  
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-20 - Como professor quero criar diferentes alternativas para uma questão para assim fornecer diferentes opções de resposta
-- **Épico:** Gestão de Alternativas  
+## PB-23 - Como professor quero criar diferentes alternativas para uma questão para assim fornecer diferentes opções de resposta
+- **Épico:** Gestão de Alternativas (CRUD)
 - **Descrição:** O sistema deve permitir o professor a criar diferentes alternativas durante a criação de uma questão de alternativas.  
 - **Critério de Aceitação:** Ao criar uma questão do tipo **alternativa** o professor deve poder criar no máximo cinco alternativas possíveis, de **a* à **e*.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-21 - Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro
-- **Épico:** Gestão de Alternativas  
+## PB-24 - Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro
+- **Épico:** Gestão de Alternativas (CRUD)
 - **Descrição:** O sistema deve permitir o professor a editar as alternativas de uma questão caso ela possua.  
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-22 - Como professor quero excluir as alternativas de uma questão para mudar o número de alternativas da questão
-- **Épico:** Gestão de Alternativas  
+## PB-25 - Como professor quero excluir as alternativas de uma questão para mudar o número de alternativas da questão
+- **Épico:** Gestão de Alternativas (CRUD)
 - **Descrição:** O sistema deve permitir o professor a excluir uma alternativa presente em uma questão.  
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível excluir cada uma das alternativas.
-- **Prioridade:**    
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-23 - Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente
+## PB-26 - Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente
 - **Épico:** Gestão de Alternativas  
 - **Descrição:** O sistema deve permitir o professor a definir uma alternativa como correta pra uma questão de alternativa.  
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível definir uma das alternativas criadas como correta.
-- **Prioridade:**    
+- **Prioridade:** Media  
 - **Status:** Backlog
 
 ---
 
-## PB-24 - Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem
+## PB-27 - Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem
 - **Épico:** Exportação de Arquivos  
 - **Descrição:** O sistema deve permitir aos professores salvar todas as questões em algum formato de arquivo em seus computadores.  
 - **Critério de Aceitação:** Professores devem poder salvar todas as questões armazenadas no sistema em seus computadores.  
-- **Prioridade:**    
+- **Prioridade:** Baixa
 - **Status:** Backlog
