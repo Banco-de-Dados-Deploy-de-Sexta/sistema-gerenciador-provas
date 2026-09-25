@@ -56,7 +56,14 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 ## 💻 Tecnologias utilizadas<a id="tecnologias"></a>
 
-A PREENCHER...
+<h4 align="center">
+  <a href="https://www.java.com/pt-br/">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MiIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDgyIDI4Ij4KICA8cmVjdCB3aWR0aD0iODIiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI0MSIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+SkFWQTwvdGV4dD4KPC9zdmc+Cg=="/>
+  </a>
+  <a href="https://openjfx.io/">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMDYgMjgiPgogIDxyZWN0IHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI1MyIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+SkFWQUZYPC90ZXh0Pgo8L3N2Zz4K"/>
+  </a>
+</h4>
 
 ---
 
@@ -78,11 +85,27 @@ A PREENCHER...
 
 ## 🏃‍ DoR - Definition of Ready <a id="dor"></a>
 
-A PREENCHER...
+- User Stories com **Critérios de Aceitação** claramente definidos
+- Regras de negócio da funcionalidade **documentadas** (ex.: regras de criação/correção de provas, permissões de acesso, etc.)
+- Entradas e saídas esperadas **especificadas** (dados de entrada, telas envolvidas, resultado esperado)
+- Modelagem de dados/impacto no banco de dados **identificado** (novas tabelas, campos ou relacionamentos necessários)
+- Dependências técnicas ou de outras User Stories **identificadas**
+- Escopo da funcionalidade **delimitado**
+- Protótipo/tela de referência **disponível**, quando aplicável
 
 ## 🏆 DoD - Definition of Done <a id="dod"></a>
 
-A PREENCHER...
+- Manual de Usuário atualizado
+- Manual da Aplicação atualizado
+- Funcionalidade implementada e **executando corretamente** no ambiente de desenvolvimento
+- Código organizado, **legível** e seguindo o padrão definido pela equipe
+- Todos os critérios de aceitação **atendidos**
+- Testes (manuais e/ou automatizados) realizados com diferentes cenários de entrada
+- Tratamento de entradas inválidas e casos de erro implementado
+- Integração com o banco de dados validada (persistência e consulta corretas)
+- Merge da branch realizado sem conflitos na branch principal
+- Atualização do **README.md** e demais documentações (se necessário)
+- Funcionalidade validada sem erros de execução
 
 ---
 
