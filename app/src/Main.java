@@ -50,8 +50,6 @@ public class Main {
         System.out.println(prova);
 
         scanner.close();
-
-
     }
 
     private static String provaParaLinha(Prova prova) {

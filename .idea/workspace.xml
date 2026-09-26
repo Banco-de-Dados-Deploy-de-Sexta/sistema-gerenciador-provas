@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="914e2f3f-1d46-4dc5-bb9c-de2914956c01" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sistema-gerenciador-provas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sistema-gerenciador-provas.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/modelos/Prova.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/modelos/Prova.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/storage/TxtStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/storage/TxtStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/storage/save.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/storage/save.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,10 +78,10 @@
       <entry key="W1" value="16.986492144709015" />
     </decayedShown>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3JkSNDOP0Qekszmd2QLVSlA1UUw" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -95,7 +96,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "feat/entidade-prova",
+    "git-widget-placeholder": "developer",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/wjmoraes12/Projetos/sistema-gerenciador-provas",

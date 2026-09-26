@@ -20,8 +20,7 @@ public class TxtStorage<K, V> implements Storage<K, V> {
     private final Function<V, String> valorParaLinha;
     private final Function<V, K> extratorChave;
 
-    public TxtStorage(String caminhoArquivo, Function<String, V> linhaParaValor, Function<V, String> valorParaLinha, Function<V, K> extratorChave)
-    {
+    public TxtStorage(String caminhoArquivo, Function<String, V> linhaParaValor, Function<V, String> valorParaLinha, Function<V, K> extratorChave) {
         this.arquivo = Paths.get(caminhoArquivo);
         this.linhaParaValor = linhaParaValor;
         this.valorParaLinha = valorParaLinha;

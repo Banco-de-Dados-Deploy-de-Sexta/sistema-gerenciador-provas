@@ -1,1 +1,2 @@
 1;weslley;tiktok;2025-08-20;banco de dados;1
+2;VAI CORINTHIANS;Estrutura de Dados;2026-08-20;Banco de Dados;1

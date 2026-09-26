@@ -67,29 +67,4 @@ public class Prova {
     public void setBimestre(int bimestre) {
         this.bimestre = bimestre;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Prova)) return false;
-        Prova prova = (Prova) o;
-        return Objects.equals(codigo, prova.codigo);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(codigo);
-    }
-
-    @Override
-    public String toString() {
-        return "Prova{" +
-                "codigo=" + codigo +
-                ", titulo='" + titulo + '\'' +
-                ", materia='" + materia + '\'' +
-                ", data=" + data +
-                ", curso='" + curso + '\'' +
-                ", bimestre=" + bimestre +
-                '}';
-    }
 }
