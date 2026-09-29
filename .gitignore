@@ -8,3 +8,12 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea/workspace.xml
+.idea/shelf/
+*.iws

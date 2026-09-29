@@ -1,4 +1,4 @@
-package auxiliares;
+package com.provas.app.auxiliares;
 
 //Aqui ficarão todas as configurações do projeto
 //No momento não temos nenhuma
