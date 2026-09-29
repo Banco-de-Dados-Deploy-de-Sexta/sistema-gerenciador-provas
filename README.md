@@ -8,37 +8,37 @@ O desafio consiste em desenvolver um sistema gerenciador de avaliações para um
 
 ---
 
-# 📌 Backlog do Projeto (Tabela)
+ 📌 Backlog do Projeto (Tabela)
 
-| Rank | Prioridade | User Story | Sprint | Requisito do Cliente | Status |
-| :--: | :--------: | ---------- | :----: | :------------------: | :----: |
-| 1 | Media | Como professor quero que as questões da prova sejam corrigidas automaticamente para eu lançar as notas dos alunos | 2 | RF-01 | ⬜ |
-| 2 | Media | Como professor quero criar uma prova e quero que ela fique armazenada para manter um histórico | 2 | RF-02 | ⬜ |
-| 3 | Media | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 2 | RF-03 | ⬜ |
-| 4 | Media | Como professor quero excluir uma prova para manter a lista apenas com provas que estou utilizando | 2 | RF-04 | ⬜ |
-| 5 | Media | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | RF-05 | ⬜ |
-| 6 | Media | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | RF-05 | ⬜ |
-| 7 | Media | Como professor quero aplicar uma prova a um ou mais alunos para que ele realize a prova no sistema | 3 | RF-06 | ⬜ |
-| 8 | Media | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | RF-07 | ⬜ |
-| 9 | Media | Como aluno quero realizar as provas associdas a mim para ficar com nota acima da média na faculdade | 3 | RF-06 | ⬜ |
-| 10 | Baixa | Como professor quero salvar as provas em meu computador para enviar o arquivo da prova em outros canais de mensagem | 3 | RF-08 | ⬜ |
-| 11 | Baixa | Como aluno quero salvar as minhas provas em meu computador para consulta-las depois com mais facilidade | 3 | RF-08 | ⬜ |
-| 12 | Media | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | RF-09 | ⬜ |
-| 13 | Media | Como professor quero que o sistema calcule e aplique uma nota na prova depois de ser corrigida para eu conferir se a nota está correta | 2 | RF-10 | ⬜ |
-| 14 | Media | Como professor quero atribuir uma questão que criei a uma prova para complementar um modelo de prova que utilizo | 2 | RF-11 | ⬜ |
-| 15 | Baixa | Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificulta-los de trapacear | 3 | RF-13 | ⬜ |
-| 16 | Baixa | Como professor quero que as alternativas das questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificulta-los de trapacear | 3 | RF-12 | ⬜ |
-| 17 | Media | Como professor quero criar uma questão e quero que ela fique armazenada para manter um histórico | 2 | RF-15 | ⬜ |
-| 18 | Media | Como professor quero editar uma questão e para trocar seu tipo ou corrigir algum erro de digitação | 2 | RF-16 | ⬜ |
-| 19 | Media | Como professor quero excluir uma questão para manter a lista apenas com questões que estou utilizando | 2 | RF-17 | ⬜ |
-| 20 | Media | Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova | 3 | RF-19 | ⬜ |
-| 21 | Baixa | Como professor quero escolher entre vários tipos ao criar uma questão para criar uma prova dinâmica | 3 | RF-20 | ⬜ |
-| 22 | Media | Como professor quero digitar a pergunta da questão para que o aluno entenda corretamente o enunciado | 2 | RF-21 | ⬜ |
-| 23 | Media | Como professor quero criar diferentes alternativas para uma questão para assim fornecer diferentes opções de resposta | 2 | RF-22 | ⬜ |
-| 24 | Media | Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro | 2 | RF-23 | ⬜ |
-| 25 | Media | Como professor quero excluir as alternativas de uma questão para mudar o número de alternativas da questão | 2 | RF-24 | ⬜ |
-| 26 | Media | Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente | 2 | RF-25 | ⬜ |
-| 27 | Baixa | Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem | 3 | RF-26 | ⬜ |
+| Rank | ID | Prioridade | User Story | Sprint | Requisito do Cliente | Status |
+| :--: | :--: | :--------: | ---------- | :----: | :-------------------: | :----: |
+| 1 | PB-17 | Alta | Como professor quero criar uma questão para poder utilizá-la na montagem de provas | 2 | RF-15 | ⬜ |
+| 2 | PB-22 | Alta | Como professor quero digitar a pergunta da questão para que o aluno entenda corretamente o enunciado | 2 | RF-21 | ⬜ |
+| 3 | PB-23 | Alta | Como professor quero criar diferentes alternativas para uma questão para montar questões de múltipla escolha | 2 | RF-22 | ⬜ |
+| 4 | PB-26 | Alta | Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente | 2 | RF-25 | ⬜ |
+| 5 | PB-02 | Alta | Como professor quero criar uma prova para aplicá-la aos alunos | 2 | RF-02 | ⬜ |
+| 6 | PB-14 | Alta | Como professor quero atribuir uma questão que criei a uma prova para complementar um modelo de prova que utilizo | 2 | RF-11 | ⬜ |
+| 7 | PB-07 | Alta | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 3 | RF-06 | ⬜ |
+| 8 | PB-09 | Alta | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 3 | RF-06 | ⬜ |
+| 9 | PB-01 | Alta | Como professor quero que as questões da prova sejam corrigidas automaticamente para eu lançar as notas dos alunos | 2 | RF-01 | ⬜ |
+| 10 | PB-13 | Alta | Como professor quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno | 2 | RF-10 | ⬜ |
+| 11 | PB-05 | Media | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | RF-05 | ⬜ |
+| 12 | PB-06 | Media | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | RF-05 | ⬜ |
+| 13 | PB-08 | Media | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | RF-07 | ⬜ |
+| 14 | PB-03 | Media | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 2 | RF-03 | ⬜ |
+| 15 | PB-04 | Media | Como professor quero excluir uma prova para manter a lista apenas com provas que estou utilizando | 2 | RF-04 | ⬜ |
+| 16 | PB-12 | Media | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | RF-09 | ⬜ |
+| 17 | PB-18 | Media | Como professor quero editar uma questão para trocar seu tipo ou corrigir algum erro de digitação | 2 | RF-16 | ⬜ |
+| 18 | PB-19 | Media | Como professor quero excluir uma questão para manter a lista apenas com questões que estou utilizando | 2 | RF-17 | ⬜ |
+| 19 | PB-20 | Media | Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova | 3 | RF-19 | ⬜ |
+| 20 | PB-21 | Media | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 3 | RF-20 | ⬜ |
+| 21 | PB-24 | Media | Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro | 2 | RF-23 | ⬜ |
+| 22 | PB-25 | Media | Como professor quero excluir alternativas de uma questão para manter apenas as opções relevantes ao respondê-la | 2 | RF-24 | ⬜ |
+| 23 | PB-10 | Baixa | Como professor quero salvar as provas em meu computador para enviar o arquivo da prova em outros canais de mensagem | 3 | RF-08 | ⬜ |
+| 24 | PB-11 | Baixa | Como aluno quero salvar as minhas provas em meu computador para consulta-las depois com mais facilidade | 3 | RF-08 | ⬜ |
+| 25 | PB-15 | Baixa | Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | RF-13 | ⬜ |
+| 26 | PB-16 | Baixa | Como professor quero que as alternativas das questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | RF-12 | ⬜ |
+| 27 | PB-27 | Baixa | Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem | 3 | RF-26 | ⬜ |
 
 Backlog detalhado: [Link](docs/backlog.md) 📄
 
