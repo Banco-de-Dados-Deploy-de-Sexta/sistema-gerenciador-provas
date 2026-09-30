@@ -14,7 +14,6 @@ public class Home extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(Home.class.getResource("home.fxml"));
         Scene scene = new Scene(loader.load(), 800, 600);
-        stage.setTitle("Sistema Gerenciador de Provas");
         stage.setScene(scene);
         stage.show();
     }
