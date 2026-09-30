@@ -13,7 +13,7 @@ public class Home extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(Home.class.getResource("home.fxml"));
-        Scene scene = new Scene(loader.load(), 800, 600);
+        Scene scene = new Scene(loader.load());
         stage.setScene(scene);
         stage.show();
     }

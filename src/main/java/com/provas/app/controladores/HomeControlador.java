@@ -7,9 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 //Controlador da tela Home (ligado ao home.fxml)
@@ -20,19 +18,20 @@ public class HomeControlador {
     public TextField letraCaixaTexto;
     public TextField perguntaCaixaTexto;
 
-    private List<Alternativa> alternativas = new ArrayList<>();
+    private final List<Alternativa> alternativas = new ArrayList<>();
 
-    @FXML
-    public void escreverAlternativa(){
-
-    }
+    //Grupo que garante que apenas uma alternativa fique selecionada
+    private final ToggleGroup grupoAlternativas = new ToggleGroup();
 
     @FXML
     public void adicionarAlternativa(){
-        int novoNumeroAlternativa = alternativas.size() + 1;
-        Alternativa novaAlternativa = new Alternativa(novoNumeroAlternativa, String.valueOf((char) (novoNumeroAlternativa + 96)), perguntaCaixaTexto.getText());
+        //O indice da nova alternativa e a proxima linha livre do grid (comeca em 0)
+        int novoNumeroAlternativa = alternativas.size();
+        String letra = String.valueOf((char) ('a' + novoNumeroAlternativa));
+        Alternativa novaAlternativa = new Alternativa(novoNumeroAlternativa, letra, perguntaCaixaTexto.getText());
         alternativas.add(novaAlternativa);
         adicionarAlternativaAGrid(novaAlternativa);
+        perguntaCaixaTexto.clear();
     }
 
     private void criarAlternativasExemplo(){
@@ -41,14 +40,14 @@ public class HomeControlador {
     }
 
     private void adicionarAlternativaAGrid(Alternativa alternativa){
-        gridAlternativas.add(new RadioButton(alternativa.letraAlternativa), 0, alternativa.numeroAlternativa);
-        gridAlternativas.add(new Text(alternativa.perguntaAlternativa), 1, alternativa.numeroAlternativa);
+        RadioButton radio = new RadioButton(alternativa.letraAlternativa);
+        radio.setToggleGroup(grupoAlternativas);
+        gridAlternativas.addRow(alternativa.numeroAlternativa, radio, new Text(alternativa.perguntaAlternativa));
     }
 
     private void criarGridAlternativas(){
         for (Alternativa alternativa : alternativas){
-            gridAlternativas.add(new RadioButton(alternativa.letraAlternativa), 0, alternativa.numeroAlternativa);
-            gridAlternativas.add(new Text(alternativa.perguntaAlternativa), 1, alternativa.numeroAlternativa);
+            adicionarAlternativaAGrid(alternativa);
         }
     }
 
