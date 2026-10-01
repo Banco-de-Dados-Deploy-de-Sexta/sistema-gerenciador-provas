@@ -3,9 +3,21 @@
 
 # 📌 Backlog da Sprint
 
-| Rank | Prioridade | User Story | Sprint | Requisito do Cliente | Status |
-| :--: | :--------: | ---------- | :----: | :------------------: | :----: |
-A PREENCHER
+| Rank | Prioridade | User Story | Requisito do Cliente | Status |
+|:----:|:----------:|------------|:---------------------:|:------:|
+| 1 | Alta | **PB17** — Como professor, quero criar uma questão para poder utilizá-la na montagem de provas. | RF-15 | ⬜ |
+| 2 | Alta | **PB22** — Como professor, quero digitar a pergunta da questão para adicioná-la à prova. | RF-21 | ⬜ |
+| 3 | Média | **PB21** — Como professor, quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados. | RF-20 | ⬜ |
+| 4 | Alta | **PB23** — Como professor, quero criar diferentes alternativas para uma questão para montar questões de múltipla escolha. | RF-22 | ⬜ |
+| 5 | Média | **PB24** — Como professor, quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro. | RF-23 | ⬜ |
+| 6 | Média | **PB25** — Como professor, quero excluir alternativas de uma questão para manter apenas as opções relevantes ao respondê-la. | RF-24 | ⬜ |
+| 7 | Alta | **PB26** — Como professor, quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente. | RF-25 | ⬜ |
+| 8 | Média | **PB18** — Como professor, quero editar uma questão para trocar seu tipo ou corrigir algum erro de digitação. | RF-16 | ⬜ |
+| 9 | Média | **PB19** — Como professor, quero excluir uma questão não atribuída a nenhuma prova para manter a lista apenas com questões que estou utilizando. | RF-17 | ⬜ |
+| 10 | Média | **PB20** — Como professor, quero visualizar uma lista com todas as questões criadas no sistema para poder compará-las ao criar uma nova prova. | RF-19 | ⬜ |
+| 11 | Alta | **PB02** — Como professor, quero criar uma prova para aplicá-la aos alunos. | RF-02 | ⬜ |
+| 12 | Alta | **PB14** — Como professor, quero atribuir uma questão que criei a uma prova para aplicá-la aos alunos. | RF-11 | ⬜ |
+| 13 | Média | **PB12** — Como professor, quero definir os pesos das questões para que as questões mais difíceis valham mais pontos. | RF-09 | ⬜ |
 
 ---
 
