@@ -1,1 +1,2 @@
-1;weslley;tiktok;2025-08-20;banco de dados;1
+1;weslley;tiktok;2025-08-20;banco de dados
+2;oi;res;1;2

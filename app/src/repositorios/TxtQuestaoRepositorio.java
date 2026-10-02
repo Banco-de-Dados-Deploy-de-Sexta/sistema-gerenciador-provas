@@ -25,7 +25,7 @@ public class TxtQuestaoRepositorio implements QuestaoRepositorio {
 
     @Override
     public Questao save(Questao questao) {
-        return storage.set(questao.getCodigo(), questao);
+        return storage.set(questao.getNumero(), questao);
     }
 
     @Override
