@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="914e2f3f-1d46-4dc5-bb9c-de2914956c01" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/modelos/Prova.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/modelos/Prova.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/storage/TxtStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/storage/TxtStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/storage/save.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/storage/save.txt" afterDir="false" />
-    </list>
+    <list default="true" id="914e2f3f-1d46-4dc5-bb9c-de2914956c01" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,7 +90,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "developer",
+    "git-widget-placeholder": "questao",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/wjmoraes12/Projetos/sistema-gerenciador-provas",
