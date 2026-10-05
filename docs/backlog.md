@@ -27,7 +27,7 @@
 
 ---
 
-## PB-04 - Como professor quero excluir uma prova para manter a lista apenas com provas que estou utilizando
+## PB-04 - Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando
 - **Épico:** Gestão de Provas (CRUD)
 - **Descrição:** O sistema deve permitir a exclusão de provas.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível exclui-las.
@@ -58,7 +58,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir o professor a aplicar a prova a um aluno ou grupo de alunos.
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
-- **Prioridade:** Alta
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -76,7 +76,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir aos alunos a realização das provas associadas a seus nomes.
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.
-- **Prioridade:** Alta
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
@@ -112,12 +112,12 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve calcular uma nota para a prova após sua correção e aplica-la na prova corrigida.
 - **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.
-- **Prioridade:** Alta
+- **Prioridade:** Media
 - **Status:** Backlog
 
 ---
 
-## PB-14 - Como professor quero atribuir uma questão que criei a uma prova para complementar um modelo de prova que utilizo
+## PB-14 - Como professor quero atribuir uma questão que criei a uma prova para aplica-la aos alunos
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor atribuir uma questão criada a uma prova existente.
 - **Critério de Aceitação:** O professor pode atribuir individualmente uma questão a uma ou mais provas.
@@ -157,16 +157,16 @@
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a editar as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.
-- **Prioridade:** Media
+- **Prioridade:** Alta
 - **Status:** Backlog
 
 ---
 
-## PB-19 - Como professor quero excluir uma questão para manter a lista apenas com questões que estou utilizando
+## PB-19 - Como professor quero excluir uma questão não atribuída a nenhuma prova para manter a lista apenas com questões que estou utilizando
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a excluir as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de exclusão de questões armazenadas.
-- **Prioridade:** Media
+- **Prioridade:** Alta
 - **Status:** Backlog
 
 ---
@@ -175,7 +175,7 @@
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a visualizar todas as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de visualização da lista de questões armazenadas.
-- **Prioridade:** Media
+- **Prioridade:** Alta
 - **Status:** Backlog
 
 ---
@@ -189,7 +189,7 @@
 
 ---
 
-## PB-22 - Como professor quero digitar a pergunta da questão para que o aluno entenda corretamente o enunciado
+## PB-22 - Como professor quero digitar a pergunta da questão para adiciona-la à prova
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a digitar uma pergunta para a questão durante sua criação.
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
@@ -211,7 +211,7 @@
 - **Épico:** Gestão de Alternativas (CRUD)
 - **Descrição:** O sistema deve permitir o professor a editar as alternativas de uma questão caso ela possua.
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
-- **Prioridade:** Media
+- **Prioridade:** Alta
 - **Status:** Backlog
 
 ---
@@ -220,7 +220,7 @@
 - **Épico:** Gestão de Alternativas (CRUD)
 - **Descrição:** O sistema deve permitir o professor a excluir uma alternativa presente em uma questão.
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível excluir cada uma das alternativas.
-- **Prioridade:** Media
+- **Prioridade:** Alta
 - **Status:** Backlog
 
 ---
