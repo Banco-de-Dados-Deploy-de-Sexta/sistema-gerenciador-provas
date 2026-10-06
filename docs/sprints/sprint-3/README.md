@@ -13,7 +13,6 @@ A PREENCHER
 
 - User Stories com **Critérios de Aceitação** claramente definidos
 - Regras de negócio da funcionalidade **documentadas** (ex.: regras de criação/correção de provas, permissões de acesso, etc.)
-- Modelagem de dados/impacto no banco de dados **identificado** (novas tabelas, campos ou relacionamentos necessários)
 - Dependências técnicas ou de outras User Stories **identificadas**
 - Escopo da funcionalidade **delimitado**
 - Protótipo/tela de referência **disponível**, quando aplicável

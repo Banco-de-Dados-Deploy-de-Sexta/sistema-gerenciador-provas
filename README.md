@@ -73,6 +73,7 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
   📦 sistema-gerenciador-avaliacoes
     ┣ 📁 src
     ┣ 📁 docs
+      ┣ 📁 prototipos
       ┣ 📁 sprints        
       ┗ 📜 backlog.md
       ┗ 📜 requisitos.md
@@ -99,12 +100,9 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 - Funcionalidade implementada e **executando corretamente** no ambiente de desenvolvimento
 - Código organizado, **legível** e seguindo o padrão definido pela equipe
 - Todos os critérios de aceitação **atendidos**
-- Testes (manuais e/ou automatizados) realizados com diferentes cenários de entrada
 - Tratamento de entradas inválidas e casos de erro implementado
 - Integração com o banco de dados validada (persistência e consulta corretas)
-- Merge da branch realizado sem conflitos na branch principal
 - Atualização do **README.md** e demais documentações (se necessário)
-- Funcionalidade validada sem erros de execução
 
 ---
 
