@@ -24,7 +24,7 @@
 - **Épico:** Gestão de Provas (CRUD)
 - **Descrição:** O sistema deve permitir a edição de provas armazenadas.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível edita-las.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 3
 - **Status:** Backlog
 
@@ -34,7 +34,7 @@
 - **Épico:** Gestão de Provas (CRUD)
 - **Descrição:** O sistema deve permitir a exclusão de provas.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível exclui-las.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 2
 - **Status:** Backlog
 
@@ -44,7 +44,7 @@
 - **Épico:** Gestão de Provas (CRUD)
 - **Descrição:** O sistema deve permitir visualização de todas as provas para os professores.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 3
 - **Status:** Backlog
 
@@ -54,7 +54,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir aos alunos a visualização das provas associadas a si.
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes apos a realização da prova.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 3
 - **Status:** Backlog
 
@@ -64,7 +64,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir o professor a aplicar a prova a um aluno ou grupo de alunos.
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 5
 - **Status:** Backlog
 
@@ -74,7 +74,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir o professor a agendar uma prova em alguma data de segunda à sexta.
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 3
 - **Status:** Backlog
 
@@ -84,7 +84,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve permitir aos alunos a realização das provas associadas a seus nomes.
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 8
 - **Status:** Backlog
 
@@ -114,7 +114,7 @@
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor mudar o peso individual de cada questão em uma prova.
 - **Critério de Aceitação:** O professor pode definir pesos diferentes para cada questão de uma prova.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 3
 - **Status:** Backlog
 
@@ -124,7 +124,7 @@
 - **Épico:** Aplicação, Agendamento e Realização de Provas
 - **Descrição:** O sistema deve calcular uma nota para a prova após sua correção e aplica-la na prova corrigida.
 - **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 5
 - **Status:** Backlog
 
@@ -163,7 +163,7 @@
 ## PB-17 - Como professor quero criar uma questão para poder utilizá-la na montagem de provas
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a criar diversas questões individualmente e armazena-las.
-- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de criação de questões, com diferentes tipos de questões e definição de resposta correta (se for alternativa).
+- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de criação de questões, com definição de resposta correta (se for alternativa).
 - **Prioridade:** Alta
 - **Story Points:** 5
 - **Status:** Backlog
@@ -173,7 +173,7 @@
 ## PB-18 - Como professor quero editar uma questão para trocar seu tipo ou corrigir algum erro de digitação
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a editar as questões armazenadas.
-- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.
+- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar o enunciado e as alternativas da questão.
 - **Prioridade:** Alta
 - **Story Points:** 3
 - **Status:** Backlog
@@ -204,7 +204,7 @@
 - **Épico:** Gestão de Questões (CRUD)
 - **Descrição:** O sistema deve permitir o professor a optar por diversos tipos durante a criação de uma questão.
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder escolher entre questões de alternativa (**a** à **e**), questões de associação, ou de texto livre.
-- **Prioridade:** Media
+- **Prioridade:** Média
 - **Story Points:** 5
 - **Status:** Backlog
 

@@ -108,7 +108,7 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 - **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), marcador de seleção ao lado de cada alternativa.
 
 ### PB18 — Editar questão
-- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.
+- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar o enunciado e as alternativas da questão.
 - **Regras de Negócio:** As mesmas validações da criação (PB22, PB23 e PB26) se aplicam na edição.
 - **Dependências:** PB17 e PB20.
 - **Escopo:** Edição do enunciado e das alternativas da questão. A troca de tipo depende da PB21 (Sprint 3).
@@ -130,7 +130,7 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 
 ### PB02 — Criar prova
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma tela para criação de provas.
-- **Regras de Negócio:** Toda prova pertence ao professor que a criou (RN1).
+- **Regras de Negócio:** Toda prova pertence ao professor que a criou.
 - **Dependências:** Nenhuma.
 - **Escopo:** Criação e armazenamento de provas. Aplicação e agendamento ficam para a Sprint 3.
 - **Protótipo:** [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)) (botão "Criar prova"), que abre a [Tela de montagem de prova](../../prototipos/tela-montar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-540)).
@@ -151,7 +151,7 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 
 ### PB05 — Visualizar provas
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualizá-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
-- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN3).
+- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN1).
 - **Dependências:** PB02 e PB14.
 - **Escopo:** Listagem de provas e tela de detalhes, servindo de ponto de acesso para editar e excluir.
 - **Protótipo:** [Lista de provas](../../prototipos/lista-provas.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-365)) e [Card de consulta de prova](../../prototipos/card-consultar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1657)) com os detalhes da prova selecionada.

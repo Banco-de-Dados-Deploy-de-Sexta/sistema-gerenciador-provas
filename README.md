@@ -24,16 +24,16 @@ O desafio consiste em desenvolver um sistema gerenciador de avaliações para um
 | 10 | PB20 | Alta | Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova | 3 | 2 | RF-19 | ⬜ |
 | 11 | PB02 | Alta | Como professor quero criar uma prova para aplicá-la aos alunos | 5 | 2 | RF-02 | ⬜ |
 | 12 | PB14 | Alta | Como professor quero atribuir uma questão que criei a uma prova para aplica-la aos alunos | 5 | 2 | RF-11 | ⬜ |
-| 13 | PB12 | Media | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | 2 | RF-09 | ⬜ |
-| 14 | PB05 | Media | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | 2 | RF-05 | ⬜ |
-| 15 | PB03 | Media | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ⬜ |
-| 16 | PB04 | Media | Como professor quero excluir uma prova nao aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ⬜ |
-| 17 | PB21 | Media | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ⬜ |
-| 18 | PB07 | Media | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ⬜ |
-| 19 | PB08 | Media | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | 3 | RF-07 | ⬜ |
-| 20 | PB06 | Media | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | 3 | RF-05 | ⬜ |
-| 21 | PB09 | Media | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 8 | 3 | RF-06 | ⬜ |
-| 22 | PB13 | Media | Como professor quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno | 5 | 3 | RF-10 | ⬜ |
+| 13 | PB12 | Média | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | 2 | RF-09 | ⬜ |
+| 14 | PB05 | Média | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | 2 | RF-05 | ⬜ |
+| 15 | PB03 | Média | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ⬜ |
+| 16 | PB04 | Média | Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ⬜ |
+| 17 | PB21 | Média | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ⬜ |
+| 18 | PB07 | Média | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ⬜ |
+| 19 | PB08 | Média | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | 3 | RF-07 | ⬜ |
+| 20 | PB06 | Média | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | 3 | RF-05 | ⬜ |
+| 21 | PB09 | Média | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 8 | 3 | RF-06 | ⬜ |
+| 22 | PB13 | Média | Como professor quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno | 5 | 3 | RF-10 | ⬜ |
 | 23 | PB10 | Baixa | Como professor quero salvar as provas em meu computador para enviar o arquivo da prova em outros canais de mensagem | 5 | 3 | RF-08 | ⬜ |
 | 24 | PB11 | Baixa | Como aluno quero salvar as minhas provas em meu computador para consulta-las depois com mais facilidade | 3 | 3 | RF-08 | ⬜ |
 | 25 | PB15 | Baixa | Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | 3 | RF-13 | ⬜ |
@@ -88,7 +88,6 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 - User Stories com **Critérios de Aceitação** claramente definidos
 - Regras de negócio da funcionalidade **documentadas** (ex.: regras de criação/correção de provas, permissões de acesso, etc.)
-- Entradas e saídas esperadas **especificadas** (dados de entrada, telas envolvidas, resultado esperado)
 - Dependências técnicas ou de outras User Stories **identificadas**
 - Escopo da funcionalidade **delimitado**
 - Protótipo/tela de referência **disponível**, quando aplicável
