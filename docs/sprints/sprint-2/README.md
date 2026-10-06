@@ -70,103 +70,103 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 - **Regras de Negócio:** Toda questão deve ter um enunciado e um tipo; a questão fica disponível para reaproveitamento em outras provas (RNF1).
 - **Dependências:** Nenhuma.
 - **Escopo:** Criação e armazenamento de questões do tipo alternativa. A escolha entre outros tipos de questão (PB21) fica para a Sprint 3.
-- **Protótipo:** Tela de cadastro de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)).
 
 ### PB22 — Digitar a pergunta da questão
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
 - **Regras de Negócio:** O enunciado é obrigatório e deve ter no mínimo cinco caracteres.
 - **Dependências:** PB17.
 - **Escopo:** Campo de texto do enunciado com validação de tamanho mínimo.
-- **Protótipo:** Campo de enunciado na tela de cadastro de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), campo "digite a pergunta da questão".
 
 ### PB23 — Criar alternativas
 - **Critério de Aceitação:** Ao criar uma questão do tipo **alternativa** o professor deve poder criar no máximo cinco alternativas possíveis, de **a** à **e**.
 - **Regras de Negócio:** Máximo de cinco alternativas por questão; cada alternativa deve possuir texto.
 - **Dependências:** PB17.
 - **Escopo:** Cadastro de alternativas durante a criação da questão.
-- **Protótipo:** Seção de alternativas na tela de cadastro de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), botão "Adicionar alternativa".
 
 ### PB24 — Editar alternativas
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
 - **Regras de Negócio:** O texto da alternativa não pode ficar vazio após a edição.
 - **Dependências:** PB23.
 - **Escopo:** Edição do texto de cada alternativa de uma questão.
-- **Protótipo:** Tela de edição de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), campo de texto da alternativa.
 
 ### PB25 — Excluir alternativas
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível excluir cada uma das alternativas.
 - **Regras de Negócio:** Ao excluir a alternativa correta, a questão fica sem resposta correta até que uma nova seja definida.
 - **Dependências:** PB23.
 - **Escopo:** Exclusão individual de alternativas de uma questão.
-- **Protótipo:** Tela de edição de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), permitirá deletar alternativas.
 
 ### PB26 — Definir alternativa correta
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível definir uma das alternativas criadas como correta.
 - **Regras de Negócio:** Cada questão de alternativa deve ter exatamente uma alternativa correta.
 - **Dependências:** PB23.
 - **Escopo:** Seleção da alternativa correta na criação e na edição da questão.
-- **Protótipo:** Seleção da alternativa correta na tela de cadastro/edição de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), marcador de seleção ao lado de cada alternativa.
 
 ### PB18 — Editar questão
-- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.
+- **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar o enunciado e as alternativas da questão.
 - **Regras de Negócio:** As mesmas validações da criação (PB22, PB23 e PB26) se aplicam na edição.
 - **Dependências:** PB17 e PB20.
 - **Escopo:** Edição do enunciado e das alternativas da questão. A troca de tipo depende da PB21 (Sprint 3).
-- **Protótipo:** Tela de edição de questão.
+- **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), reutilizado em modo de edição com os dados da questão preenchidos.
 
 ### PB19 — Excluir questão
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de exclusão de questões armazenadas.
 - **Regras de Negócio:** Só é possível excluir questões que não estejam atribuídas a nenhuma prova; ao excluir a questão, suas alternativas também são excluídas.
 - **Dependências:** PB17 e PB20.
 - **Escopo:** Exclusão de questões não atribuídas, com mensagem de erro caso a questão esteja em uso.
-- **Protótipo:** Ação de excluir na lista de questões.
+- **Protótipo:** [Lista de questões](../../prototipos/lista-questoes.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-423)), permitirá exclusão de questões não utilizadas em nenhuma prova.
 
 ### PB20 — Visualizar lista de questões
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de visualização da lista de questões armazenadas.
 - **Regras de Negócio:** A lista deve exibir todas as questões cadastradas no sistema.
 - **Dependências:** PB17.
 - **Escopo:** Listagem das questões com enunciado e tipo, servindo de ponto de acesso para editar e excluir.
-- **Protótipo:** Tela de listagem de questões.
+- **Protótipo:** [Lista de questões](../../prototipos/lista-questoes.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-423)).
 
 ### PB02 — Criar prova
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma tela para criação de provas.
-- **Regras de Negócio:** Toda prova pertence ao professor que a criou (RN1).
+- **Regras de Negócio:** Toda prova pertence ao professor que a criou.
 - **Dependências:** Nenhuma.
 - **Escopo:** Criação e armazenamento de provas. Aplicação e agendamento ficam para a Sprint 3.
-- **Protótipo:** Tela de cadastro de prova.
+- **Protótipo:** [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)) (botão "Criar prova"), que abre a [Tela de montagem de prova](../../prototipos/tela-montar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-540)).
 
 ### PB14 — Atribuir questão à prova
 - **Critério de Aceitação:** O professor pode atribuir individualmente uma questão a uma ou mais provas.
 - **Regras de Negócio:** Uma mesma questão não pode ser atribuída duas vezes à mesma prova.
 - **Dependências:** PB02 e PB17.
 - **Escopo:** Adicionar e remover questões de uma prova.
-- **Protótipo:** Seleção de questões na tela de cadastro/edição de prova.
+- **Protótipo:** [Tela de montagem de prova](../../prototipos/tela-montar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-540)), lista de questões na lateral e questões da prova ao centro.
 
 ### PB12 — Definir peso das questões
 - **Critério de Aceitação:** O professor pode definir pesos diferentes para cada questão de uma prova.
 - **Regras de Negócio:** O peso deve ser um número maior que zero; o peso padrão de uma questão é 1.
 - **Dependências:** PB14.
 - **Escopo:** Definição do peso de cada questão dentro de uma prova.
-- **Protótipo:** Campo de peso na lista de questões da prova.
+- **Protótipo:** [Tela de montagem de prova](../../prototipos/tela-montar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-540)), permitirá definir pesos para cada questão.
 
 ### PB05 — Visualizar provas
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualizá-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
-- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN3).
+- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN1).
 - **Dependências:** PB02 e PB14.
 - **Escopo:** Listagem de provas e tela de detalhes, servindo de ponto de acesso para editar e excluir.
-- **Protótipo:** Tela de listagem e detalhes de provas.
+- **Protótipo:** [Lista de provas](../../prototipos/lista-provas.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-365)) e [Card de consulta de prova](../../prototipos/card-consultar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1657)) com os detalhes da prova selecionada.
 
 ### PB03 — Editar prova
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível editá-las.
 - **Regras de Negócio:** O professor só pode editar as suas próprias provas.
 - **Dependências:** PB02, PB14 e PB05.
 - **Escopo:** Edição dos dados da prova e das questões atribuídas a ela.
-- **Protótipo:** Tela de edição de prova.
+- **Protótipo:** [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)) (botão "Editar prova") e [Menu de detalhes da prova](../../prototipos/menu-detalhes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-197)) (botões "Confirmar" e "Cancelar").
 
 ### PB04 — Excluir prova
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível excluí-las.
 - **Regras de Negócio:** Só é possível excluir provas que ainda não foram aplicadas; ao excluir a prova, as questões continuam armazenadas no sistema.
 - **Dependências:** PB02 e PB05.
 - **Escopo:** Exclusão de provas não aplicadas, com confirmação antes de excluir.
-- **Protótipo:** Ação de excluir na lista de provas.
+- **Protótipo:** [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)), botão "Excluir prova".
 

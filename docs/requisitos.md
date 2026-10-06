@@ -81,7 +81,7 @@ USO# - O aluno pode consultar o [gabarito] da prova
 
 ## Regras de negócio
 
-- RN1 - O professor pode visualizar somente as sua provas
+- RN1 - O professor pode visualizar todas as provas do sistema
 - RN2 - O professor pode aplicar somente as suas provas
 - RN3 - O professor pode reaproveitar passadas
 - RN4 - O aluno pode visualizar somente as suas questões
