@@ -5,6 +5,7 @@
 - **Descrição:** O sistema deve corrigir diferentes questões de uma prova automaticamente.
 - **Critério de Aceitação:** Ao percorrer uma prova o sistema deve corrigir as questões de acordo com a resposta correta definida pelo professor (exceto questões de texto livre).
 - **Prioridade:** Alta
+- **Story Points:** 8
 - **Status:** Backlog
 
 ---
@@ -14,6 +15,7 @@
 - **Descrição:** O sistema deve permitir a criação e armazenamento de provas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma tela para criação de provas.
 - **Prioridade:** Alta
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -23,6 +25,7 @@
 - **Descrição:** O sistema deve permitir a edição de provas armazenadas.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível edita-las.
 - **Prioridade:** Media
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -32,6 +35,7 @@
 - **Descrição:** O sistema deve permitir a exclusão de provas.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível exclui-las.
 - **Prioridade:** Media
+- **Story Points:** 2
 - **Status:** Backlog
 
 ---
@@ -41,6 +45,7 @@
 - **Descrição:** O sistema deve permitir visualização de todas as provas para os professores.
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
 - **Prioridade:** Media
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -50,6 +55,7 @@
 - **Descrição:** O sistema deve permitir aos alunos a visualização das provas associadas a si.
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes apos a realização da prova.
 - **Prioridade:** Media
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -59,6 +65,7 @@
 - **Descrição:** O sistema deve permitir o professor a aplicar a prova a um aluno ou grupo de alunos.
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
 - **Prioridade:** Media
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -68,6 +75,7 @@
 - **Descrição:** O sistema deve permitir o professor a agendar uma prova em alguma data de segunda à sexta.
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.
 - **Prioridade:** Media
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -77,6 +85,7 @@
 - **Descrição:** O sistema deve permitir aos alunos a realização das provas associadas a seus nomes.
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.
 - **Prioridade:** Media
+- **Story Points:** 8
 - **Status:** Backlog
 
 ---
@@ -86,6 +95,7 @@
 - **Descrição:** O sistema deve permitir aos professores salvar todas as provas em algum formato de arquivo em seus computadores.
 - **Critério de Aceitação:** Professores devem poder salvar todas as provas armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -95,6 +105,7 @@
 - **Descrição:** O sistema deve permitir aos alunos salvar as provas que realizaram em algum formato de arquivo em seus computadores.
 - **Critério de Aceitação:** Alunos devem poder salvar as provas que realizaram em computadores.
 - **Prioridade:** Baixa
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -104,6 +115,7 @@
 - **Descrição:** O sistema deve permitir o professor mudar o peso individual de cada questão em uma prova.
 - **Critério de Aceitação:** O professor pode definir pesos diferentes para cada questão de uma prova.
 - **Prioridade:** Media
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -113,6 +125,7 @@
 - **Descrição:** O sistema deve calcular uma nota para a prova após sua correção e aplica-la na prova corrigida.
 - **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.
 - **Prioridade:** Media
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -122,6 +135,7 @@
 - **Descrição:** O sistema deve permitir o professor atribuir uma questão criada a uma prova existente.
 - **Critério de Aceitação:** O professor pode atribuir individualmente uma questão a uma ou mais provas.
 - **Prioridade:** Alta
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -131,6 +145,7 @@
 - **Descrição:** O sistema deve embaralhar as questões de uma prova para cada aluno que for realiza-la.
 - **Critério de Aceitação:** Cada aluno realiza a prova com as questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -140,6 +155,7 @@
 - **Descrição:** O sistema deve embaralhar as alternativas das questões de uma prova (quando houver) para cada aluno que for realiza-la.
 - **Critério de Aceitação:** Cada aluno realiza a prova com as alternativas das questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -149,6 +165,7 @@
 - **Descrição:** O sistema deve permitir o professor a criar diversas questões individualmente e armazena-las.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de criação de questões, com diferentes tipos de questões e definição de resposta correta (se for alternativa).
 - **Prioridade:** Alta
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -158,6 +175,7 @@
 - **Descrição:** O sistema deve permitir o professor a editar as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar todos os atributos da questão.
 - **Prioridade:** Alta
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -167,6 +185,7 @@
 - **Descrição:** O sistema deve permitir o professor a excluir as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de exclusão de questões armazenadas.
 - **Prioridade:** Alta
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -176,6 +195,7 @@
 - **Descrição:** O sistema deve permitir o professor a visualizar todas as questões armazenadas.
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de visualização da lista de questões armazenadas.
 - **Prioridade:** Alta
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -185,6 +205,7 @@
 - **Descrição:** O sistema deve permitir o professor a optar por diversos tipos durante a criação de uma questão.
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder escolher entre questões de alternativa (**a** à **e**), questões de associação, ou de texto livre.
 - **Prioridade:** Media
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -194,6 +215,7 @@
 - **Descrição:** O sistema deve permitir o professor a digitar uma pergunta para a questão durante sua criação.
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
 - **Prioridade:** Alta
+- **Story Points:** 2
 - **Status:** Backlog
 
 ---
@@ -203,6 +225,7 @@
 - **Descrição:** O sistema deve permitir o professor a criar diferentes alternativas durante a criação de uma questão de alternativas.
 - **Critério de Aceitação:** Ao criar uma questão do tipo **alternativa** o professor deve poder criar no máximo cinco alternativas possíveis, de **a** à **e**.
 - **Prioridade:** Alta
+- **Story Points:** 5
 - **Status:** Backlog
 
 ---
@@ -212,6 +235,7 @@
 - **Descrição:** O sistema deve permitir o professor a editar as alternativas de uma questão caso ela possua.
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
 - **Prioridade:** Alta
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -221,6 +245,7 @@
 - **Descrição:** O sistema deve permitir o professor a excluir uma alternativa presente em uma questão.
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível excluir cada uma das alternativas.
 - **Prioridade:** Alta
+- **Story Points:** 2
 - **Status:** Backlog
 
 ---
@@ -230,6 +255,7 @@
 - **Descrição:** O sistema deve permitir o professor a definir uma alternativa como correta pra uma questão de alternativa.
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível definir uma das alternativas criadas como correta.
 - **Prioridade:** Alta
+- **Story Points:** 3
 - **Status:** Backlog
 
 ---
@@ -239,4 +265,5 @@
 - **Descrição:** O sistema deve permitir aos professores salvar todas as questões em algum formato de arquivo em seus computadores.
 - **Critério de Aceitação:** Professores devem poder salvar todas as questões armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
+- **Story Points:** 3
 - **Status:** Backlog
