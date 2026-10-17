@@ -2,45 +2,45 @@ CREATE DATABASE IF NOT EXISTS banco;
 USE banco;
 
 CREATE TABLE prova (
-  codigo varchar(7) primary key,
-  titulo text not null,
-  materia varchar(50) not null,
-  data_prova datetime,
-  curso varchar(50),
-  bimestre int
+codigo varchar(7) primary key,
+titulo text not null,
+materia varchar(50) not null,
+data_prova datetime,
+curso varchar(50),
+bimestre int
 );
 
 CREATE TABLE questao (
-  id_questao int primary key,
-  titulo varchar(50) not null,
-  descricao varchar(300) not null
+id_questao int primary key,
+titulo varchar(200) not null,
+descricao varchar(300) not null
 );
 
 CREATE TABLE prova_questao (
-  codigo_prova varchar(7),
-  id_questao int,
+codigo_prova varchar(7),
+id_questao int,
 
-  PRIMARY KEY(codigo_prova, id_questao),
+PRIMARY KEY(codigo_prova, id_questao),
 
-  CONSTRAINT fk_codigo_prova
-  FOREIGN KEY (codigo_prova)
-  REFERENCES prova(codigo),
+CONSTRAINT fk_codigo_prova
+FOREIGN KEY (codigo_prova)
+REFERENCES prova(codigo),
 
-  CONSTRAINT fk_id_questao
-  FOREIGN KEY (id_questao)
-  REFERENCES questao(id_questao)
+CONSTRAINT fk_id_questao
+FOREIGN KEY (id_questao)
+REFERENCES questao(id_questao)
 );
 
 CREATE TABLE alternativa (
-  id_alternativa int,
-  id_questao int not null, -- FK
-  texto varchar(100) not null,
-  correta boolean not null,
-  PRIMARY KEY (id_alternativa, id_questao),
-  CONSTRAINT fk_alternativa_questao
-  FOREIGN KEY (id_questao)
-  REFERENCES questao(id_questao)
-); 
+id_alternativa int,
+id_questao int not null, -- FK
+texto varchar(100) not null,
+correta boolean not null,
+PRIMARY KEY (id_alternativa, id_questao),
+CONSTRAINT fk_alternativa_questao
+FOREIGN KEY (id_questao)
+REFERENCES questao(id_questao)
+);
 
 INSERT INTO prova
 (codigo, titulo, materia, data_prova, curso, bimestre)
@@ -67,7 +67,7 @@ VALUES
 (9, 'Qual comando remove uma tabela do banco de dados?', 'Assinale a alternativa correta:'),
 (10, 'O que significa ACID em bancos de dados?', 'Assinale a alternativa correta:');
 
- 
+
 INSERT INTO prova_questao
 (codigo_prova, id_questao)
 VALUES
