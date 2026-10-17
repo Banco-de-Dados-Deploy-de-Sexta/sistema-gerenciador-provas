@@ -12,11 +12,9 @@ public class Main {
 
         QuestaoStorage storage = new QuestaoStorage(conexao);
 
-        TxtQuestaoRepositorio questaoRepositorio =
-                new TxtQuestaoRepositorio(storage);
+        TxtQuestaoRepositorio questaoRepositorio = new TxtQuestaoRepositorio(storage);
 
-        QuestaoServico questaoServico =
-                new QuestaoServico(questaoRepositorio);
+        QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
 
         telas.Questao.setQuestaoServico(questaoServico);
         Application.launch(telas.Questao.class, args);
