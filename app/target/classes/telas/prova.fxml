@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="652.0" prefWidth="645.0" styleClass="tela" stylesheets="@prova.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="telas.ProvaController">
+
+       <padding>
+              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+       </padding>
+
+       <VBox spacing="18.0" styleClass="card" VBox.vgrow="ALWAYS">
+
+              <Label styleClass="titulo" text="Criar Prova" />
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="TÍTULO" />
+
+                     <TextField fx:id="tituloCaixaTexto" promptText="Digite o título da prova" />
+              </VBox>
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="MATÉRIA" />
+
+                     <TextField fx:id="materiaCaixaTexto" promptText="Digite a matéria" />
+              </VBox>
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="CURSO" />
+
+                     <TextField fx:id="cursoCaixaTexto" promptText="Digite o curso" />
+              </VBox>
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="BIMESTRE" />
+
+                     <TextField fx:id="bimestreCaixaTexto" promptText="Digite o bimestre" />
+              </VBox>
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="DATA" />
+
+                     <DatePicker fx:id="dataPicker" disable="true" />
+
+                     <Label style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" text="Agendamento disponível na Sprint 3." />
+              </VBox>
+
+              <VBox spacing="6.0">
+                     <Label styleClass="secao" text="QUESTÕES" />
+
+                     <Label text="As questões serão vinculadas à prova posteriormente." wrapText="true" />
+              </VBox>
+
+              <HBox alignment="CENTER_RIGHT">
+                     <Button onAction="#confirmar" prefHeight="40.0" prefWidth="130.0" styleClass="botao-primario" text="Confirmar" />
+              </HBox>
+
+       </VBox>
+
+</VBox>

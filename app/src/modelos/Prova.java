@@ -66,4 +66,14 @@ public class Prova {
     public void setBimestre(int bimestre) {
         this.bimestre = bimestre;
     }
+
+    @Override
+    public String toString() {
+        return "Código: " + codigo +
+                "\nTítulo: " + titulo +
+                "\nMatéria: " + materia +
+                "\nData: " + data +
+                "\nCurso: " + curso +
+                "\nBimestre: " + bimestre;
+    }
 }
