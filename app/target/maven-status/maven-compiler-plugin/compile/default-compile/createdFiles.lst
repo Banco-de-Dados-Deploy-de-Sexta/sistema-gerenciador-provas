@@ -1,0 +1,17 @@
+interfaces/QuestaoRepositorio.class
+auxiliares/Env.class
+servicos/ProvaServico.class
+modelos/Prova.class
+configuracao/ConexaoMySQL.class
+interfaces/Storage.class
+Main.class
+interfaces/ProvaRepositorio.class
+servicos/QuestaoServico.class
+telas/QuestaoController.class
+repositorios/TxtQuestaoRepositorio.class
+storage/QuestaoStorage.class
+storage/TxtStorage.class
+auxiliares/Configuracao.class
+telas/Questao.class
+modelos/Questao.class
+repositorios/TxtProvaRepositorio.class

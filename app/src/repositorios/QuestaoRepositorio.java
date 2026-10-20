@@ -1,15 +1,14 @@
 package repositorios;
 
 import modelos.Questao;
-import interfaces.QuestaoRepositorio;
 import interfaces.Storage;
 import java.util.List;
 
-public class TxtQuestaoRepositorio implements QuestaoRepositorio {
+public class QuestaoRepositorio implements interfaces.QuestaoRepositorio {
 
     private final Storage<Long, Questao> storage;
 
-    public TxtQuestaoRepositorio(Storage<Long, Questao> storage) {
+    public QuestaoRepositorio(Storage<Long, Questao> storage) {
         this.storage = storage;
     }
 
