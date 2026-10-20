@@ -1,15 +1,14 @@
 package repositorios;
 
 import modelos.Prova;
-import interfaces.ProvaRepositorio;
 import interfaces.Storage;
 import java.util.List;
 
-public class TxtProvaRepositorio implements ProvaRepositorio {
+public class ProvaRepositorio implements interfaces.ProvaRepositorio {
 
     private final Storage<Long, Prova> storage;
 
-    public TxtProvaRepositorio(Storage<Long, Prova> storage) {
+    public ProvaRepositorio(Storage<Long, Prova> storage) {
         this.storage = storage;
     }
 

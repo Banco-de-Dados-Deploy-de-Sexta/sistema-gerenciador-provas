@@ -1,6 +1,6 @@
 import configuracao.ConexaoMySQL;
 import javafx.application.Application;
-import repositorios.TxtQuestaoRepositorio;
+import repositorios.QuestaoRepositorio;
 import servicos.QuestaoServico;
 import storage.QuestaoStorage;
 
@@ -12,7 +12,7 @@ public class Main {
 
         QuestaoStorage storage = new QuestaoStorage(conexao);
 
-        TxtQuestaoRepositorio questaoRepositorio = new TxtQuestaoRepositorio(storage);
+        QuestaoRepositorio questaoRepositorio = new QuestaoRepositorio(storage);
 
         QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
 

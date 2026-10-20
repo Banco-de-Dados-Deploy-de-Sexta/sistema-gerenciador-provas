@@ -1,0 +1,17 @@
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/Main.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/auxiliares/Configuracao.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/auxiliares/Env.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/configuracao/ConexaoMySQL.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/interfaces/ProvaRepositorio.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/interfaces/QuestaoRepositorio.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/interfaces/Storage.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/modelos/Prova.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/modelos/Questao.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/repositorios/TxtProvaRepositorio.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/repositorios/TxtQuestaoRepositorio.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/servicos/ProvaServico.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/servicos/QuestaoServico.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/storage/QuestaoStorage.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/storage/TxtStorage.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/telas/Questao.java
+/Users/wjmoraes12/Projetos/sistema-gerenciador-provas/app/src/telas/QuestaoController.java
