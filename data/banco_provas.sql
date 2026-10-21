@@ -19,6 +19,7 @@ descricao varchar(300) not null
 CREATE TABLE prova_questao (
 codigo_prova varchar(7),
 id_questao int,
+peso_questao float,
 
 PRIMARY KEY(codigo_prova, id_questao),
 
