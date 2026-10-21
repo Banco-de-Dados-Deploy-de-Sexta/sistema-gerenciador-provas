@@ -12,7 +12,7 @@ public class HomeController {
     @FXML
     private void abrirQuestao(ActionEvent event) {
         try {
-            new Questao().start(palcoDe(event));
+            BancoQuestoes.abrir(palcoDe(event));
         } catch (Exception e) {
             mostrarErro("Não foi possível abrir a tela de questão.", e);
         }
@@ -21,7 +21,7 @@ public class HomeController {
     @FXML
     private void abrirBancoQuestoes(ActionEvent event) {
         try {
-            new BancoQuestoes().start(palcoDe(event));
+            BancoQuestoes.abrir(palcoDe(event));
         } catch (Exception e) {
             mostrarErro("Não foi possível abrir o banco de questões.", e);
         }

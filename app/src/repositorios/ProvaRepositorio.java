@@ -1,19 +1,20 @@
 package repositorios;
 
 import modelos.Prova;
-import interfaces.Storage;
+import modelos.PesoQuestao;
+import storage.ProvaStorage;
 import java.util.List;
 
 public class ProvaRepositorio implements interfaces.ProvaRepositorio {
 
-    private final Storage<Long, Prova> storage;
+    private final ProvaStorage storage;
 
-    public ProvaRepositorio(Storage<Long, Prova> storage) {
+    public ProvaRepositorio(ProvaStorage storage) {
         this.storage = storage;
     }
 
     @Override
-    public Prova findByKey(Long codigo) {
+    public Prova findByKey(String codigo) {
         return storage.get(codigo);
     }
 
@@ -28,13 +29,23 @@ public class ProvaRepositorio implements interfaces.ProvaRepositorio {
     }
 
     @Override
-    public void remove(Long codigo) {
+    public void remove(String codigo) {
         storage.delete(codigo);
     }
 
     @Override
     public void removeAll() {
         storage.deleteAll();
+    }
+
+    @Override
+    public List<PesoQuestao> listarQuestoes(String codigo) {
+        return storage.listarQuestoes(codigo);
+    }
+
+    @Override
+    public void salvarQuestoes(String codigo, List<PesoQuestao> questoes) {
+        storage.salvarQuestoes(codigo, questoes);
     }
 
 }

@@ -19,10 +19,12 @@ public class Main {
 
         ProvaStorage provaStorage = new ProvaStorage(conexao);
         ProvaRepositorio provaRepositorio = new ProvaRepositorio(provaStorage);
-        ProvaServico provaServico = new ProvaServico(provaRepositorio);
+        ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico);
 
         telas.Questao.setQuestaoServico(questaoServico);
+        telas.BancoQuestoes.setQuestaoServico(questaoServico);
         telas.Prova.setProvaServico(provaServico);
+        telas.Prova.setQuestaoServico(questaoServico);
 
         // O programa agora começa pela Home
         Application.launch(telas.Home.class, args);

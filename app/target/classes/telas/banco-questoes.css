@@ -1,10 +1,12 @@
-.tela { -fx-background-color: #f7f8fc; -fx-font-family: "System"; }
-.empty-card { -fx-background-color: white; -fx-background-radius: 14px; -fx-border-color: #e8ebf1; -fx-border-radius: 14px; -fx-padding: 42px; }
-.empty-icon { -fx-alignment: CENTER; -fx-background-color: #eff6ff; -fx-background-radius: 26px; -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-min-width: 52px; -fx-min-height: 52px; }
-.title { -fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #172033; }
-.description { -fx-font-size: 13px; -fx-text-fill: #64748b; -fx-text-alignment: CENTER; }
-.primary-button, .secondary-button { -fx-background-radius: 8px; -fx-font-weight: bold; -fx-padding: 11px 18px; -fx-cursor: hand; }
+.tela { -fx-background-color: #f5f7fb; -fx-font-family: "System"; }
+.title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #172033; }
+.description { -fx-font-size: 13px; -fx-text-fill: #64748b; }
+.table-view { -fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; }
+.table-view .column-header-background { -fx-background-color: #f8fafc; }
+.table-view .column-header .label { -fx-text-fill: #475569; -fx-font-weight: bold; }
+.table-row-cell { -fx-cell-size: 42px; }
+.primary-button, .secondary-button, .danger-button { -fx-background-radius: 7px; -fx-font-weight: bold; -fx-padding: 9px 14px; -fx-cursor: hand; }
 .primary-button { -fx-background-color: #2563eb; -fx-text-fill: white; }
 .primary-button:hover { -fx-background-color: #1d4ed8; }
-.secondary-button { -fx-background-color: transparent; -fx-text-fill: #64748b; }
-.secondary-button:hover { -fx-text-fill: #2563eb; }
+.secondary-button { -fx-background-color: white; -fx-border-color: #cbd5e1; -fx-border-radius: 7px; -fx-text-fill: #334155; }
+.danger-button { -fx-background-color: #fff1f2; -fx-text-fill: #be123c; }

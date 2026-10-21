@@ -15,4 +15,5 @@ public interface QuestaoRepositorio {
     void remove(Long numero);
 
     void removeAll();
+
 }

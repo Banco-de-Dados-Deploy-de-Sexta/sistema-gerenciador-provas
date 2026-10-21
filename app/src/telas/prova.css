@@ -72,3 +72,13 @@
 .lista-questoes > .viewport {
     -fx-background-color: transparent;
 }
+
+.subtitulo { -fx-font-size: 13px; -fx-text-fill: #64748b; }
+.card { -fx-background-color: white; -fx-background-radius: 12; -fx-padding: 24; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 16, 0, 0, 4); }
+.table-view { -fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; }
+.table-view .column-header-background { -fx-background-color: #f8fafc; }
+.table-view .column-header .label { -fx-text-fill: #475569; -fx-font-weight: bold; }
+.table-row-cell { -fx-cell-size: 42px; }
+.botao-perigo { -fx-background-color: #fff1f2; -fx-background-radius: 8; -fx-text-fill: #be123c; -fx-padding: 10 14; -fx-cursor: hand; }
+.question-row { -fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-padding: 12px; }
+.resultado { -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1d4ed8; }

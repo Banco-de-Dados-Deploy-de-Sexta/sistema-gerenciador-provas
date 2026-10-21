@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -9,50 +8,39 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
-<VBox alignment="TOP_CENTER" prefHeight="520.0" prefWidth="645.0" styleClass="tela" stylesheets="@questao.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="telas.QuestaoController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-
-    <VBox fx:id="painel" maxWidth="900.0" spacing="18.0" styleClass="card" VBox.vgrow="ALWAYS">
-
-        <Label styleClass="titulo" text="Questão 1" />
-
+<VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="760.0" styleClass="tela" stylesheets="@questao.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+    <VBox maxWidth="900.0" spacing="16.0" styleClass="card" VBox.vgrow="ALWAYS">
+        <Label fx:id="tituloTela" styleClass="titulo" text="Nova questão" />
         <VBox spacing="6.0">
             <Label styleClass="secao" text="ENUNCIADO" />
-            <TextField fx:id="enunciadoCaixaTexto" promptText="Digite o enunciado da questão" />
+            <TextField fx:id="enunciadoCaixaTexto" maxWidth="1.7976931348623157E308" promptText="Digite o enunciado da questão (até 200 caracteres)" />
         </VBox>
-
         <VBox spacing="6.0">
-            <Label styleClass="secao" text="NOVA ALTERNATIVA" />
+            <Label styleClass="secao" text="ADICIONAR ALTERNATIVA" />
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-                <TextField fx:id="perguntaCaixaTexto" promptText="Texto da alternativa" HBox.hgrow="ALWAYS" />
-                <Button mnemonicParsing="false" onAction="#adicionarAlternativa" styleClass="botao-secundario" text="+ Adicionar alternativa" />
+                <TextField fx:id="perguntaCaixaTexto" maxWidth="1.7976931348623157E308" onAction="#adicionarAlternativa" promptText="Texto da alternativa" HBox.hgrow="ALWAYS" />
+                <Button mnemonicParsing="false" onAction="#adicionarAlternativa" styleClass="botao-secundario" text="Adicionar" />
             </HBox>
         </VBox>
-
         <VBox spacing="6.0" VBox.vgrow="ALWAYS">
-            <Label styleClass="secao" text="ALTERNATIVAS" />
+            <Label styleClass="secao" text="ALTERNATIVAS — MARQUE A CORRETA" />
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="lista-alternativas" VBox.vgrow="ALWAYS">
                 <content>
-                    <GridPane fx:id="gridAlternativas" hgap="10.0" vgap="8.0">
+                    <GridPane fx:id="gridAlternativas" hgap="12.0" vgap="10.0">
                         <columnConstraints>
-                            <ColumnConstraints hgrow="NEVER" minWidth="40.0" />
+                            <ColumnConstraints hgrow="NEVER" minWidth="48.0" />
                             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                            <ColumnConstraints hgrow="NEVER" minWidth="70.0" />
                         </columnConstraints>
-                        <padding>
-                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                        </padding>
+                        <padding><Insets bottom="12.0" left="12.0" right="12.0" top="12.0" /></padding>
                     </GridPane>
                 </content>
             </ScrollPane>
         </VBox>
-
         <HBox alignment="CENTER_RIGHT" spacing="10.0">
-            <Button mnemonicParsing="false" onAction="#voltar" prefHeight="40.0" prefWidth="130.0" styleClass="botao-secundario" text="Voltar" />
-            <Button mnemonicParsing="false" onAction="#confirmar" prefHeight="40.0" prefWidth="130.0" styleClass="botao-primario" text="Confirmar" />
+            <Button mnemonicParsing="false" onAction="#voltar" prefHeight="40.0" prefWidth="110.0" styleClass="botao-secundario" text="Voltar" />
+            <Button mnemonicParsing="false" onAction="#confirmar" prefHeight="40.0" prefWidth="130.0" styleClass="botao-primario" text="Salvar questão" />
         </HBox>
-
     </VBox>
 </VBox>
