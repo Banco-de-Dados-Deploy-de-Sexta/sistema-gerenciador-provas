@@ -19,6 +19,7 @@ descricao varchar(300) not null
 CREATE TABLE prova_questao (
 codigo_prova varchar(7),
 id_questao int,
+peso_questao float NOT NULL DEFAULT 1,
 
 PRIMARY KEY(codigo_prova, id_questao),
 
@@ -69,18 +70,18 @@ VALUES
 
 
 INSERT INTO prova_questao
-(codigo_prova, id_questao)
+(codigo_prova, id_questao, peso_questao)
 VALUES
-('AMD01', 1),
-('LDP01', 2),
-('AMD01', 3),
-('AMD01', 4),
-('LDP01', 5),
-('POO01', 6),
-('SBD01', 7),
-('SQL01', 8),
-('SQL01', 9),
-('SBD01', 10);
+('AMD01', 1, 1),
+('LDP01', 2, 1),
+('AMD01', 3, 1),
+('AMD01', 4, 1),
+('LDP01', 5, 1),
+('POO01', 6, 1),
+('SBD01', 7, 1),
+('SQL01', 8, 1),
+('SQL01', 9, 1),
+('SBD01', 10, 1);
 
 INSERT INTO alternativa
 (id_alternativa, id_questao, texto, correta)

@@ -72,3 +72,10 @@
 .lista-alternativas > .viewport {
     -fx-background-color: transparent;
 }
+
+.botao-remover {
+    -fx-background-color: #fff1f2;
+    -fx-background-radius: 6;
+    -fx-text-fill: #be123c;
+    -fx-cursor: hand;
+}
