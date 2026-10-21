@@ -1,0 +1,10 @@
+.tela { -fx-background-color: #f7f8fc; -fx-font-family: "System"; }
+.empty-card { -fx-background-color: white; -fx-background-radius: 14px; -fx-border-color: #e8ebf1; -fx-border-radius: 14px; -fx-padding: 42px; }
+.empty-icon { -fx-alignment: CENTER; -fx-background-color: #eff6ff; -fx-background-radius: 26px; -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2563eb; -fx-min-width: 52px; -fx-min-height: 52px; }
+.title { -fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #172033; }
+.description { -fx-font-size: 13px; -fx-text-fill: #64748b; -fx-text-alignment: CENTER; }
+.primary-button, .secondary-button { -fx-background-radius: 8px; -fx-font-weight: bold; -fx-padding: 11px 18px; -fx-cursor: hand; }
+.primary-button { -fx-background-color: #2563eb; -fx-text-fill: white; }
+.primary-button:hover { -fx-background-color: #1d4ed8; }
+.secondary-button { -fx-background-color: transparent; -fx-text-fill: #64748b; }
+.secondary-button:hover { -fx-text-fill: #2563eb; }

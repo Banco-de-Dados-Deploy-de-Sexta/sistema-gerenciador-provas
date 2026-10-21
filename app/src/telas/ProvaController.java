@@ -1,10 +1,12 @@
 package telas;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import servicos.ProvaServico;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
@@ -94,5 +96,15 @@ public class ProvaController {
         Alert alerta = new Alert(tipo, mensagem);
         alerta.setHeaderText(null);
         alerta.showAndWait();
+    }
+
+    @FXML
+    private void voltar(ActionEvent event) {
+        try {
+            Stage palco = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            new Home().start(palco);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

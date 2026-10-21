@@ -9,7 +9,9 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import servicos.QuestaoServico;
-
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,18 +57,24 @@ public class QuestaoController {
         String enunciado = enunciadoCaixaTexto.getText().trim();
         Toggle marcada = grupoCorreta.getSelectedToggle();
 
-        if (enunciado.isEmpty() || alternativas.size() < 4 || marcada == null) {
-            mostrar(Alert.AlertType.WARNING, "Preencha o enunciado, adicione ao menos 4 alternativas e marque a correta.");
+        if (enunciado.isEmpty() || alternativas.size() < 3 || marcada == null) {
+            mostrar(Alert.AlertType.WARNING, "Preencha o enunciado, adicione ao menos 3 alternativas e marque a correta.");
             return;
         }
 
-        // var evita misturar telas.Questao com modelos.Questao
-        var questao = questaoServico.cadastrarQuestao(
-                enunciado, "Assinale a alternativa correta:", String.join("|", alternativas), (String) marcada.getUserData()
-        );
+        try {
+            // var evita misturar telas.Questao com modelos.Questao
+            questaoServico.cadastrarQuestao(
+                    enunciado, "Assinale a alternativa correta:",
+                    String.join("|", alternativas), (String) marcada.getUserData()
+            );
 
-        mostrar(Alert.AlertType.INFORMATION, "Questão cadastrada:\n" + questao);
-        limpar();
+            mostrar(Alert.AlertType.INFORMATION, "Questão e alternativas cadastradas com sucesso.");
+            limpar();
+        } catch (IllegalStateException e) {
+            mostrar(Alert.AlertType.ERROR, "Não foi possível salvar a questão e suas alternativas no banco.");
+            e.printStackTrace();
+        }
     }
 
     private void limpar() {
@@ -81,5 +89,15 @@ public class QuestaoController {
         Alert alerta = new Alert(tipo, mensagem);
         alerta.setHeaderText(null);
         alerta.showAndWait();
+    }
+
+    @FXML
+    private void voltar(ActionEvent event) {
+        try {
+            Stage palco = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            new Home().start(palco);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
