@@ -1,83 +1,32 @@
-import interfaces.QuestaoRepositorio;
-import interfaces.Storage;
-import modelos.Questao;
-import repositorios.TxtQuestaoRepositorio;
+import configuracao.ConexaoMySQL;
+import javafx.application.Application;
+import repositorios.ProvaRepositorio;
+import repositorios.QuestaoRepositorio;
+import servicos.ProvaServico;
 import servicos.QuestaoServico;
-import storage.TxtStorage;
-import telas.Home;
-
-import java.util.Scanner;
+import storage.ProvaStorage;
+import storage.QuestaoStorage;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        ConexaoMySQL conexao = new ConexaoMySQL();
 
-        // Composition Root
-        Storage<Long, Questao> storage = new TxtStorage<>(
-                "src/storage/save.txt",
-                Main::linhaParaQuestao,
-                Main::questaoParaLinha,
-                Questao::getNumero
-        );
+        QuestaoStorage questaoStorage = new QuestaoStorage(conexao);
+        QuestaoRepositorio questaoRepositorio = new QuestaoRepositorio(questaoStorage);
+        QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
 
-        TxtQuestaoRepositorio questaoRepositorio =
-                new TxtQuestaoRepositorio(storage);
+        ProvaStorage provaStorage = new ProvaStorage(conexao);
+        ProvaRepositorio provaRepositorio = new ProvaRepositorio(provaStorage);
+        ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico);
 
-        QuestaoServico questaoServico =
-                new QuestaoServico(questaoRepositorio);
+        telas.Questao.setQuestaoServico(questaoServico);
+        telas.BancoQuestoes.setQuestaoServico(questaoServico);
+        telas.Prova.setProvaServico(provaServico);
+        telas.Prova.setQuestaoServico(questaoServico);
 
-        // Renderização da tela de início
-        Home home = new Home();
-
-        System.out.println("Insira o número da questão: ");
-        long numero = Long.parseLong(scanner.nextLine());
-
-        System.out.println("Insira o título da questão: ");
-        String titulo = scanner.nextLine();
-
-        System.out.println("Insira a descrição da questão: ");
-        String descricao = scanner.nextLine();
-
-        System.out.println("Insira as alternativas da questão: ");
-        String alternativas = scanner.nextLine();
-
-        System.out.println("Insira a alternativa correta: ");
-        String alternativaCorreta = scanner.nextLine();
-
-        Questao questao = questaoServico.cadastrarQuestao(
-                titulo,
-                descricao,
-                alternativas,
-                alternativaCorreta
-        );
-
-        System.out.println("Questão cadastrada:");
-        System.out.println(questao);
-
-        scanner.close();
-    }
-
-    private static String questaoParaLinha(Questao questao) {
-
-        return questao.getNumero() + ";" +
-                questao.getTitulo() + ";" +
-                questao.getDescricao() + ";" +
-                questao.getAlternativas() + ";" +
-                questao.getAlternativa_correta();
-    }
-
-    private static Questao linhaParaQuestao(String linha) {
-
-        String[] campos = linha.split(";");
-
-        return new Questao(
-                Long.parseLong(campos[0]),
-                campos[1],
-                campos[2],
-                campos[3],
-                campos[4]
-        );
+        // O programa agora começa pela Home
+        Application.launch(telas.Home.class, args);
     }
 }

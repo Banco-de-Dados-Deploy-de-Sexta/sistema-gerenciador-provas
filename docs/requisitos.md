@@ -26,7 +26,7 @@
 - RF18 - Vizualizar questão
 - RF19 - Vizualizar todas as questões disponíves
 - RF20 - Definir tipo de questão
-- RF21 - Escrever pergunta da prova
+- RF21 - Escrever pergunta da questão
 - RF22 - Criar e armazenar alternativas
 - RF23 - Editar alternativas
 - RF24 - Excluir alternativas
@@ -79,7 +79,7 @@ USO# - O aluno pode consultar o [gabarito] da prova
 
 ## Regras de negócio
 
-- RN1 - O professor pode visualizar somente as sua provas
+- RN1 - O professor pode visualizar todas as provas do sistema
 - RN2 - O professor pode aplicar somente as suas provas
 - RN3 - O professor pode reaproveitar passadas
 - RN4 - O aluno pode visualizar somente as suas questões

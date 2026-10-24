@@ -1,24 +1,6 @@
 
 # Documentação - Sprint 1
 
-# 📌 Backlog da Sprint
+# 📌 Objetivo da Sprint 1
 
-| Rank | Prioridade | User Story | Sprint | Requisito do Cliente | Status |
-| :--: | :--------: | ---------- | :----: | :------------------: | :----: |
-A PREENCHER
-
----
-
-## 🏅 DoR - Definition of Ready <a id="dor"></a>
-
-|             Critério             | Descrição                                                                                         |
-| :------------------------------: | ------------------------------------------------------------------------------------------------- |
-A PREENCHER
-
----
-
-## 🏅 DoD - Definition of Done <a id="dod"></a>
-
-|                 Critério                 | Descrição                                                                 |
-| :--------------------------------------: | ------------------------------------------------------------------------- |
-A PREENCHER
+Definir funcionalidades do projeto, desenvolver as User Stories e documentar as diferentes etapas de criação do sistema.
