@@ -1,4 +1,4 @@
-package telas;
+package telas.prova;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,7 +62,7 @@ public class ProvaFormularioController {
     @FXML private void voltar(ActionEvent event) { voltarParaProvas(); }
 
     private void voltarParaProvas() {
-        try { telas.Prova.abrir((Stage) tituloTela.getScene().getWindow()); }
+        try { telas.prova.Prova.abrir((Stage) tituloTela.getScene().getWindow()); }
         catch (Exception e) { mostrar(Alert.AlertType.ERROR, "Não foi possível voltar à lista de provas."); }
     }
 

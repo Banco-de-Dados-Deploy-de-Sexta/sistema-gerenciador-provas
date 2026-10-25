@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import telas.componentes.Icones?>
+<HBox spacing="10.0" styleClass="tela" stylesheets="@../componentes/tema.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+    <VBox minWidth="268.0" prefWidth="268.0" styleClass="menu-lateral">
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#novaProva" styleClass="botao-menu" text="Criar prova">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="ADICIONAR" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="editarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#editarProva" styleClass="botao-menu" text="Editar prova">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="EDITAR" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="excluirButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#excluirProva" styleClass="botao-menu" text="Excluir prova">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="EXCLUIR" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="agendarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#agendarProva" styleClass="botao-menu" text="Agendar prova">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="AGENDAR" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="baixarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#baixarProva" styleClass="botao-menu" text="Baixar prova">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="BAIXAR" /></content></SVGPath></graphic>
+        </Button>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#abrirBancoQuestoes" styleClass="botao-menu" text="Questões">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="LISTA" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="questoesButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gerenciarQuestoes" styleClass="botao-menu" text="Questões e pesos">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="SELECIONAR_QUESTOES" /></content></SVGPath></graphic>
+        </Button>
+        <Button fx:id="corrigirButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#corrigir" styleClass="botao-menu" text="Calcular resultado">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="CALCULAR" /></content></SVGPath></graphic>
+        </Button>
+    </VBox>
+    <HBox styleClass="conteudo" HBox.hgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" minWidth="276.0" prefWidth="276.0" styleClass="lista-cards">
+            <content><VBox fx:id="listaProvas" styleClass="lista-cards-conteudo" /></content>
+        </ScrollPane>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="detalhe" HBox.hgrow="ALWAYS">
+            <content>
+                <VBox alignment="TOP_CENTER">
+                    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="25.0" /></padding>
+                    <VBox fx:id="questoesProva" maxWidth="597.0" styleClass="painel-questoes" />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </HBox>
+</HBox>
