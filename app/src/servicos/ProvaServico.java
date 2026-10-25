@@ -46,6 +46,8 @@ public class ProvaServico {
         return resultado;
     }
 
+    public int contarQuestoes(String codigoProva) { return provaRepositorio.listarQuestoes(codigoProva).size(); }
+
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
         if (buscarProva(codigoProva) == null) throw new IllegalArgumentException("A prova não existe.");
         for (PesoQuestao item : questoes) {

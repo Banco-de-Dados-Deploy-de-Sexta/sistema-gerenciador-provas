@@ -1,0 +1,278 @@
+.tela {
+    -fx-background-color: #f5f7fb;
+    -fx-font-family: "Inter", "Segoe UI", "System";
+    -fx-font-size: 14px;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 3);
+}
+
+.titulo {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.subtitulo {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7280;
+}
+
+.secao {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+}
+
+.step-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.resultado {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d4ed8;
+}
+
+/* Campos */
+
+.text-field,
+.date-picker > .text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-padding: 10 12;
+    -fx-text-fill: #111827;
+    -fx-prompt-text-fill: #9ca3af;
+    -fx-highlight-fill: #bfdbfe;
+    -fx-highlight-text-fill: #111827;
+}
+
+.text-field:focused,
+.date-picker > .text-field:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.25), 6, 0, 0, 0);
+}
+
+.date-picker {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.date-picker > .text-field {
+    -fx-background-radius: 8 0 0 8;
+    -fx-border-radius: 8 0 0 8;
+}
+
+.date-picker > .arrow-button {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 0 8 8 0;
+    -fx-border-color: #d1d5db #d1d5db #d1d5db transparent;
+    -fx-border-radius: 0 8 8 0;
+    -fx-padding: 0 12 0 12;
+    -fx-cursor: hand;
+}
+
+.date-picker > .arrow-button:hover {
+    -fx-background-color: #dbeafe;
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #2563eb;
+}
+
+/* Botões */
+
+.botao-primario {
+    -fx-background-color: #2563eb;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+}
+
+.botao-primario:hover {
+    -fx-background-color: #1d4ed8;
+}
+
+.botao-secundario {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 8;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 8;
+    -fx-text-fill: #1d4ed8;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14;
+    -fx-cursor: hand;
+}
+
+.botao-secundario:hover {
+    -fx-background-color: #dbeafe;
+}
+
+.botao-perigo {
+    -fx-background-color: #fff1f2;
+    -fx-background-radius: 8;
+    -fx-border-color: #fecdd3;
+    -fx-border-radius: 8;
+    -fx-text-fill: #be123c;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14;
+    -fx-cursor: hand;
+}
+
+/* Listas */
+
+.scroll-pane,
+.lista-questoes {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport,
+.lista-questoes > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 999;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button,
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.question-row {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-padding: 12 14;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.question-row:hover {
+    -fx-border-color: #93c5fd;
+}
+
+.question-row .label {
+    -fx-text-fill: #374151;
+}
+
+.question-row .step-title {
+    -fx-text-fill: #111827;
+}
+
+.question-row .text-field {
+    -fx-padding: 6 10;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-cell-size: 42px;
+}
+
+/* Caixas de seleção e opções */
+
+.check-box,
+.radio-button {
+    -fx-text-fill: #374151;
+    -fx-cursor: hand;
+}
+
+.check-box {
+    -fx-font-weight: bold;
+}
+
+.check-box .box {
+    -fx-background-color: #cbd5e1, white;
+    -fx-background-insets: 0, 1.5;
+    -fx-background-radius: 5, 4;
+    -fx-padding: 0.25em;
+}
+
+.check-box:hover .box {
+    -fx-background-color: #2563eb, white;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #2563eb;
+    -fx-background-insets: 0;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.radio-button .radio {
+    -fx-background-color: #cbd5e1, white;
+    -fx-background-insets: 0, 1.5;
+    -fx-background-radius: 1em;
+    -fx-padding: 0.3em;
+}
+
+.radio-button .dot {
+    -fx-background-color: transparent;
+    -fx-background-radius: 1em;
+    -fx-padding: 0.2em;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: #2563eb, white;
+}
+
+.radio-button:selected .dot {
+    -fx-background-color: #2563eb;
+}
+
+.radio-button:selected {
+    -fx-text-fill: #1d4ed8;
+    -fx-font-weight: bold;
+}

@@ -21,12 +21,12 @@ public class Main {
         ProvaRepositorio provaRepositorio = new ProvaRepositorio(provaStorage);
         ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico);
 
-        telas.Questao.setQuestaoServico(questaoServico);
-        telas.BancoQuestoes.setQuestaoServico(questaoServico);
-        telas.Prova.setProvaServico(provaServico);
-        telas.Prova.setQuestaoServico(questaoServico);
+        telas.questao.Questao.setQuestaoServico(questaoServico);
+        telas.bancoquestoes.BancoQuestoes.setQuestaoServico(questaoServico);
+        telas.prova.Prova.setProvaServico(provaServico);
+        telas.prova.Prova.setQuestaoServico(questaoServico);
 
-        // O programa agora começa pela Home
-        Application.launch(telas.Home.class, args);
+        // O programa começa pelo menu de provas
+        Application.launch(telas.prova.Prova.class, args);
     }
 }

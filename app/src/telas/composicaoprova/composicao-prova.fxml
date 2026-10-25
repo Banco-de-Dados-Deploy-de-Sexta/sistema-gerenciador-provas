@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox spacing="14.0" styleClass="tela" stylesheets="@prova.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="14.0" styleClass="tela" stylesheets="@../componentes/prova.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <padding><Insets bottom="22.0" left="26.0" right="26.0" top="22.0" /></padding>
     <Label fx:id="tituloTela" styleClass="titulo" text="Questões da prova" />
     <Label styleClass="subtitulo" text="Marque as questões que farão parte da prova e informe o peso de cada uma." wrapText="true" />
