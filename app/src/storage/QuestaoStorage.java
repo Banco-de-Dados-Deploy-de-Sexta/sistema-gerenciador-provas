@@ -21,7 +21,7 @@ public class QuestaoStorage implements Storage<Long, Questao> {
     private static final String SQL_LISTAR = "SELECT id_questao, titulo, descricao FROM questao ORDER BY id_questao";
     private static final String SQL_REMOVER_QUESTAO = "DELETE FROM questao WHERE id_questao = ?";
     private static final String SQL_REMOVER_ALTERNATIVAS = "DELETE FROM alternativa WHERE id_questao = ?";
-    private static final String SQL_REMOVER_VINCULOS = "DELETE FROM prova_questao WHERE id_questao = ?";
+    private static final String SQL_CONTAR_VINCULOS = "SELECT COUNT(*) FROM prova_questao WHERE id_questao = ?";
     private static final String SQL_LISTAR_ALTERNATIVAS = """
             SELECT id_alternativa, texto, correta FROM alternativa
             WHERE id_questao = ? ORDER BY id_alternativa
@@ -110,11 +110,21 @@ public class QuestaoStorage implements Storage<Long, Questao> {
         executarTransacaoRemocao(key);
     }
 
+    // Questões vinculadas a provas não são removidas: a FK de prova_questao impede a exclusão
+    public boolean estaEmAlgumaProva(Long key) {
+        try (Connection con = conexao.conectar(); PreparedStatement ps = con.prepareStatement(SQL_CONTAR_VINCULOS)) {
+            ps.setLong(1, key);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() && rs.getInt(1) > 0; }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao verificar os vínculos da questão " + key, e);
+        }
+    }
+
     private void executarTransacaoRemocao(Long key) {
         try (Connection con = conexao.conectar()) {
             con.setAutoCommit(false);
             try {
-                for (String sql : List.of(SQL_REMOVER_VINCULOS, SQL_REMOVER_ALTERNATIVAS, SQL_REMOVER_QUESTAO)) {
+                for (String sql : List.of(SQL_REMOVER_ALTERNATIVAS, SQL_REMOVER_QUESTAO)) {
                     try (PreparedStatement ps = con.prepareStatement(sql)) {
                         ps.setLong(1, key);
                         ps.executeUpdate();

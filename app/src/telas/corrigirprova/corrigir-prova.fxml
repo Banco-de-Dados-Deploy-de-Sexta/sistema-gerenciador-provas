@@ -8,12 +8,13 @@
 <VBox spacing="12.0" styleClass="tela" stylesheets="@../componentes/prova.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <padding><Insets bottom="20.0" left="24.0" right="24.0" top="20.0" /></padding>
     <Label fx:id="tituloTela" styleClass="titulo" text="Corrigir prova" />
-    <Label styleClass="subtitulo" text="Respostas de exemplo já preenchidas. Clique em Calcular resultado para somar o peso das alternativas corretas." wrapText="true" />
+    <Label styleClass="subtitulo" text="Marque a alternativa respondida pelo aluno em cada questão e clique em Calcular resultado. Questões sem resposta contam como erradas." wrapText="true" />
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
         <content><VBox fx:id="listaQuestoes" spacing="10.0"><padding><Insets bottom="8.0" left="4.0" right="4.0" top="4.0" /></padding></VBox></content>
     </ScrollPane>
     <HBox alignment="CENTER_LEFT" spacing="12.0">
         <Button mnemonicParsing="false" onAction="#corrigir" styleClass="botao-primario" text="Calcular resultado" />
+        <Button mnemonicParsing="false" onAction="#limparRespostas" styleClass="botao-secundario" text="Limpar respostas" />
         <Label fx:id="resultadoLabel" styleClass="resultado" text="" />
         <HBox HBox.hgrow="ALWAYS" />
         <Button mnemonicParsing="false" onAction="#voltar" styleClass="botao-secundario" text="Voltar" />

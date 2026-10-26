@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -76,7 +77,7 @@ public class ProvaController {
         mostrarQuestoes();
     }
 
-    // Card de prova do Figma: código e data no topo, título, matéria/curso/bimestre e total de questões
+    // Card de prova do Figma: código e data no topo, título, matéria/curso/bimestre, total de questões e estado
     private VBox cardProva(Prova prova) {
         Label codigo = new Label(prova.getCodigo());
         codigo.getStyleClass().add("card-pequeno");
@@ -94,9 +95,15 @@ public class ProvaController {
         int quantidade = provaServico.contarQuestoes(prova.getCodigo());
         Label questoes = new Label(quantidade + (quantidade == 1 ? " questão" : " questões"));
         questoes.getStyleClass().add("card-destaque");
-        questoes.setPadding(new Insets(16, 0, 0, 0));
+        Region espacoRodape = new Region();
+        HBox.setHgrow(espacoRodape, Priority.ALWAYS);
+        Label estado = new Label(provaServico.estado(prova));
+        estado.getStyleClass().add("card-estado");
+        HBox rodape = new HBox(questoes, espacoRodape, estado);
+        rodape.setAlignment(Pos.CENTER_LEFT);
+        rodape.setPadding(new Insets(16, 0, 0, 0));
 
-        VBox card = new VBox(topo, titulo, detalhes, questoes);
+        VBox card = new VBox(topo, titulo, detalhes, rodape);
         card.getStyleClass().add("card-lista");
         card.setUserData(prova);
         card.setOnMouseClicked(event -> selecionada.set(prova));

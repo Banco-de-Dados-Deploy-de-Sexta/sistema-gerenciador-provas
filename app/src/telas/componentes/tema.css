@@ -134,6 +134,17 @@
     -fx-text-fill: #2563eb;
 }
 
+.card-lista .card-estado {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 999;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 999;
+    -fx-padding: 1 8 1 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb;
+}
+
 .card-lista .card-texto {
     -fx-font-size: 14px;
     -fx-text-fill: #374151;

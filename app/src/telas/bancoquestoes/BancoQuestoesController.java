@@ -112,13 +112,25 @@ public class BancoQuestoesController {
     private void excluirQuestao() {
         Questao questao = selecionada.get();
         if (questao == null) return;
+        try {
+            if (questaoServico.estaEmAlgumaProva(questao.getNumero())) {
+                avisar("Esta questão está vinculada a uma ou mais provas e não pode ser excluída. "
+                        + "Remova-a das provas em Questões e pesos antes de excluí-la.");
+                return;
+            }
+        } catch (RuntimeException e) {
+            mostrarErro("Não foi possível verificar os vínculos da questão.", e);
+            return;
+        }
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
-                "Excluir a questão selecionada? Ela também será removida das provas em que estiver vinculada.", ButtonType.CANCEL, ButtonType.OK);
+                "Excluir a questão selecionada? Esta ação não pode ser desfeita.", ButtonType.CANCEL, ButtonType.OK);
         confirmacao.setHeaderText("Excluir questão");
         if (confirmacao.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
         try {
             questaoServico.excluirQuestao(questao.getNumero());
             atualizar();
+        } catch (IllegalArgumentException e) {
+            avisar(e.getMessage());
         } catch (RuntimeException e) {
             mostrarErro("Não foi possível excluir a questão.", e);
         }
@@ -128,6 +140,12 @@ public class BancoQuestoesController {
     private void voltar(ActionEvent event) {
         try { Prova.abrir((Stage) ((Node) event.getSource()).getScene().getWindow()); }
         catch (Exception e) { mostrarErro("Não foi possível voltar à lista de provas.", e); }
+    }
+
+    private void avisar(String mensagem) {
+        Alert alerta = new Alert(Alert.AlertType.WARNING, mensagem);
+        alerta.setHeaderText(null);
+        alerta.showAndWait();
     }
 
     private void mostrarErro(String mensagem, Exception e) {

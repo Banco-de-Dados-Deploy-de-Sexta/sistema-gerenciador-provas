@@ -16,4 +16,6 @@ public interface QuestaoRepositorio {
 
     void removeAll();
 
+    boolean estaEmAlgumaProva(Long numero);
+
 }

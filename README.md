@@ -75,7 +75,9 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
     ┣ 📁 docs
       ┣ 📁 prototipos
       ┣ 📁 sprints        
-      ┗ 📜 backlog.md
+      ┣ 📜 backlog.md
+      ┣ 📜 manual-instalacao.md
+      ┣ 📜 manual-usuario.md
       ┗ 📜 requisitos.md
     ┗ 📜 README.md
 ```
@@ -107,11 +109,11 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 ## 📖 Manual de Instalação <a id="manualInstalacao"></a>
 
-A PREENCHER...
+Pré-requisitos, criação do banco de dados, configuração do `.env` e execução da aplicação: [docs/manual-instalacao.md](docs/manual-instalacao.md) 📄
 
 ## 📖 Manual do Usuário <a id="manualUsuario"></a>
 
-A PREENCHER...
+Como usar o banco de questões, as provas, a montagem com pesos e a correção: [docs/manual-usuario.md](docs/manual-usuario.md) 📄
 
 ---
 

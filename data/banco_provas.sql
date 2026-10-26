@@ -12,7 +12,7 @@ bimestre int
 
 CREATE TABLE questao (
 id_questao int primary key,
-titulo varchar(200) not null,
+titulo varchar(500) not null,
 descricao varchar(300) not null
 );
 
@@ -35,7 +35,7 @@ REFERENCES questao(id_questao)
 CREATE TABLE alternativa (
 id_alternativa int,
 id_questao int not null, -- FK
-texto varchar(100) not null,
+texto varchar(300) not null,
 correta boolean not null,
 PRIMARY KEY (id_alternativa, id_questao),
 CONSTRAINT fk_alternativa_questao
@@ -86,42 +86,52 @@ VALUES
 INSERT INTO alternativa
 (id_alternativa, id_questao, texto, correta)
 VALUES
-(1, 1, 'a) Modelo Erro-Resposta', FALSE),
-(2, 1, 'b) Meio Esperado de Resolução', FALSE),
-(3, 1, 'c) Modelo Entidade-Relacionamento', TRUE),
+(1, 1, 'Modelo Erro-Resposta', FALSE),
+(2, 1, 'Meio Esperado de Resolução', FALSE),
+(3, 1, 'Modelo Entidade-Relacionamento', TRUE),
+(4, 1, 'Mapa de Estruturas Relacionais', FALSE),
 
-(1, 2, 'a) Uma extensão para formatar documentos', FALSE),
-(2, 2, 'b) Uma ferramenta para desenhar gráficos em JAVA', TRUE),
-(3, 2, 'c) Uma biblioteca de código aberto para Python', FALSE),
+(1, 2, 'Uma extensão para formatar documentos', FALSE),
+(2, 2, 'Uma ferramenta para desenhar gráficos em JAVA', TRUE),
+(3, 2, 'Uma biblioteca de código aberto para Python', FALSE),
+(4, 2, 'Um banco de dados orientado a objetos', FALSE),
 
-(1, 3, 'a) Identificar unicamente cada registro da tabela', TRUE),
-(2, 3, 'b) Criar índices automaticamente', FALSE),
-(3, 3, 'c) Armazenar apenas valores numéricos', FALSE),
+(1, 3, 'Identificar unicamente cada registro da tabela', TRUE),
+(2, 3, 'Criar índices automaticamente', FALSE),
+(3, 3, 'Armazenar apenas valores numéricos', FALSE),
+(4, 3, 'Permitir valores repetidos na coluna', FALSE),
 
-(1, 4, 'a) Um registro relacionado a vários registros', TRUE),
-(2, 4, 'b) Vários registros relacionados a um único registro', FALSE),
-(3, 4, 'c) Nenhum relacionamento entre tabelas', FALSE),
+(1, 4, 'Um registro relacionado a vários registros', TRUE),
+(2, 4, 'Vários registros relacionados a um único registro', FALSE),
+(3, 4, 'Nenhum relacionamento entre tabelas', FALSE),
+(4, 4, 'Um registro relacionado a apenas um registro', FALSE),
 
-(1, 5, 'a) Um bloco de comentários do código', FALSE),
-(2, 5, 'b) Uma instância de uma classe', TRUE),
-(3, 5, 'c) Um pacote Java', FALSE),
+(1, 5, 'Um bloco de comentários do código', FALSE),
+(2, 5, 'Uma instância de uma classe', TRUE),
+(3, 5, 'Um pacote Java', FALSE),
+(4, 5, 'Um tipo primitivo da linguagem', FALSE),
 
-(1, 6, 'a) Encapsulamento', FALSE),
-(2, 6, 'b) Herança', TRUE),
-(3, 6, 'c) Sobrecarga', FALSE),
+(1, 6, 'Encapsulamento', FALSE),
+(2, 6, 'Herança', TRUE),
+(3, 6, 'Sobrecarga', FALSE),
+(4, 6, 'Abstração de dados', FALSE),
 
-(1, 7, 'a) SELECT', TRUE),
-(2, 7, 'b) INSERT', FALSE),
-(3, 7, 'c) DELETE', FALSE),
+(1, 7, 'SELECT', TRUE),
+(2, 7, 'INSERT', FALSE),
+(3, 7, 'DELETE', FALSE),
+(4, 7, 'UPDATE', FALSE),
 
-(1, 8, 'a) ORDER BY', FALSE),
-(2, 8, 'b) GROUP BY', FALSE),
-(3, 8, 'c) WHERE', TRUE),
+(1, 8, 'ORDER BY', FALSE),
+(2, 8, 'GROUP BY', FALSE),
+(3, 8, 'WHERE', TRUE),
+(4, 8, 'HAVING', FALSE),
 
-(1, 9, 'a) DELETE', FALSE),
-(2, 9, 'b) DROP TABLE', TRUE),
-(3, 9, 'c) TRUNCATE', FALSE),
+(1, 9, 'DELETE', FALSE),
+(2, 9, 'DROP TABLE', TRUE),
+(3, 9, 'TRUNCATE', FALSE),
+(4, 9, 'ALTER TABLE', FALSE),
 
-(1, 10, 'a) Um protocolo de rede', FALSE),
-(2, 10, 'b) Propriedades de transações em bancos de dados', TRUE),
-(3, 10, 'c) Um tipo de banco NoSQL', FALSE);
+(1, 10, 'Um protocolo de rede', FALSE),
+(2, 10, 'Propriedades de transações em bancos de dados', TRUE),
+(3, 10, 'Um tipo de banco NoSQL', FALSE),
+(4, 10, 'Uma linguagem de consulta', FALSE);

@@ -89,13 +89,17 @@ public class QuestaoController {
 
     @FXML
     private void adicionarAlternativa() {
+        if (alternativas.size() >= QuestaoServico.MAX_ALTERNATIVAS) {
+            mostrar(Alert.AlertType.WARNING, "A questão pode ter no máximo " + QuestaoServico.MAX_ALTERNATIVAS + " alternativas (a até e).");
+            return;
+        }
         String texto = perguntaCaixaTexto.getText().trim();
         if (texto.isEmpty()) {
             perguntaCaixaTexto.requestFocus();
             return;
         }
-        if (texto.length() > 100) {
-            mostrar(Alert.AlertType.WARNING, "Cada alternativa pode ter até 100 caracteres.");
+        if (texto.length() > QuestaoServico.MAX_TEXTO_ALTERNATIVA) {
+            mostrar(Alert.AlertType.WARNING, "Cada alternativa pode ter até " + QuestaoServico.MAX_TEXTO_ALTERNATIVA + " caracteres.");
             return;
         }
         alternativas.add(new Alternativa(alternativas.size() + 1, texto, false));
@@ -118,9 +122,12 @@ public class QuestaoController {
 
             Label letra = new Label(CardQuestao.letra(i));
             letra.getStyleClass().add("alternativa-letra");
-            Label texto = new Label(alternativa.getTexto());
-            texto.setWrapText(true);
+            // Texto editável da alternativa (PB24); vazio ou acima do limite é barrado ao confirmar
+            TextField texto = new TextField(alternativa.getTexto());
+            texto.getStyleClass().add("campo-alternativa");
+            texto.setPromptText("o texto da alternativa não pode ficar vazio");
             texto.setMaxWidth(Double.MAX_VALUE);
+            texto.textProperty().addListener((obs, antigo, novo) -> alternativa.setTexto(novo));
             HBox.setHgrow(texto, Priority.ALWAYS);
 
             Button remover = new Button(null, Icones.criar(Icones.CANCELAR, 0.6));
@@ -135,15 +142,24 @@ public class QuestaoController {
             linha.setAlignment(Pos.CENTER_LEFT);
             listaAlternativas.getChildren().add(linha);
         }
-        proximaLetraLabel.setText(CardQuestao.letra(alternativas.size()));
+        boolean limiteAtingido = alternativas.size() >= QuestaoServico.MAX_ALTERNATIVAS;
+        proximaLetraLabel.setText(limiteAtingido ? "" : CardQuestao.letra(alternativas.size()));
+        perguntaCaixaTexto.setDisable(limiteAtingido);
+        perguntaCaixaTexto.setPromptText(limiteAtingido
+                ? "limite de " + QuestaoServico.MAX_ALTERNATIVAS + " alternativas atingido"
+                : "digite a alternativa e clique em Adicionar alternativa");
     }
 
     @FXML
     private void confirmar() {
         String enunciado = enunciadoCaixaTexto.getText().trim();
         Toggle marcada = grupoCorreta.getSelectedToggle();
-        if (enunciado.isEmpty()) {
-            mostrar(Alert.AlertType.WARNING, "Digite a pergunta da questão.");
+        if (enunciado.length() < QuestaoServico.MIN_ENUNCIADO) {
+            mostrar(Alert.AlertType.WARNING, "A pergunta da questão deve ter pelo menos " + QuestaoServico.MIN_ENUNCIADO + " caracteres.");
+            return;
+        }
+        if (alternativas.stream().anyMatch(a -> a.getTexto() == null || a.getTexto().isBlank())) {
+            mostrar(Alert.AlertType.WARNING, "O texto das alternativas não pode ficar vazio.");
             return;
         }
         if (marcada == null) {
@@ -173,8 +189,18 @@ public class QuestaoController {
     @FXML
     private void removerQuestao() {
         boolean salva = idQuestao > 0;
+        try {
+            if (salva && questaoServico.estaEmAlgumaProva(idQuestao)) {
+                mostrar(Alert.AlertType.WARNING, "Esta questão está vinculada a uma ou mais provas e não pode ser excluída. "
+                        + "Remova-a das provas em Questões e pesos antes de excluí-la.");
+                return;
+            }
+        } catch (RuntimeException e) {
+            mostrar(Alert.AlertType.ERROR, "Não foi possível verificar os vínculos da questão.\n" + e.getMessage());
+            return;
+        }
         String mensagem = salva
-                ? "Excluir esta questão? Ela também será removida das provas em que estiver vinculada."
+                ? "Excluir esta questão? Esta ação não pode ser desfeita."
                 : "Descartar esta questão? O que foi digitado será perdido.";
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, mensagem, ButtonType.CANCEL, ButtonType.OK);
         confirmacao.setHeaderText("Remover questão");
@@ -182,6 +208,8 @@ public class QuestaoController {
         try {
             if (salva) questaoServico.excluirQuestao(idQuestao);
             voltarParaBanco();
+        } catch (IllegalArgumentException e) {
+            mostrar(Alert.AlertType.WARNING, e.getMessage());
         } catch (RuntimeException e) {
             mostrar(Alert.AlertType.ERROR, "Não foi possível excluir a questão.\n" + e.getMessage());
         }

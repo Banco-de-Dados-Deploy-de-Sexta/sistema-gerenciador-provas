@@ -48,6 +48,14 @@ public class ProvaServico {
 
     public int contarQuestoes(String codigoProva) { return provaRepositorio.listarQuestoes(codigoProva).size(); }
 
+    // Estado exibido nos detalhes da prova (PB05), derivado das questões vinculadas e da data:
+    // sem questões = Rascunho; sem data = Pronta; data de hoje em diante = Agendada; data passada = Encerrada
+    public String estado(Prova prova) {
+        if (contarQuestoes(prova.getCodigo()) == 0) return "Rascunho";
+        if (prova.getData() == null) return "Pronta";
+        return prova.getData().isBefore(LocalDate.now()) ? "Encerrada" : "Agendada";
+    }
+
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
         if (buscarProva(codigoProva) == null) throw new IllegalArgumentException("A prova não existe.");
         for (PesoQuestao item : questoes) {

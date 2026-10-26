@@ -1,14 +1,14 @@
 package repositorios;
 
 import modelos.Questao;
-import interfaces.Storage;
+import storage.QuestaoStorage;
 import java.util.List;
 
 public class QuestaoRepositorio implements interfaces.QuestaoRepositorio {
 
-    private final Storage<Long, Questao> storage;
+    private final QuestaoStorage storage;
 
-    public QuestaoRepositorio(Storage<Long, Questao> storage) {
+    public QuestaoRepositorio(QuestaoStorage storage) {
         this.storage = storage;
     }
 
@@ -37,5 +37,9 @@ public class QuestaoRepositorio implements interfaces.QuestaoRepositorio {
         storage.deleteAll();
     }
 
+    @Override
+    public boolean estaEmAlgumaProva(Long numero) {
+        return storage.estaEmAlgumaProva(numero);
+    }
 
 }
