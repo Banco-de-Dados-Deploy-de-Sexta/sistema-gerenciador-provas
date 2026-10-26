@@ -1,0 +1,402 @@
+.tela {
+    -fx-background-color: #f5f7fb;
+    -fx-font-family: "Inter", "Segoe UI", "System";
+    -fx-font-size: 14px;
+}
+
+/* Menu lateral */
+
+.menu-lateral {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 16 12 16 12;
+    -fx-spacing: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 3);
+}
+
+.botao-menu {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: #374151;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 14 10 14;
+    -fx-graphic-text-gap: 12;
+    -fx-cursor: hand;
+}
+
+.botao-menu .icone {
+    -fx-fill: #2563eb;
+}
+
+.botao-menu:hover {
+    -fx-background-color: #eff6ff;
+    -fx-text-fill: #1d4ed8;
+}
+
+.botao-menu:pressed,
+.botao-menu:focused:pressed {
+    -fx-background-color: #2563eb;
+    -fx-text-fill: white;
+}
+
+.botao-menu:pressed .icone {
+    -fx-fill: white;
+}
+
+.botao-menu:focused {
+    -fx-background-color: #eff6ff;
+}
+
+.botao-menu:disabled {
+    -fx-opacity: 0.4;
+}
+
+.icone {
+    -fx-fill: #2563eb;
+}
+
+/* Área de conteúdo */
+
+.conteudo {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 12;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 3);
+}
+
+.lista-cards,
+.lista-cards > .viewport {
+    -fx-background-color: #f8fafc;
+    -fx-background: #f8fafc;
+}
+
+.lista-cards {
+    -fx-background-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-padding: 0;
+}
+
+.lista-cards-conteudo {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* Fundo em camadas no lugar de borda: o destaque de seleção não altera o tamanho do card */
+.card-lista {
+    -fx-background-color: #e5e7eb, white;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 10, 9;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 4;
+    -fx-cursor: hand;
+}
+
+.card-lista:hover {
+    -fx-background-color: #93c5fd, white;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.12), 10, 0, 0, 2);
+}
+
+.card-lista.selecionado {
+    -fx-background-color: #2563eb, #eff6ff;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 10, 8;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.18), 10, 0, 0, 2);
+}
+
+.card-lista .label {
+    -fx-text-fill: #111827;
+}
+
+.card-lista .card-pequeno {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+}
+
+.card-titulo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.card-lista .card-destaque {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb;
+}
+
+.card-lista .card-estado {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 999;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 999;
+    -fx-padding: 1 8 1 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb;
+}
+
+.card-lista .card-texto {
+    -fx-font-size: 14px;
+    -fx-text-fill: #374151;
+}
+
+.card-lista.selecionado .label.card-pequeno {
+    -fx-text-fill: #3b82f6;
+}
+
+.detalhe,
+.detalhe > .viewport {
+    -fx-background-color: white;
+    -fx-background: white;
+}
+
+.detalhe {
+    -fx-padding: 0;
+}
+
+/* Barras de rolagem finas */
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 999;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button,
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+
+/* Painel e cards de questão */
+
+.painel-questoes {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+    -fx-spacing: 14;
+}
+
+.card-questao {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-padding: 16 18 18 18;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 14, 0, 0, 3);
+}
+
+.card-questao .label {
+    -fx-text-fill: #1f2937;
+}
+
+.vazio {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b7280;
+    -fx-padding: 12;
+}
+
+.card-questao .questao-numero {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb;
+    -fx-padding: 0 6 0 0;
+}
+
+.card-questao .questao-titulo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.card-questao .questao-peso {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 999;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 999;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d4ed8;
+}
+
+.questao-pergunta {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent transparent transparent #2563eb;
+    -fx-border-width: 0 0 0 3;
+    -fx-padding: 12 14 12 14;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.card-questao .alternativa-letra {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2563eb;
+}
+
+/* Indicador da alternativa correta */
+
+.card-questao .radio-button .radio {
+    -fx-background-color: #cbd5e1, white;
+    -fx-background-insets: 0, 1.5;
+    -fx-background-radius: 1em;
+    -fx-padding: 0.3em;
+}
+
+.card-questao .radio-button .dot {
+    -fx-background-color: transparent;
+    -fx-background-radius: 1em;
+    -fx-padding: 0.2em;
+}
+
+.card-questao .radio-button:hover .radio {
+    -fx-background-color: #16a34a, white;
+}
+
+.card-questao .radio-button:selected .radio {
+    -fx-background-color: #16a34a, white;
+    -fx-background-insets: 0, 1.5;
+}
+
+.card-questao .radio-button:selected .dot {
+    -fx-background-color: #16a34a;
+    -fx-background-insets: 0;
+}
+
+.card-questao .radio-button:focused .radio {
+    -fx-effect: dropshadow(gaussian, rgba(22, 163, 74, 0.3), 4, 0, 0, 0);
+}
+
+/* Formulário de questão */
+
+.campo-questao,
+.campo-alternativa {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #111827;
+    -fx-prompt-text-fill: #9ca3af;
+    -fx-highlight-fill: #bfdbfe;
+    -fx-highlight-text-fill: #111827;
+}
+
+.campo-questao:focused,
+.campo-alternativa:focused {
+    -fx-border-color: #2563eb;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.25), 6, 0, 0, 0);
+}
+
+.campo-questao .content {
+    -fx-background-color: transparent;
+}
+
+.campo-questao {
+    -fx-font-size: 15px;
+    -fx-padding: 8;
+}
+
+.campo-questao .scroll-pane,
+.campo-questao .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.campo-alternativa {
+    -fx-font-size: 13px;
+    -fx-padding: 6 10 6 10;
+}
+
+.botao-claro {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 8;
+    -fx-border-color: #bfdbfe;
+    -fx-border-radius: 8;
+    -fx-text-fill: #1d4ed8;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14 7 12;
+    -fx-graphic-text-gap: 8;
+    -fx-cursor: hand;
+}
+
+.botao-claro:hover {
+    -fx-background-color: #dbeafe;
+}
+
+.botao-claro .icone {
+    -fx-fill: #1d4ed8;
+}
+
+.botao-claro.primario {
+    -fx-background-color: #2563eb;
+    -fx-border-color: #2563eb;
+    -fx-text-fill: white;
+}
+
+.botao-claro.primario:hover {
+    -fx-background-color: #1d4ed8;
+    -fx-border-color: #1d4ed8;
+}
+
+.botao-claro.primario .icone {
+    -fx-fill: white;
+}
+
+.botao-claro.perigo {
+    -fx-background-color: #fff1f2;
+    -fx-border-color: #fecdd3;
+    -fx-text-fill: #be123c;
+}
+
+.botao-claro.perigo:hover {
+    -fx-background-color: #ffe4e6;
+}
+
+.botao-claro.perigo .icone {
+    -fx-fill: #be123c;
+}
+
+.botao-icone {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.botao-icone .icone {
+    -fx-fill: #9ca3af;
+}
+
+.botao-icone:hover {
+    -fx-background-color: #fff1f2;
+}
+
+.botao-icone:hover .icone {
+    -fx-fill: #be123c;
+}

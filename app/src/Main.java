@@ -1,37 +1,32 @@
 import configuracao.ConexaoMySQL;
 import javafx.application.Application;
-import repositorios.QuestaoRepositorio;
 import repositorios.ProvaRepositorio;
+import repositorios.QuestaoRepositorio;
 import servicos.ProvaServico;
 import servicos.QuestaoServico;
-import storage.QuestaoStorage;
 import storage.ProvaStorage;
+import storage.QuestaoStorage;
 
 public class Main {
 
     public static void main(String[] args) {
 
         ConexaoMySQL conexao = new ConexaoMySQL();
-        
 
-        // QuestaoStorage storage = new QuestaoStorage(conexao);
+        QuestaoStorage questaoStorage = new QuestaoStorage(conexao);
+        QuestaoRepositorio questaoRepositorio = new QuestaoRepositorio(questaoStorage);
+        QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
 
-        // QuestaoRepositorio questaoRepositorio = new QuestaoRepositorio(storage);
+        ProvaStorage provaStorage = new ProvaStorage(conexao);
+        ProvaRepositorio provaRepositorio = new ProvaRepositorio(provaStorage);
+        ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico);
 
-        // QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
+        telas.questao.Questao.setQuestaoServico(questaoServico);
+        telas.bancoquestoes.BancoQuestoes.setQuestaoServico(questaoServico);
+        telas.prova.Prova.setProvaServico(provaServico);
+        telas.prova.Prova.setQuestaoServico(questaoServico);
 
-        // telas.Questao.setQuestaoServico(questaoServico);
-        // Application.launch(telas.Questao.class, args);
-
-
-        ProvaStorage storage = new ProvaStorage(conexao);
-
-        ProvaRepositorio repositorio = new ProvaRepositorio(storage);
-
-        ProvaServico servico = new ProvaServico(repositorio);
-
-        telas.Prova.setProvaServico(servico);
-
-        Application.launch(telas.Prova.class, args);
+        // O programa começa pelo menu de provas
+        Application.launch(telas.prova.Prova.class, args);
     }
 }

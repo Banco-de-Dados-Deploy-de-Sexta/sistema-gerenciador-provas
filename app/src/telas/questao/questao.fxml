@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import telas.componentes.Icones?>
+<HBox spacing="10.0" styleClass="tela" stylesheets="@../componentes/tema.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="10.0" /></padding>
+    <VBox minWidth="268.0" prefWidth="268.0" styleClass="menu-lateral">
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#confirmar" styleClass="botao-menu" text="Confirmar">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="CONFIRMAR" /></content></SVGPath></graphic>
+        </Button>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#voltar" styleClass="botao-menu" text="Cancelar">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="CANCELAR" /></content></SVGPath></graphic>
+        </Button>
+    </VBox>
+    <HBox styleClass="conteudo" HBox.hgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" minWidth="276.0" prefWidth="276.0" styleClass="lista-cards">
+            <content><VBox fx:id="listaQuestoes" styleClass="lista-cards-conteudo" /></content>
+        </ScrollPane>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="detalhe" HBox.hgrow="ALWAYS">
+            <content>
+                <VBox alignment="TOP_CENTER">
+                    <padding><Insets bottom="10.0" left="10.0" right="10.0" top="25.0" /></padding>
+                    <VBox maxWidth="597.0" styleClass="painel-questoes">
+                        <VBox styleClass="card-questao">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label fx:id="numeroLabel" styleClass="questao-numero" text="1)" />
+                                <Label fx:id="tituloTela" styleClass="questao-titulo" text="Nova questão" />
+                            </HBox>
+                            <TextArea fx:id="enunciadoCaixaTexto" prefRowCount="3" promptText="digite a pergunta da questão" styleClass="campo-questao" wrapText="true" />
+                            <HBox>
+                                <Button mnemonicParsing="false" onAction="#adicionarAlternativa" styleClass="botao-claro" text="Adicionar alternativa">
+                                    <graphic><SVGPath scaleX="0.7" scaleY="0.7" styleClass="icone"><content><Icones fx:constant="ADICIONAR" /></content></SVGPath></graphic>
+                                </Button>
+                            </HBox>
+                            <VBox fx:id="listaAlternativas" spacing="8.0" />
+                            <HBox alignment="CENTER_LEFT" spacing="6.0">
+                                <Label fx:id="proximaLetraLabel" styleClass="alternativa-letra" text="a)" />
+                                <TextField fx:id="perguntaCaixaTexto" onAction="#adicionarAlternativa" promptText="digite a alternativa e clique em Adicionar alternativa" styleClass="campo-alternativa" HBox.hgrow="ALWAYS" />
+                            </HBox>
+                            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                <padding><Insets top="12.0" /></padding>
+                                <Button mnemonicParsing="false" onAction="#removerQuestao" styleClass="botao-claro, perigo" text="Remover questão">
+                                    <graphic><SVGPath scaleX="0.7" scaleY="0.7" styleClass="icone"><content><Icones fx:constant="EXCLUIR" /></content></SVGPath></graphic>
+                                </Button>
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button mnemonicParsing="false" onAction="#confirmar" styleClass="botao-claro, primario" text="Confirmar">
+                                    <graphic><SVGPath scaleX="0.7" scaleY="0.7" styleClass="icone"><content><Icones fx:constant="CONFIRMAR" /></content></SVGPath></graphic>
+                                </Button>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </HBox>
+</HBox>

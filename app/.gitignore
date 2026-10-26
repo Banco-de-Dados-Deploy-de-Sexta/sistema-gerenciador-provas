@@ -1,8 +1,13 @@
-### IntelliJ IDEA ###
+### Build (Maven / IntelliJ) ###
+target/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
 
 ### Eclipse ###
 .apt_generated
@@ -29,4 +34,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Variáveis de ambiente (credenciais) ###
 .env
+!.env.example
