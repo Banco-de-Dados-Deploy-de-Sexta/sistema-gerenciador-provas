@@ -12,22 +12,22 @@ O desafio consiste em desenvolver um sistema gerenciador de avaliações para um
 
 | Rank | ID | Prioridade | User Story | Story Points | Sprint | Requisito do Cliente | Status |
 | :--: | :--: | :--------: | ---------- | :----------: | :----: | :-------------------: | :----: |
-| 1 | PB01 | Alta | Como professor quero que as questões da prova sejam corrigidas automaticamente para eu lançar as notas dos alunos | 8 | 2 | RF-01 | ⬜ |
-| 2 | PB17 | Alta | Como professor quero criar uma questão para poder utilizá-la na montagem de provas | 5 | 2 | RF-15 | ⬜ |
-| 3 | PB22 | Alta | Como professor quero digitar a pergunta da questão para adiciona-la à prova | 2 | 2 | RF-21 | ⬜ |
-| 4 | PB23 | Alta | Como professor quero criar diferentes alternativas para uma questão para montar questões de múltipla escolha | 5 | 2 | RF-22 | ⬜ |
-| 5 | PB24 | Alta | Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro | 3 | 2 | RF-23 | ⬜ |
-| 6 | PB25 | Alta | Como professor quero excluir alternativas de uma questão para manter apenas as opções relevantes ao respondê-la | 2 | 2 | RF-24 | ⬜ |
-| 7 | PB26 | Alta | Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente | 3 | 2 | RF-25 | ⬜ |
-| 8 | PB18 | Alta | Como professor quero editar uma questão para trocar seu tipo ou corrigir algum erro de digitação | 3 | 2 | RF-16 | ⬜ |
-| 9 | PB19 | Alta | Como professor quero excluir uma questão não atribuída a nenhuma prova para manter a lista apenas com questões que estou utilizando | 3 | 2 | RF-17 | ⬜ |
-| 10 | PB20 | Alta | Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova | 3 | 2 | RF-19 | ⬜ |
-| 11 | PB02 | Alta | Como professor quero criar uma prova para aplicá-la aos alunos | 5 | 2 | RF-02 | ⬜ |
-| 12 | PB14 | Alta | Como professor quero atribuir uma questão que criei a uma prova para aplica-la aos alunos | 5 | 2 | RF-11 | ⬜ |
-| 13 | PB12 | Média | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | 2 | RF-09 | ⬜ |
-| 14 | PB05 | Média | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | 2 | RF-05 | ⬜ |
-| 15 | PB03 | Média | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ⬜ |
-| 16 | PB04 | Média | Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ⬜ |
+| 1 | PB01 | Alta | Como professor quero que as questões da prova sejam corrigidas automaticamente para eu lançar as notas dos alunos | 8 | 2 | RF-01 | ✅ |
+| 2 | PB17 | Alta | Como professor quero criar uma questão para poder utilizá-la na montagem de provas | 5 | 2 | RF-15 | ✅ |
+| 3 | PB22 | Alta | Como professor quero digitar a pergunta da questão para adiciona-la à prova | 2 | 2 | RF-21 | ✅ |
+| 4 | PB23 | Alta | Como professor quero criar diferentes alternativas para uma questão para montar questões de múltipla escolha | 5 | 2 | RF-22 | ✅ |
+| 5 | PB24 | Alta | Como professor quero editar as alternativas de uma questão para mudar seu conteúdo ou corrigir algum erro | 3 | 2 | RF-23 | ✅ |
+| 6 | PB25 | Alta | Como professor quero excluir alternativas de uma questão para manter apenas as opções relevantes ao respondê-la | 2 | 2 | RF-24 | ✅ |
+| 7 | PB26 | Alta | Como professor quero definir a alternativa correta de uma questão para que a prova seja corrigida corretamente | 3 | 2 | RF-25 | ✅ |
+| 8 | PB18 | Alta | Como professor quero editar uma questão para trocar seu tipo ou corrigir algum erro de digitação | 3 | 2 | RF-16 | ✅ |
+| 9 | PB19 | Alta | Como professor quero excluir uma questão não atribuída a nenhuma prova para manter a lista apenas com questões que estou utilizando | 3 | 2 | RF-17 | ✅ |
+| 10 | PB20 | Alta | Como professor quero visualizar uma lista com todas as questões criadas no sistema para assim poder comparar ao criar uma nova prova | 3 | 2 | RF-19 | ✅ |
+| 11 | PB02 | Alta | Como professor quero criar uma prova para aplicá-la aos alunos | 5 | 2 | RF-02 | ✅ |
+| 12 | PB14 | Alta | Como professor quero atribuir uma questão que criei a uma prova para aplica-la aos alunos | 5 | 2 | RF-11 | ✅ |
+| 13 | PB12 | Média | Como professor quero definir os pesos das questões para as questões mais difíceis valerem mais pontos | 3 | 2 | RF-09 | ✅ |
+| 14 | PB05 | Média | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | 2 | RF-05 | ✅ |
+| 15 | PB03 | Média | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ✅ |
+| 16 | PB04 | Média | Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ✅ |
 | 17 | PB21 | Média | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ⬜ |
 | 18 | PB07 | Média | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ⬜ |
 | 19 | PB08 | Média | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | 3 | RF-07 | ⬜ |
