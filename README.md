@@ -63,6 +63,9 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
   <a href="https://openjfx.io/">
     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMDYgMjgiPgogIDxyZWN0IHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI1MyIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+SkFWQUZYPC90ZXh0Pgo8L3N2Zz4K"/>
   </a>
+  <a href="https://www.mysql.com/">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDk0IDI4Ij4KICA8cmVjdCB3aWR0aD0iOTQiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI0NyIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+TVlTUUw8L3RleHQ+Cjwvc3ZnPgo="/>
+  </a>
 </h4>
 
 ---
@@ -70,11 +73,17 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 ## 📁 Estrutura do projeto
 
 ```bash
-  📦 sistema-gerenciador-avaliacoes
-    ┣ 📁 src
+  📦 sistema-gerenciador-provas
+    ┣ 📁 app
+      ┣ 📁 src            # código-fonte (modelos, storage, repositórios, serviços e telas)
+      ┣ 📜 .env.example   # modelo do arquivo de conexão com o banco
+      ┗ 📜 pom.xml
+    ┣ 📁 data             # scripts SQL, DER e dados do banco
+    ┣ 📁 diagramas        # diagrama de casos de uso
     ┣ 📁 docs
       ┣ 📁 prototipos
-      ┣ 📁 sprints        
+      ┣ 📁 sketch
+      ┣ 📁 sprints
       ┣ 📜 backlog.md
       ┣ 📜 manual-instalacao.md
       ┣ 📜 manual-usuario.md

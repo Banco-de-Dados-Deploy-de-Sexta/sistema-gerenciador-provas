@@ -56,6 +56,16 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 
 ---
 
+## 📝 Decisões registradas na Sprint 2 <a id="decisoes"></a>
+
+- **Tipo da questão (PB17, PB18 e PB20):** nesta sprint, toda questão é do tipo **alternativa**. A escolha e a troca de tipo ficam para a PB21 (Sprint 3).
+- **Propriedade da prova (PB02 e PB03):** o sistema ainda não tem login, então a regra "a prova pertence ao professor que a criou" fica registrada para quando houver autenticação.
+- **Prova aplicada (PB04):** o bloqueio de exclusão de provas aplicadas depende da PB07 (Sprint 3). Até lá, toda prova pode ser excluída, sempre com confirmação.
+- **Limites da questão (PB22, PB23 e PB24):** enunciado de 5 a 500 caracteres; de 4 a 5 alternativas, com até 300 caracteres cada.
+- **Correção (PB01):** o professor marca na tela as alternativas respondidas pelo aluno. A realização da prova pelo próprio aluno chega com a PB09 (Sprint 3).
+
+---
+
 ## ✅ DoR por User Story <a id="dor-stories"></a>
 
 ### PB01 — Correção automática das questões da prova
@@ -74,21 +84,21 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 
 ### PB22 — Digitar a pergunta da questão
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
-- **Regras de Negócio:** O enunciado é obrigatório e deve ter no mínimo cinco caracteres.
+- **Regras de Negócio:** O enunciado é obrigatório e deve ter no mínimo cinco e no máximo quinhentos caracteres.
 - **Dependências:** PB17.
 - **Escopo:** Campo de texto do enunciado com validação de tamanho mínimo.
 - **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), campo "digite a pergunta da questão".
 
 ### PB23 — Criar alternativas
 - **Critério de Aceitação:** Ao criar uma questão do tipo **alternativa** o professor deve poder criar no máximo cinco alternativas possíveis, de **a** à **e**.
-- **Regras de Negócio:** Máximo de cinco alternativas por questão; cada alternativa deve possuir texto.
+- **Regras de Negócio:** Mínimo de quatro e máximo de cinco alternativas por questão; cada alternativa deve possuir texto, com até trezentos caracteres.
 - **Dependências:** PB17.
 - **Escopo:** Cadastro de alternativas durante a criação da questão.
 - **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), botão "Adicionar alternativa".
 
 ### PB24 — Editar alternativas
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
-- **Regras de Negócio:** O texto da alternativa não pode ficar vazio após a edição.
+- **Regras de Negócio:** O texto da alternativa não pode ficar vazio após a edição e deve ter até trezentos caracteres.
 - **Dependências:** PB23.
 - **Escopo:** Edição do texto de cada alternativa de uma questão.
 - **Protótipo:** [Card de criação de questão](../../prototipos/card-criar-questao.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1090)), campo de texto da alternativa.
@@ -151,7 +161,7 @@ Entregar ao professor a gestão completa de questões e provas, junto com a corr
 
 ### PB05 — Visualizar provas
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualizá-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
-- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN1).
+- **Regras de Negócio:** O professor pode visualizar as provas disponíveis no sistema para usá-las como modelo (RN1). O estado da prova é definido pelas questões e pela data: **Rascunho** (sem questões), **Pronta** (sem data), **Agendada** (data de hoje em diante) ou **Encerrada** (data passada).
 - **Dependências:** PB02 e PB14.
 - **Escopo:** Listagem de provas e tela de detalhes, servindo de ponto de acesso para editar e excluir.
 - **Protótipo:** [Lista de provas](../../prototipos/lista-provas.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-365)) e [Card de consulta de prova](../../prototipos/card-consultar-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-1657)) com os detalhes da prova selecionada.

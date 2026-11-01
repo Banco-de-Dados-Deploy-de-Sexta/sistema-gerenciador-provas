@@ -6,7 +6,7 @@
 - **Critério de Aceitação:** Ao percorrer uma prova o sistema deve corrigir as questões de acordo com a resposta correta definida pelo professor (exceto questões de texto livre).
 - **Prioridade:** Alta
 - **Story Points:** 8
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -16,7 +16,7 @@
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma tela para criação de provas.
 - **Prioridade:** Alta
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -26,7 +26,7 @@
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível edita-las.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -36,7 +36,7 @@
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível exclui-las.
 - **Prioridade:** Média
 - **Story Points:** 2
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -46,7 +46,7 @@
 - **Critério de Aceitação:** Ao consultar as provas como professor deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -56,7 +56,7 @@
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes apos a realização da prova.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -66,7 +66,7 @@
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -76,7 +76,7 @@
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -86,7 +86,7 @@
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.
 - **Prioridade:** Média
 - **Story Points:** 8
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -96,7 +96,7 @@
 - **Critério de Aceitação:** Professores devem poder salvar todas as provas armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -106,7 +106,7 @@
 - **Critério de Aceitação:** Alunos devem poder salvar as provas que realizaram em computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -116,7 +116,7 @@
 - **Critério de Aceitação:** O professor pode definir pesos diferentes para cada questão de uma prova.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -126,7 +126,7 @@
 - **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -136,7 +136,7 @@
 - **Critério de Aceitação:** O professor pode atribuir individualmente uma questão a uma ou mais provas.
 - **Prioridade:** Alta
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -146,7 +146,7 @@
 - **Critério de Aceitação:** Cada aluno realiza a prova com as questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -156,7 +156,7 @@
 - **Critério de Aceitação:** Cada aluno realiza a prova com as alternativas das questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -166,7 +166,7 @@
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de criação de questões, com definição de resposta correta (se for alternativa).
 - **Prioridade:** Alta
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -176,7 +176,7 @@
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de edição de questões armazenadas, podendo alterar o enunciado e as alternativas da questão.
 - **Prioridade:** Alta
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -186,7 +186,7 @@
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de exclusão de questões armazenadas.
 - **Prioridade:** Alta
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -196,7 +196,7 @@
 - **Critério de Aceitação:** Ao entrar como professor deve haver uma funcionalidade de visualização da lista de questões armazenadas.
 - **Prioridade:** Alta
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -206,7 +206,7 @@
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder escolher entre questões de alternativa (**a** à **e**), questões de associação, ou de texto livre.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
 
 ---
 
@@ -216,7 +216,7 @@
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder digitar livremente o enunciado, com limite mínimo de cinco caracteres.
 - **Prioridade:** Alta
 - **Story Points:** 2
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -226,7 +226,7 @@
 - **Critério de Aceitação:** Ao criar uma questão do tipo **alternativa** o professor deve poder criar no máximo cinco alternativas possíveis, de **a** à **e**.
 - **Prioridade:** Alta
 - **Story Points:** 5
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -236,7 +236,7 @@
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível editar cada uma das alternativas.
 - **Prioridade:** Alta
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -246,7 +246,7 @@
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível excluir cada uma das alternativas.
 - **Prioridade:** Alta
 - **Story Points:** 2
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -256,7 +256,7 @@
 - **Critério de Aceitação:** Ao acessar uma questão de alternativas, deve ser possível definir uma das alternativas criadas como correta.
 - **Prioridade:** Alta
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Concluído (Sprint 2)
 
 ---
 
@@ -266,4 +266,4 @@
 - **Critério de Aceitação:** Professores devem poder salvar todas as questões armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Backlog
+- **Status:** Planejado (Sprint 3)
