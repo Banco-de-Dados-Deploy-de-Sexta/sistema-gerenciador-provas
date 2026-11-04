@@ -51,7 +51,11 @@ public class ProvaServico {
     // Estado exibido nos detalhes da prova (PB05), derivado das questões vinculadas e da data:
     // sem questões = Rascunho; sem data = Pronta; data de hoje em diante = Agendada; data passada = Encerrada
     public String estado(Prova prova) {
-        if (contarQuestoes(prova.getCodigo()) == 0) return "Rascunho";
+        return estado(prova, contarQuestoes(prova.getCodigo()));
+    }
+
+    public String estado(Prova prova, int totalQuestoes) {
+        if (totalQuestoes == 0) return "Rascunho";
         if (prova.getData() == null) return "Pronta";
         return prova.getData().isBefore(LocalDate.now()) ? "Encerrada" : "Agendada";
     }

@@ -6,13 +6,22 @@ import servicos.ProvaServico;
 import servicos.QuestaoServico;
 import storage.ProvaStorage;
 import storage.QuestaoStorage;
+import storage.UsuarioStorage;
+import telas.login.Login;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        // Application.launch(telas.login.Login.class, args);
+
         ConexaoMySQL conexao = new ConexaoMySQL();
 
+        // Usuário / Login
+        UsuarioStorage usuarioStorage = new UsuarioStorage(conexao);
+        Login.setUsuarioStorage(usuarioStorage);
+
+        // Questões e Provas
         QuestaoStorage questaoStorage = new QuestaoStorage(conexao);
         QuestaoRepositorio questaoRepositorio = new QuestaoRepositorio(questaoStorage);
         QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
@@ -27,6 +36,6 @@ public class Main {
         telas.prova.Prova.setQuestaoServico(questaoServico);
 
         // O programa começa pelo menu de provas
-        Application.launch(telas.prova.Prova.class, args);
+        Application.launch(telas.login.Login.class, args);
     }
 }

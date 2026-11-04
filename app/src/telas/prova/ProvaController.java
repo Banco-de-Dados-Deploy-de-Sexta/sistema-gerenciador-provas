@@ -97,7 +97,7 @@ public class ProvaController {
         questoes.getStyleClass().add("card-destaque");
         Region espacoRodape = new Region();
         HBox.setHgrow(espacoRodape, Priority.ALWAYS);
-        Label estado = new Label(provaServico.estado(prova));
+        Label estado = new Label(provaServico.estado(prova, quantidade));
         estado.getStyleClass().add("card-estado");
         HBox rodape = new HBox(questoes, espacoRodape, estado);
         rodape.setAlignment(Pos.CENTER_LEFT);
