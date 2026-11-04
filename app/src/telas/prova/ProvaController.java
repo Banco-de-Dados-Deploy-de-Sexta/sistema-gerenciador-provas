@@ -40,24 +40,35 @@ import telas.corrigirprova.CorrigirProva;
 public class ProvaController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    @FXML private VBox listaProvas;
-    @FXML private VBox questoesProva;
-    @FXML private Button editarButton;
-    @FXML private Button excluirButton;
-    @FXML private Button agendarButton;
-    @FXML private Button baixarButton;
-    @FXML private Button questoesButton;
-    @FXML private Button corrigirButton;
+    @FXML
+    private VBox listaProvas;
+    @FXML
+    private VBox questoesProva;
+    @FXML
+    private Button editarButton;
+    @FXML
+    private Button excluirButton;
+    @FXML
+    private Button agendarButton;
+    @FXML
+    private Button baixarButton;
+    @FXML
+    private Button questoesButton;
+    @FXML
+    private Button corrigirButton;
 
     private final ProvaServico provaServico;
     private final ObjectProperty<Prova> selecionada = new SimpleObjectProperty<>();
 
-    public ProvaController(ProvaServico provaServico) { this.provaServico = provaServico; }
+    public ProvaController(ProvaServico provaServico) {
+        this.provaServico = provaServico;
+    }
 
     @FXML
     private void initialize() {
         var nenhuma = selecionada.isNull();
-        for (Button botao : List.of(editarButton, excluirButton, agendarButton, baixarButton, questoesButton, corrigirButton))
+        for (Button botao : List.of(editarButton, excluirButton, agendarButton, baixarButton, questoesButton,
+                corrigirButton))
             botao.disableProperty().bind(nenhuma);
         selecionada.addListener((obs, antiga, nova) -> {
             destacarSelecionada();
@@ -70,14 +81,17 @@ public class ProvaController {
         String codigoSelecionado = selecionada.get() == null ? null : selecionada.get().getCodigo();
         List<Prova> provas = provaServico.listarProvas();
         listaProvas.getChildren().clear();
-        for (Prova prova : provas) listaProvas.getChildren().add(cardProva(prova));
-        if (provas.isEmpty()) listaProvas.getChildren().add(vazio("Nenhuma prova cadastrada. Use Criar prova."));
+        for (Prova prova : provas)
+            listaProvas.getChildren().add(cardProva(prova));
+        if (provas.isEmpty())
+            listaProvas.getChildren().add(vazio("Nenhuma prova cadastrada. Use Criar prova."));
         selecionada.set(provas.stream().filter(p -> p.getCodigo().equals(codigoSelecionado)).findFirst().orElse(null));
         destacarSelecionada();
         mostrarQuestoes();
     }
 
-    // Card de prova do Figma: código e data no topo, título, matéria/curso/bimestre, total de questões e estado
+    // Card de prova do Figma: código e data no topo, título,
+    // matéria/curso/bimestre, total de questões e estado
     private VBox cardProva(Prova prova) {
         Label codigo = new Label(prova.getCodigo());
         codigo.getStyleClass().add("card-pequeno");
@@ -119,7 +133,8 @@ public class ProvaController {
         for (Node card : listaProvas.getChildren()) {
             boolean marcada = selecionada.get() != null && card.getUserData() == selecionada.get();
             card.getStyleClass().remove("selecionado");
-            if (marcada) card.getStyleClass().add("selecionado");
+            if (marcada)
+                card.getStyleClass().add("selecionado");
         }
     }
 
@@ -132,9 +147,11 @@ public class ProvaController {
         }
         List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
         for (int i = 0; i < questoes.size(); i++)
-            questoesProva.getChildren().add(CardQuestao.visualizar(i + 1, questoes.get(i).getQuestao(), questoes.get(i).getPeso()));
+            questoesProva.getChildren()
+                    .add(CardQuestao.visualizar(i + 1, questoes.get(i).getQuestao(), questoes.get(i).getPeso()));
         if (questoes.isEmpty())
-            questoesProva.getChildren().add(vazio("Esta prova ainda não tem questões. Use Questões e pesos para vinculá-las."));
+            questoesProva.getChildren()
+                    .add(vazio("Esta prova ainda não tem questões. Use Questões e pesos para vinculá-las."));
     }
 
     private Label vazio(String mensagem) {
@@ -144,37 +161,56 @@ public class ProvaController {
         return vazio;
     }
 
-    @FXML private void novaProva(ActionEvent event) { abrirFormulario(event, null); }
-    @FXML private void editarProva(ActionEvent event) { abrirFormulario(event, selecionada.get()); }
+    @FXML
+    private void novaProva(ActionEvent event) {
+        abrirFormulario(event, null);
+    }
+
+    @FXML
+    private void editarProva(ActionEvent event) {
+        abrirFormulario(event, selecionada.get());
+    }
 
     private void abrirFormulario(ActionEvent event, Prova prova) {
-        try { telas.prova.Prova.abrirFormulario(palcoDe(event), prova); }
-        catch (Exception e) { erro("Não foi possível abrir o formulário da prova.", e); }
+        try {
+            telas.prova.Prova.abrirFormulario(palcoDe(event), prova);
+        } catch (Exception e) {
+            erro("Não foi possível abrir o formulário da prova.", e);
+        }
     }
 
     @FXML
     private void excluirProva() {
         Prova prova = selecionada.get();
-        if (prova == null) return;
+        if (prova == null)
+            return;
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
                 "Excluir a prova e seus vínculos com questões?", ButtonType.CANCEL, ButtonType.OK);
         confirmacao.setHeaderText("Excluir prova");
-        if (confirmacao.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
-        try { provaServico.excluirProva(prova.getCodigo()); selecionada.set(null); atualizar(); }
-        catch (RuntimeException e) { erro("Não foi possível excluir a prova.", e); }
+        if (confirmacao.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK)
+            return;
+        try {
+            provaServico.excluirProva(prova.getCodigo());
+            selecionada.set(null);
+            atualizar();
+        } catch (RuntimeException e) {
+            erro("Não foi possível excluir a prova.", e);
+        }
     }
 
     @FXML
     private void agendarProva() {
         Prova prova = selecionada.get();
-        if (prova == null) return;
+        if (prova == null)
+            return;
         DatePicker data = new DatePicker(prova.getData() == null ? LocalDate.now() : prova.getData());
         Dialog<ButtonType> dialogo = new Dialog<>();
         dialogo.setTitle("Agendar prova");
         dialogo.setHeaderText("Escolha a data da prova \"" + prova.getTitulo() + "\"");
         dialogo.getDialogPane().setContent(new VBox(8, new Label("Data da prova"), data));
         dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK || data.getValue() == null) return;
+        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK || data.getValue() == null)
+            return;
         LocalDate anterior = prova.getData();
         try {
             prova.setData(data.getValue());
@@ -190,13 +226,15 @@ public class ProvaController {
     @FXML
     private void baixarProva(ActionEvent event) {
         Prova prova = selecionada.get();
-        if (prova == null) return;
+        if (prova == null)
+            return;
         FileChooser seletor = new FileChooser();
         seletor.setTitle("Baixar prova");
         seletor.setInitialFileName(prova.getCodigo() + ".txt");
         seletor.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texto", "*.txt"));
         File arquivo = seletor.showSaveDialog(palcoDe(event));
-        if (arquivo == null) return;
+        if (arquivo == null)
+            return;
 
         StringBuilder texto = new StringBuilder()
                 .append(prova.getCodigo()).append(" — ").append(prova.getTitulo()).append('\n')
@@ -207,10 +245,12 @@ public class ProvaController {
         for (int i = 0; i < questoes.size(); i++) {
             QuestaoComPeso item = questoes.get(i);
             texto.append(i + 1).append(") ").append(item.getQuestao().getTitulo())
-                    .append(String.format(Locale.forLanguageTag("pt-BR"), "  (peso %.1f)", item.getPeso())).append('\n');
+                    .append(String.format(Locale.forLanguageTag("pt-BR"), "  (peso %.1f)", item.getPeso()))
+                    .append('\n');
             List<Alternativa> alternativas = item.getQuestao().getAlternativas();
             for (int j = 0; j < alternativas.size(); j++)
-                texto.append("   ").append(CardQuestao.letra(j)).append(' ').append(alternativas.get(j).getTexto()).append('\n');
+                texto.append("   ").append(CardQuestao.letra(j)).append(' ').append(alternativas.get(j).getTexto())
+                        .append('\n');
             texto.append('\n');
         }
         try {
@@ -225,31 +265,53 @@ public class ProvaController {
 
     @FXML
     private void abrirBancoQuestoes(ActionEvent event) {
-        try { BancoQuestoes.abrir(palcoDe(event)); }
-        catch (Exception e) { erro("Não foi possível abrir o banco de questões.", e); }
+        try {
+            BancoQuestoes.abrir(palcoDe(event));
+        } catch (Exception e) {
+            erro("Não foi possível abrir o banco de questões.", e);
+        }
     }
 
     @FXML
     private void gerenciarQuestoes(ActionEvent event) {
         Prova prova = selecionada.get();
-        if (prova == null) return;
-        try { ComposicaoProva.abrir(palcoDe(event), prova, provaServico, telas.prova.Prova.getQuestaoServico()); }
-        catch (Exception e) { erro("Não foi possível abrir a composição da prova.", e); }
+        if (prova == null)
+            return;
+        try {
+            ComposicaoProva.abrir(palcoDe(event), prova, provaServico, telas.prova.Prova.getQuestaoServico());
+        } catch (Exception e) {
+            erro("Não foi possível abrir a composição da prova.", e);
+        }
     }
 
     @FXML
     private void corrigir(ActionEvent event) {
         Prova prova = selecionada.get();
-        if (prova == null) return;
-        try { CorrigirProva.abrir(palcoDe(event), prova, provaServico); }
-        catch (Exception e) { erro("Não foi possível abrir a correção.", e); }
+        if (prova == null)
+            return;
+        try {
+            CorrigirProva.abrir(palcoDe(event), prova, provaServico);
+        } catch (Exception e) {
+            erro("Não foi possível abrir a correção.", e);
+        }
     }
 
-    private Stage palcoDe(ActionEvent event) { return (Stage) ((Node) event.getSource()).getScene().getWindow(); }
+    private Stage palcoDe(ActionEvent event) {
+        return (Stage) ((Node) event.getSource()).getScene().getWindow();
+    }
 
     private void erro(String mensagem, Exception e) {
         Alert alerta = new Alert(Alert.AlertType.ERROR, mensagem + "\n" + e.getMessage());
         alerta.setHeaderText(null);
         alerta.showAndWait();
+    }
+
+    @FXML
+    private void voltar(ActionEvent event) {
+        try {
+            telas.login.Login.abrir(palcoDe(event));
+        } catch (Exception e) {
+            erro("Não foi possível voltar para a tela de login.", e);
+        }
     }
 }

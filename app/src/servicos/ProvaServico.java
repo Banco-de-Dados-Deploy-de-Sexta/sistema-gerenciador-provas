@@ -1,7 +1,6 @@
 package servicos;
 
 import interfaces.ProvaRepositorio;
-import modelos.Alternativa;
 import modelos.PesoQuestao;
 import modelos.Prova;
 import modelos.Questao;
