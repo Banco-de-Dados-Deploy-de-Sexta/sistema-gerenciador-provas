@@ -2,8 +2,8 @@ package telas.prova;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -24,6 +24,33 @@ public class ProvaFormularioController {
     private String codigo;
 
     public ProvaFormularioController(ProvaServico provaServico) { this.provaServico = provaServico; }
+
+    @FXML
+    private void initialize() {
+        if (dataPicker != null) {
+            java.time.LocalDate hoje = java.time.LocalDate.now();
+            int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
+            int anoAtual = hoje.getYear();
+            dataPicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(java.time.LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        return;
+                    }
+                    boolean ehPassado = item.isBefore(hoje);
+                    boolean ehFimDeSemana = item.getDayOfWeek() == java.time.DayOfWeek.SATURDAY
+                            || item.getDayOfWeek() == java.time.DayOfWeek.SUNDAY;
+                    int semItem = item.getMonthValue() <= 6 ? 1 : 2;
+                    boolean outroSemestre = item.getYear() != anoAtual || semItem != semestreAtual;
+                    if (ehPassado || ehFimDeSemana || outroSemestre) {
+                        setDisable(true);
+                        setStyle("-fx-opacity: 0.4;");
+                    }
+                }
+            });
+        }
+    }
 
     public void definirProva(Prova prova) {
         if (prova == null) {

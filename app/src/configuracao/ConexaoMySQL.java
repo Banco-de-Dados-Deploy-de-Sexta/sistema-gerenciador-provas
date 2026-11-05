@@ -12,6 +12,7 @@ public class ConexaoMySQL {
     private final String url;
     private final String usuario;
     private final String senha;
+    private Connection conexaoAtiva;
 
     public ConexaoMySQL() {
         Map<String, String> env = Env.carregar(".env");
@@ -26,7 +27,14 @@ public class ConexaoMySQL {
         }
     }
 
-    public Connection conectar() throws SQLException {
-        return DriverManager.getConnection(url, usuario, senha);
+    public boolean isPostgreSQL() {
+        return url != null && url.startsWith("jdbc:postgresql:");
+    }
+
+    public synchronized Connection conectar() throws SQLException {
+        if (conexaoAtiva == null || conexaoAtiva.isClosed() || !conexaoAtiva.isValid(2)) {
+            conexaoAtiva = DriverManager.getConnection(url, usuario, senha);
+        }
+        return conexaoAtiva;
     }
 }

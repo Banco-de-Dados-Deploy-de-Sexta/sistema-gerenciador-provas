@@ -1,6 +1,8 @@
 CREATE DATABASE IF NOT EXISTS banco;
 USE banco;
 
+--- AREA DE PROVA ---
+
 CREATE TABLE prova (
 codigo varchar(7) primary key,
 titulo text not null,
@@ -43,6 +45,18 @@ FOREIGN KEY (id_questao)
 REFERENCES questao(id_questao)
 );
 
+--- ------------- ---
+
+--- AREA DE USUARIO ---
+
+CREATE TABLE usuario (
+registro varchar(20) primary key,
+nome varchar(100) not null,
+tipo_usuario varchar(50) not null
+);
+--- ------------- ---
+
+--- INSERTS PROVA ---
 INSERT INTO prova
 (codigo, titulo, materia, data_prova, curso, bimestre)
 VALUES
@@ -135,3 +149,22 @@ VALUES
 (2, 10, 'Propriedades de transações em bancos de dados', TRUE),
 (3, 10, 'Um tipo de banco NoSQL', FALSE),
 (4, 10, 'Uma linguagem de consulta', FALSE);
+--- ------------- ---
+
+--- INSERTS USUARIOS ---
+INSERT INTO usuario
+(registro, nome, tipo_usuario)
+VALUES
+('SGP-A1231', 'João Victor Graciolli Ramos', 'Aluno'),
+('SGP-A1232', 'Miguel Vitale', 'Aluno'),
+('SGP-A1233', 'Ana Laura Arantes Machado', 'Aluno'),
+('SGP-A1234', 'Eduardo Nakano Silva Senador', 'Aluno'),
+('SGP-A1235', 'Gustavo Otacílio Ramos', 'Aluno'),
+('SGP-A1236', 'Natan Soares Telles', 'Aluno'),
+('SGP-A1237', 'Olavo Salles Gino Teixeira', 'Aluno'),
+('SGP-A1238', 'Weslley José Pereira de Moraes', 'Aluno'),
+
+('SGP-P1231', 'Emanuel Mineda', 'Professor'),
+('SGP-P1232', 'Adriana', 'Professor'),
+('SGP-P1233', 'Giuliano Bertoti', 'Professor');
+--- ------------- ---
