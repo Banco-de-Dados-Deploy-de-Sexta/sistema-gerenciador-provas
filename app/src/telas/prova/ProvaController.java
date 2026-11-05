@@ -10,9 +10,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -39,6 +41,8 @@ import telas.corrigirprova.CorrigirProva;
 
 public class ProvaController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
 
     @FXML
     private VBox listaProvas;
@@ -95,7 +99,13 @@ public class ProvaController {
     private VBox cardProva(Prova prova) {
         Label codigo = new Label(prova.getCodigo());
         codigo.getStyleClass().add("card-pequeno");
-        Label data = new Label(prova.getData() == null ? "Sem data" : prova.getData().format(FORMATO_DATA));
+        String textoData = "Sem data";
+        if (prova.getDataHora() != null) {
+            textoData = prova.getDataHora().format(FORMATO_DATA_HORA);
+        } else if (prova.getData() != null) {
+            textoData = prova.getData().format(FORMATO_DATA);
+        }
+        Label data = new Label(textoData);
         data.getStyleClass().add("card-pequeno");
         Region espaco = new Region();
         HBox.setHgrow(espaco, Priority.ALWAYS);
@@ -203,21 +213,85 @@ public class ProvaController {
         Prova prova = selecionada.get();
         if (prova == null)
             return;
-        DatePicker data = new DatePicker(prova.getData() == null ? LocalDate.now() : prova.getData());
+
+        LocalDate hoje = LocalDate.now();
+        int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
+        int anoAtual = hoje.getYear();
+
+        LocalDate dataInicial = prova.getDataHora() != null ? prova.getDataHora().toLocalDate()
+                : (prova.getData() != null ? prova.getData() : hoje);
+        DatePicker campoData = new DatePicker(dataInicial);
+        campoData.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    return;
+                }
+                boolean ehPassado = item.isBefore(LocalDate.now());
+                boolean ehFimDeSemana = item.getDayOfWeek() == java.time.DayOfWeek.SATURDAY
+                        || item.getDayOfWeek() == java.time.DayOfWeek.SUNDAY;
+                int semItem = item.getMonthValue() <= 6 ? 1 : 2;
+                boolean outroSemestre = item.getYear() != anoAtual || semItem != semestreAtual;
+
+                if (ehPassado || ehFimDeSemana || outroSemestre) {
+                    setDisable(true);
+                    setStyle("-fx-opacity: 0.4;");
+                }
+            }
+        });
+
+        String horaInicial = prova.getDataHora() != null ? prova.getDataHora().format(FORMATO_HORA) : "08:00";
+        TextField campoHora = new TextField(horaInicial);
+        campoHora.setPromptText("HH:mm (ex: 08:30, 19:15)");
+
         Dialog<ButtonType> dialogo = new Dialog<>();
         dialogo.setTitle("Agendar prova");
-        dialogo.setHeaderText("Escolha a data da prova \"" + prova.getTitulo() + "\"");
-        dialogo.getDialogPane().setContent(new VBox(8, new Label("Data da prova"), data));
+        dialogo.setHeaderText("Escolha a data e o horário da prova \"" + prova.getTitulo() + "\"\n"
+                + "Semestre letivo: " + semestreAtual + "º semestre de " + anoAtual);
+
+        VBox conteudo = new VBox(10,
+                new VBox(4, new Label("Data da prova (somente dias úteis do semestre atual):"), campoData),
+                new VBox(4, new Label("Horário de início (HH:mm):"), campoHora)
+        );
+        dialogo.getDialogPane().setContent(conteudo);
         dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK || data.getValue() == null)
+
+        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK)
             return;
-        LocalDate anterior = prova.getData();
+
+        LocalDate dataEscolhida = campoData.getValue();
+        if (dataEscolhida == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Selecione uma data para a prova.");
+            return;
+        }
+
+        String textoHora = campoHora.getText() != null ? campoHora.getText().trim() : "";
+        if (!textoHora.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Horário inválido. Informe no formato HH:mm (exemplo: 08:30 ou 19:00).");
+            return;
+        }
+
+        java.time.LocalTime horario = java.time.LocalTime.parse(
+                textoHora.length() == 4 ? "0" + textoHora : textoHora,
+                DateTimeFormatter.ofPattern("HH:mm")
+        );
+        java.time.LocalDateTime dataHoraEscolhida = java.time.LocalDateTime.of(dataEscolhida, horario);
+
         try {
-            prova.setData(data.getValue());
+            provaServico.validarAgendamento(dataHoraEscolhida);
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(Alert.AlertType.WARNING, e.getMessage());
+            return;
+        }
+
+        java.time.LocalDateTime anterior = prova.getDataHora();
+        try {
+            prova.setDataHora(dataHoraEscolhida);
             provaServico.salvarProva(prova);
             atualizar();
         } catch (RuntimeException e) {
-            prova.setData(anterior);
+            prova.setDataHora(anterior);
             erro("Não foi possível agendar a prova.", e);
         }
     }
@@ -236,10 +310,16 @@ public class ProvaController {
         if (arquivo == null)
             return;
 
+        String textoData = "";
+        if (prova.getDataHora() != null) {
+            textoData = " — " + prova.getDataHora().format(FORMATO_DATA_HORA);
+        } else if (prova.getData() != null) {
+            textoData = " — " + prova.getData().format(FORMATO_DATA);
+        }
         StringBuilder texto = new StringBuilder()
                 .append(prova.getCodigo()).append(" — ").append(prova.getTitulo()).append('\n')
                 .append(descricao(prova))
-                .append(prova.getData() == null ? "" : " — " + prova.getData().format(FORMATO_DATA))
+                .append(textoData)
                 .append("\n\n");
         List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
         for (int i = 0; i < questoes.size(); i++) {
@@ -302,6 +382,12 @@ public class ProvaController {
 
     private void erro(String mensagem, Exception e) {
         Alert alerta = new Alert(Alert.AlertType.ERROR, mensagem + "\n" + e.getMessage());
+        alerta.setHeaderText(null);
+        alerta.showAndWait();
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String mensagem) {
+        Alert alerta = new Alert(tipo, mensagem);
         alerta.setHeaderText(null);
         alerta.showAndWait();
     }

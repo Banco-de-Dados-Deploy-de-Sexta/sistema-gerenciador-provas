@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,8 +79,8 @@ public class ProvaStorage implements Storage<String, Prova> {
                 ps.setString(1, key);
                 ps.setString(2, value.getTitulo());
                 ps.setString(3, value.getMateria());
-                if (value.getData() == null) ps.setNull(4, java.sql.Types.DATE);
-                else ps.setDate(4, Date.valueOf(value.getData()));
+                if (value.getDataHora() == null) ps.setNull(4, java.sql.Types.TIMESTAMP);
+                else ps.setTimestamp(4, Timestamp.valueOf(value.getDataHora()));
                 ps.setString(5, value.getCurso());
                 ps.setInt(6, value.getBimestre());
                 ps.executeUpdate();
@@ -182,8 +183,8 @@ public class ProvaStorage implements Storage<String, Prova> {
     }
 
     private Prova paraProva(ResultSet rs) throws SQLException {
-        Date data = rs.getDate("data_prova");
+        Timestamp dataHora = rs.getTimestamp("data_prova");
         return new Prova(rs.getString("codigo"), rs.getString("titulo"), rs.getString("materia"),
-                data == null ? null : data.toLocalDate(), rs.getString("curso"), rs.getInt("bimestre"));
+                dataHora == null ? null : dataHora.toLocalDateTime(), rs.getString("curso"), rs.getInt("bimestre"));
     }
 }

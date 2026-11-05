@@ -55,6 +55,9 @@ public class ProvaServico {
 
     public String estado(Prova prova, int totalQuestoes) {
         if (totalQuestoes == 0) return "Rascunho";
+        if (prova.getDataHora() != null) {
+            return prova.getDataHora().isBefore(java.time.LocalDateTime.now()) ? "Encerrada" : "Agendada";
+        }
         if (prova.getData() == null) return "Pronta";
         return prova.getData().isBefore(LocalDate.now()) ? "Encerrada" : "Agendada";
     }
@@ -103,5 +106,40 @@ public class ProvaServico {
             throw new IllegalArgumentException("O curso deve ter até 50 caracteres.");
         if (prova.getBimestre() < 1 || prova.getBimestre() > 4)
             throw new IllegalArgumentException("O bimestre deve estar entre 1 e 4.");
+        if (prova.getDataHora() != null) {
+            validarAgendamento(prova.getDataHora());
+        } else if (prova.getData() != null) {
+            validarDataAgendamento(prova.getData());
+        }
+    }
+
+    public void validarDataAgendamento(LocalDate data) {
+        if (data == null) {
+            throw new IllegalArgumentException("Informe a data da prova.");
+        }
+        if (data.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Não é possível agendar para uma data passada.");
+        }
+        java.time.DayOfWeek diaSemana = data.getDayOfWeek();
+        if (diaSemana == java.time.DayOfWeek.SATURDAY || diaSemana == java.time.DayOfWeek.SUNDAY) {
+            throw new IllegalArgumentException("A data da prova deve ser em um dia útil (segunda a sexta-feira).");
+        }
+        LocalDate hoje = LocalDate.now();
+        int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
+        int semestreData = data.getMonthValue() <= 6 ? 1 : 2;
+        if (data.getYear() != hoje.getYear() || semestreData != semestreAtual) {
+            throw new IllegalArgumentException(
+                    "A prova deve ser agendada no semestre letivo atual (" + semestreAtual + "º semestre de " + hoje.getYear() + ").");
+        }
+    }
+
+    public void validarAgendamento(java.time.LocalDateTime dataHora) {
+        if (dataHora == null) {
+            throw new IllegalArgumentException("Informe a data e o horário da prova.");
+        }
+        validarDataAgendamento(dataHora.toLocalDate());
+        if (dataHora.isBefore(java.time.LocalDateTime.now())) {
+            throw new IllegalArgumentException("Não é possível agendar para um horário que já passou.");
+        }
     }
 }
