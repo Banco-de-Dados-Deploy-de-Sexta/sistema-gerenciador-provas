@@ -1,6 +1,15 @@
 CREATE DATABASE IF NOT EXISTS banco;
 USE banco;
 
+--- AREA DE USUARIO ---
+
+CREATE TABLE usuario (
+registro varchar(20) primary key,
+nome varchar(100) not null,
+tipo_usuario varchar(50) not null
+);
+--- ------------- ---
+
 --- AREA DE PROVA ---
 
 CREATE TABLE prova (
@@ -9,7 +18,12 @@ titulo text not null,
 materia varchar(50) not null,
 data_prova datetime,
 curso varchar(50),
-bimestre int
+bimestre int,
+registro_professor varchar(20),
+
+CONSTRAINT fk_registro_professor
+FOREIGN KEY (registro_professor)
+REFERENCES usuario(registro)
 );
 
 CREATE TABLE questao (
@@ -47,13 +61,22 @@ REFERENCES questao(id_questao)
 
 --- ------------- ---
 
---- AREA DE USUARIO ---
+--- INSERTS USUARIOS ---
+INSERT INTO usuario
+(registro, nome, tipo_usuario)
+VALUES
+('SGP-A1231', 'João Victor Graciolli Ramos', 'Aluno'),
+('SGP-A1232', 'Miguel Vitale', 'Aluno'),
+('SGP-A1233', 'Ana Laura Arantes Machado', 'Aluno'),
+('SGP-A1234', 'Eduardo Nakano Silva Senador', 'Aluno'),
+('SGP-A1235', 'Gustavo Otacílio Ramos', 'Aluno'),
+('SGP-A1236', 'Natan Soares Telles', 'Aluno'),
+('SGP-A1237', 'Olavo Salles Gino Teixeira', 'Aluno'),
+('SGP-A1238', 'Weslley José Pereira de Moraes', 'Aluno'),
 
-CREATE TABLE usuario (
-registro varchar(20) primary key,
-nome varchar(100) not null,
-tipo_usuario varchar(50) not null
-);
+('SGP-P1231', 'Emanuel Mineda', 'Professor'),
+('SGP-P1232', 'Adriana', 'Professor'),
+('SGP-P1233', 'Giuliano Bertoti', 'Professor');
 --- ------------- ---
 
 --- INSERTS PROVA ---
@@ -149,22 +172,4 @@ VALUES
 (2, 10, 'Propriedades de transações em bancos de dados', TRUE),
 (3, 10, 'Um tipo de banco NoSQL', FALSE),
 (4, 10, 'Uma linguagem de consulta', FALSE);
---- ------------- ---
-
---- INSERTS USUARIOS ---
-INSERT INTO usuario
-(registro, nome, tipo_usuario)
-VALUES
-('SGP-A1231', 'João Victor Graciolli Ramos', 'Aluno'),
-('SGP-A1232', 'Miguel Vitale', 'Aluno'),
-('SGP-A1233', 'Ana Laura Arantes Machado', 'Aluno'),
-('SGP-A1234', 'Eduardo Nakano Silva Senador', 'Aluno'),
-('SGP-A1235', 'Gustavo Otacílio Ramos', 'Aluno'),
-('SGP-A1236', 'Natan Soares Telles', 'Aluno'),
-('SGP-A1237', 'Olavo Salles Gino Teixeira', 'Aluno'),
-('SGP-A1238', 'Weslley José Pereira de Moraes', 'Aluno'),
-
-('SGP-P1231', 'Emanuel Mineda', 'Professor'),
-('SGP-P1232', 'Adriana', 'Professor'),
-('SGP-P1233', 'Giuliano Bertoti', 'Professor');
 --- ------------- ---

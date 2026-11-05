@@ -1,16 +1,16 @@
 package servicos;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import interfaces.ProvaRepositorio;
 import modelos.PesoQuestao;
 import modelos.Prova;
 import modelos.Questao;
 import modelos.QuestaoComPeso;
 import modelos.ResultadoCorrecao;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ProvaServico {
     private final ProvaRepositorio provaRepositorio;
@@ -21,9 +21,9 @@ public class ProvaServico {
         this.questaoServico = questaoServico;
     }
 
-    public Prova criarProva(String titulo, String materia, LocalDate data, String curso, int bimestre) {
+    public Prova criarProva(String titulo, String materia, LocalDate data, String curso, int bimestre, String registro_professor) {
         String codigo = gerarCodigo();
-        return salvarProva(new Prova(codigo, titulo, materia, data, curso, bimestre));
+        return salvarProva(new Prova(codigo, titulo, materia, data, curso, bimestre, registro_professor));
     }
 
     public Prova salvarProva(Prova prova) {
@@ -103,5 +103,7 @@ public class ProvaServico {
             throw new IllegalArgumentException("O curso deve ter até 50 caracteres.");
         if (prova.getBimestre() < 1 || prova.getBimestre() > 4)
             throw new IllegalArgumentException("O bimestre deve estar entre 1 e 4.");
+        if (prova.getRegistroProfessor() == null || prova.getRegistroProfessor().isBlank())
+            throw new IllegalArgumentException("Informe o registro do professor.");
     }
 }

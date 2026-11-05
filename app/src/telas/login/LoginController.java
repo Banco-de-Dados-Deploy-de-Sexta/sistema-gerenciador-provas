@@ -1,12 +1,13 @@
 package telas.login;
 
+import auxiliares.Sessao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import modelos.Usuario;
 import storage.UsuarioStorage;
 import telas.prova.Prova;
@@ -54,6 +55,7 @@ public class LoginController {
             }
             Stage stage = (Stage) txt_registro.getScene().getWindow();
             if (usuario.isProfessor()) {
+                Sessao.iniciar(usuario);
                 // Redireciona para o painel de provas do professor
                 Prova.abrir(stage);
             } else if (usuario.isAluno()) {

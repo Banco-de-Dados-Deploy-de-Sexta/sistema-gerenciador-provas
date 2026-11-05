@@ -1,10 +1,5 @@
 package storage;
 
-import configuracao.ConexaoMySQL;
-import interfaces.Storage;
-import modelos.PesoQuestao;
-import modelos.Prova;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -13,33 +8,42 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import configuracao.ConexaoMySQL;
+import interfaces.Storage;
+import modelos.PesoQuestao;
+import modelos.Prova;
+
 public class ProvaStorage implements Storage<String, Prova> {
     private static final String SQL_SALVAR_MYSQL = """
-            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE titulo = VALUES(titulo), materia = VALUES(materia),
-              data_prova = VALUES(data_prova), curso = VALUES(curso), bimestre = VALUES(bimestre)
+              data_prova = VALUES(data_prova), curso = VALUES(curso), bimestre = VALUES(bimestre),
+              registro_professor = VALUES(registro_professor)
             """;
 
     private static final String SQL_SALVAR_POSTGRES = """
-            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (codigo) DO UPDATE SET
               titulo = EXCLUDED.titulo,
               materia = EXCLUDED.materia,
               data_prova = EXCLUDED.data_prova,
               curso = EXCLUDED.curso,
-              bimestre = EXCLUDED.bimestre
+              bimestre = EXCLUDED.bimestre,
+              registro_professor = EXCLUDED.registro_professor
             """;
 
-    private static final String SQL_BUSCAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre FROM prova WHERE codigo = ?";
-    private static final String SQL_LISTAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre FROM prova ORDER BY codigo";
+    private static final String SQL_BUSCAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre, registro_professor FROM prova WHERE codigo = ?";
+    private static final String SQL_LISTAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre, registro_professor FROM prova ORDER BY codigo";
     private static final String SQL_REMOVER = "DELETE FROM prova WHERE codigo = ?";
     private static final String SQL_LISTAR_QUESTOES = "SELECT id_questao, peso_questao FROM prova_questao WHERE codigo_prova = ? ORDER BY id_questao";
 
     private final ConexaoMySQL conexao;
 
-    public ProvaStorage(ConexaoMySQL conexao) { this.conexao = conexao; }
+    public ProvaStorage(ConexaoMySQL conexao) {
+        this.conexao = conexao;
+    }
 
     @Override
     public Prova get(String key) {
@@ -47,7 +51,9 @@ public class ProvaStorage implements Storage<String, Prova> {
             Connection con = conexao.conectar();
             try (PreparedStatement ps = con.prepareStatement(SQL_BUSCAR)) {
                 ps.setString(1, key);
-                try (ResultSet rs = ps.executeQuery()) { return rs.next() ? paraProva(rs) : null; }
+                try (ResultSet rs = ps.executeQuery()) {
+                    return rs.next() ? paraProva(rs) : null;
+                }
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao buscar a prova " + key, e);
@@ -60,8 +66,9 @@ public class ProvaStorage implements Storage<String, Prova> {
         try {
             Connection con = conexao.conectar();
             try (PreparedStatement ps = con.prepareStatement(SQL_LISTAR);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) provas.add(paraProva(rs));
+                    ResultSet rs = ps.executeQuery()) {
+                while (rs.next())
+                    provas.add(paraProva(rs));
                 return provas;
             }
         } catch (SQLException e) {
@@ -78,10 +85,13 @@ public class ProvaStorage implements Storage<String, Prova> {
                 ps.setString(1, key);
                 ps.setString(2, value.getTitulo());
                 ps.setString(3, value.getMateria());
-                if (value.getData() == null) ps.setNull(4, java.sql.Types.DATE);
-                else ps.setDate(4, Date.valueOf(value.getData()));
+                if (value.getData() == null)
+                    ps.setNull(4, java.sql.Types.DATE);
+                else
+                    ps.setDate(4, Date.valueOf(value.getData()));
                 ps.setString(5, value.getCurso());
                 ps.setInt(6, value.getBimestre());
+                ps.setString(7, value.getRegistroProfessor());
                 ps.executeUpdate();
                 value.setCodigo(key);
                 return value;
@@ -98,7 +108,7 @@ public class ProvaStorage implements Storage<String, Prova> {
             boolean autoCommitAnterior = con.getAutoCommit();
             con.setAutoCommit(false);
             try (PreparedStatement vinculos = con.prepareStatement("DELETE FROM prova_questao WHERE codigo_prova = ?");
-                 PreparedStatement prova = con.prepareStatement(SQL_REMOVER)) {
+                    PreparedStatement prova = con.prepareStatement(SQL_REMOVER)) {
                 vinculos.setString(1, key);
                 vinculos.executeUpdate();
                 prova.setString(1, key);
@@ -122,7 +132,7 @@ public class ProvaStorage implements Storage<String, Prova> {
             boolean autoCommitAnterior = con.getAutoCommit();
             con.setAutoCommit(false);
             try (PreparedStatement vinculos = con.prepareStatement("DELETE FROM prova_questao");
-                 PreparedStatement provas = con.prepareStatement("DELETE FROM prova")) {
+                    PreparedStatement provas = con.prepareStatement("DELETE FROM prova")) {
                 vinculos.executeUpdate();
                 provas.executeUpdate();
                 con.commit();
@@ -144,7 +154,8 @@ public class ProvaStorage implements Storage<String, Prova> {
             try (PreparedStatement ps = con.prepareStatement(SQL_LISTAR_QUESTOES)) {
                 ps.setString(1, codigo);
                 try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) questoes.add(new PesoQuestao(rs.getLong("id_questao"), rs.getDouble("peso_questao")));
+                    while (rs.next())
+                        questoes.add(new PesoQuestao(rs.getLong("id_questao"), rs.getDouble("peso_questao")));
                 }
                 return questoes;
             }
@@ -159,7 +170,8 @@ public class ProvaStorage implements Storage<String, Prova> {
             boolean autoCommitAnterior = con.getAutoCommit();
             con.setAutoCommit(false);
             try (PreparedStatement remover = con.prepareStatement("DELETE FROM prova_questao WHERE codigo_prova = ?");
-                 PreparedStatement inserir = con.prepareStatement("INSERT INTO prova_questao (codigo_prova, id_questao, peso_questao) VALUES (?, ?, ?)")) {
+                    PreparedStatement inserir = con.prepareStatement(
+                            "INSERT INTO prova_questao (codigo_prova, id_questao, peso_questao) VALUES (?, ?, ?)")) {
                 remover.setString(1, codigo);
                 remover.executeUpdate();
                 for (PesoQuestao questao : questoes) {
@@ -184,6 +196,8 @@ public class ProvaStorage implements Storage<String, Prova> {
     private Prova paraProva(ResultSet rs) throws SQLException {
         Date data = rs.getDate("data_prova");
         return new Prova(rs.getString("codigo"), rs.getString("titulo"), rs.getString("materia"),
-                data == null ? null : data.toLocalDate(), rs.getString("curso"), rs.getInt("bimestre"));
+                data == null ? null : data.toLocalDate(), rs.getString("curso"), rs.getInt("bimestre"),
+                rs.getString("registro_professor"));
     }
+
 }

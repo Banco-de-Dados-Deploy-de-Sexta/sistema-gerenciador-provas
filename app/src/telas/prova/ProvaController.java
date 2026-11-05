@@ -1,5 +1,16 @@
 package telas.prova;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
+import auxiliares.Sessao;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -22,16 +33,8 @@ import javafx.stage.Stage;
 import modelos.Alternativa;
 import modelos.Prova;
 import modelos.QuestaoComPeso;
+import modelos.Usuario;
 import servicos.ProvaServico;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
 import telas.bancoquestoes.BancoQuestoes;
 import telas.componentes.CardQuestao;
 import telas.composicaoprova.ComposicaoProva;
@@ -56,6 +59,8 @@ public class ProvaController {
     private Button questoesButton;
     @FXML
     private Button corrigirButton;
+    @FXML
+    private Button aplicarButton;
 
     private final ProvaServico provaServico;
     private final ObjectProperty<Prova> selecionada = new SimpleObjectProperty<>();
@@ -68,7 +73,7 @@ public class ProvaController {
     private void initialize() {
         var nenhuma = selecionada.isNull();
         for (Button botao : List.of(editarButton, excluirButton, agendarButton, baixarButton, questoesButton,
-                corrigirButton))
+                corrigirButton, aplicarButton))
             botao.disableProperty().bind(nenhuma);
         selecionada.addListener((obs, antiga, nova) -> {
             destacarSelecionada();
@@ -168,7 +173,14 @@ public class ProvaController {
 
     @FXML
     private void editarProva(ActionEvent event) {
-        abrirFormulario(event, selecionada.get());
+        Prova prova = selecionada.get();
+        if (ehDona(prova) == false) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+            return;
+        }
+        abrirFormulario(event, prova);
     }
 
     private void abrirFormulario(ActionEvent event, Prova prova) {
@@ -182,6 +194,12 @@ public class ProvaController {
     @FXML
     private void excluirProva() {
         Prova prova = selecionada.get();
+        if (ehDona(prova) == false) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+            return;
+        }
         if (prova == null)
             return;
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
@@ -201,6 +219,12 @@ public class ProvaController {
     @FXML
     private void agendarProva() {
         Prova prova = selecionada.get();
+        if (ehDona(prova) == false) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+            return;
+        }
         if (prova == null)
             return;
         DatePicker data = new DatePicker(prova.getData() == null ? LocalDate.now() : prova.getData());
@@ -275,6 +299,13 @@ public class ProvaController {
     @FXML
     private void gerenciarQuestoes(ActionEvent event) {
         Prova prova = selecionada.get();
+        String registroLogado = Sessao.getUsuarioLogado().getRegistro();
+        if (ehDona(prova) == false) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+            return;
+        }
         if (prova == null)
             return;
         try {
@@ -309,9 +340,28 @@ public class ProvaController {
     @FXML
     private void voltar(ActionEvent event) {
         try {
+            Sessao.encerrar();
             telas.login.Login.abrir(palcoDe(event));
         } catch (Exception e) {
             erro("Não foi possível voltar para a tela de login.", e);
         }
     }
+
+    @FXML
+    private void aplicar(ActionEvent event) {
+        Prova prova = selecionada.get();
+        if (prova == null)
+            return;
+        try {
+            // telas.aplicarprova.AplicarProva.abrir(palcoDe(event), prova, provaServico);
+        } catch (Exception e) {
+            erro("Não foi possível abrir a tela de aplicação da prova.", e);
+        }
+    }
+
+    private boolean ehDona(Prova prova) {
+    Usuario logado = Sessao.getUsuarioLogado();
+    return logado != null && Objects.equals(prova.getRegistroProfessor(), logado.getRegistro());
+}
+
 }

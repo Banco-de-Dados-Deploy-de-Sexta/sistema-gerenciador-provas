@@ -1,5 +1,6 @@
 package telas.prova;
 
+import auxiliares.Sessao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -44,8 +45,9 @@ public class ProvaFormularioController {
     private void confirmar() {
         try {
             int bimestre = Integer.parseInt(bimestreCaixaTexto.getText().trim());
+            String registroProfessor = Sessao.getUsuarioLogado().getRegistro();
             Prova prova = new Prova(codigo, tituloCaixaTexto.getText().trim(), materiaCaixaTexto.getText().trim(),
-                    dataPicker.getValue(), cursoCaixaTexto.getText().trim(), bimestre);
+                    dataPicker.getValue(), cursoCaixaTexto.getText().trim(), bimestre, registroProfessor);
             provaServico.salvarProva(prova);
             info("Prova salva com sucesso. Código: " + prova.getCodigo());
             voltarParaProvas();

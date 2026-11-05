@@ -93,6 +93,16 @@
                 </SVGPath>
             </graphic>
         </Button>
+        <Button fx:id="aplicarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+            onAction="#aplicar" styleClass="botao-menu" text="Aplicar prova">
+            <graphic>
+                <SVGPath styleClass="icone">
+                    <content>
+                        <Icones fx:constant="APLICAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
 
         <!-- Spacer to push the return button to the bottom -->
         <Region VBox.vgrow="ALWAYS" />
