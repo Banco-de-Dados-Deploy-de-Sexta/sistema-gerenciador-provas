@@ -26,6 +26,18 @@ FOREIGN KEY (registro_professor)
 REFERENCES usuario(registro)
 );
 
+CREATE table prova_aluno (
+codigo_prova varchar(7),
+registro_aluno varchar(20),
+PRIMARY KEY(codigo_prova, registro_aluno),
+CONSTRAINT fk_prova_aluno_prova
+FOREIGN KEY (codigo_prova)
+REFERENCES prova(codigo),
+CONSTRAINT fk_prova_aluno_usuario
+FOREIGN KEY (registro_aluno)
+REFERENCES usuario(registro)
+);
+
 CREATE TABLE questao (
 id_questao int primary key,
 titulo varchar(500) not null,
@@ -81,13 +93,13 @@ VALUES
 
 --- INSERTS PROVA ---
 INSERT INTO prova
-(codigo, titulo, materia, data_prova, curso, bimestre)
+(codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
 VALUES
-('LDP01', 'Prova 1 de LP', 'Linguagem de Programação I', '2026-09-21', 'Banco de Dados', 2),
-('AMD01', 'Prova 1 de Modelagem de Dados', 'Arquitetura e Modelagem de Dados', '2026-09-17', 'Banco de Dados', 2),
-('SBD01', 'Prova 1 de Sistemas de Banco de Dados', 'Sistemas de Banco de Dados', '2026-10-05', 'Banco de Dados', 2),
-('POO01', 'Prova 1 de Programação Orientada a Objetos', 'Programação Orientada a Objetos', '2026-10-10', 'Banco de Dados', 2),
-('SQL01', 'Prova 1 de SQL Avançado', 'SQL', '2026-10-15', 'Banco de Dados', 2);
+('LDP01', 'Prova 1 de LP', 'Linguagem de Programação I', '2026-09-21', 'Banco de Dados', 2, 'SGP-P1231'),
+('AMD01', 'Prova 1 de Modelagem de Dados', 'Arquitetura e Modelagem de Dados', '2026-09-17', 'Banco de Dados', 2, 'SGP-P1232'),
+('SBD01', 'Prova 1 de Sistemas de Banco de Dados', 'Sistemas de Banco de Dados', '2026-10-05', 'Banco de Dados', 2, 'SGP-P1233'),
+('POO01', 'Prova 1 de Programação Orientada a Objetos', 'Programação Orientada a Objetos', '2026-10-10', 'Banco de Dados', 2, 'SGP-P1231'),
+('SQL01', 'Prova 1 de SQL Avançado', 'SQL', '2026-10-15', 'Banco de Dados', 2, 'SGP-P1232');
 
 
 

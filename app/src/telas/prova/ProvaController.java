@@ -6,12 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 import auxiliares.Sessao;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +38,7 @@ import modelos.Prova;
 import modelos.QuestaoComPeso;
 import modelos.Usuario;
 import servicos.ProvaServico;
+import telas.alunoprova.AlunoProva;
 import telas.bancoquestoes.BancoQuestoes;
 import telas.componentes.CardQuestao;
 import telas.composicaoprova.ComposicaoProva;
@@ -61,9 +65,14 @@ public class ProvaController {
     private Button corrigirButton;
     @FXML
     private Button aplicarButton;
+    @FXML
+    private Label nomeUsuario;
 
     private final ProvaServico provaServico;
     private final ObjectProperty<Prova> selecionada = new SimpleObjectProperty<>();
+    private final BooleanProperty aplicada = new SimpleBooleanProperty();
+    // registro do professor -> nome, preenchido sob demanda ao montar os cards
+    private final HashMap<String, String> nomesProfessores = new HashMap<>();
 
     public ProvaController(ProvaServico provaServico) {
         this.provaServico = provaServico;
@@ -71,11 +80,18 @@ public class ProvaController {
 
     @FXML
     private void initialize() {
+        Usuario logado = Sessao.getUsuarioLogado();
+        nomeUsuario.setText(logado == null ? "" : logado.getNome());
+        Label registroUsuario = (Label) ((VBox) nomeUsuario.getParent()).getChildren().get(2);
+        registroUsuario.setText(Sessao.getRegistroUsuarioLogado() == null ? "" : Sessao.getRegistroUsuarioLogado());
         var nenhuma = selecionada.isNull();
-        for (Button botao : List.of(editarButton, excluirButton, agendarButton, baixarButton, questoesButton,
-                corrigirButton, aplicarButton))
+        var bloqueada = nenhuma.or(aplicada);
+        for (Button botao : List.of(agendarButton, baixarButton, corrigirButton, aplicarButton))
             botao.disableProperty().bind(nenhuma);
+        for (Button botao : List.of(editarButton, excluirButton, questoesButton))
+            botao.disableProperty().bind(bloqueada);
         selecionada.addListener((obs, antiga, nova) -> {
+            aplicada.set(nova != null && provaServico.aplicada(nova.getCodigo()));
             destacarSelecionada();
             mostrarQuestoes();
         });
@@ -95,16 +111,31 @@ public class ProvaController {
         mostrarQuestoes();
     }
 
+    private String nomeProfessor(Prova prova) {
+        String registro = prova.getRegistroProfessor();
+        if (registro == null || registro.isBlank())
+            return "Sem professor";
+        return nomesProfessores.computeIfAbsent(registro, r -> {
+            Usuario professor = telas.prova.Prova.getUsuarioStorage().buscarPorRegistro(r);
+            return professor == null ? r : professor.getNome();
+        });
+    }
+
     // Card de prova do Figma: código e data no topo, título,
     // matéria/curso/bimestre, total de questões e estado
     private VBox cardProva(Prova prova) {
+        Label professor = new Label(nomeProfessor(prova));
+        professor.getStyleClass().add("card-pequeno");
         Label codigo = new Label(prova.getCodigo());
         codigo.getStyleClass().add("card-pequeno");
         Label data = new Label(prova.getData() == null ? "Sem data" : prova.getData().format(FORMATO_DATA));
         data.getStyleClass().add("card-pequeno");
         Region espaco = new Region();
         HBox.setHgrow(espaco, Priority.ALWAYS);
-        HBox topo = new HBox(codigo, espaco, data);
+        VBox direita = new VBox(2, data, professor);
+        direita.setAlignment(Pos.TOP_RIGHT);
+        HBox topo = new HBox(codigo, espaco, direita);
+
 
         Label titulo = new Label(prova.getTitulo());
         titulo.getStyleClass().add("card-titulo");
@@ -116,7 +147,7 @@ public class ProvaController {
         questoes.getStyleClass().add("card-destaque");
         Region espacoRodape = new Region();
         HBox.setHgrow(espacoRodape, Priority.ALWAYS);
-        Label estado = new Label(provaServico.estado(prova, quantidade));
+        Label estado = new Label(provaServico.estado(prova));
         estado.getStyleClass().add("card-estado");
         HBox rodape = new HBox(questoes, espacoRodape, estado);
         rodape.setAlignment(Pos.CENTER_LEFT);
@@ -352,16 +383,22 @@ public class ProvaController {
         Prova prova = selecionada.get();
         if (prova == null)
             return;
+        if (!ehDona(prova)) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para aplicar esta prova.");
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+            return;
+        }
         try {
-            // telas.aplicarprova.AplicarProva.abrir(palcoDe(event), prova, provaServico);
+            AlunoProva.abrir(palcoDe(event), prova, provaServico, telas.prova.Prova.getUsuarioStorage());
         } catch (Exception e) {
             erro("Não foi possível abrir a tela de aplicação da prova.", e);
         }
     }
 
     private boolean ehDona(Prova prova) {
-    Usuario logado = Sessao.getUsuarioLogado();
-    return logado != null && Objects.equals(prova.getRegistroProfessor(), logado.getRegistro());
-}
+        Usuario logado = Sessao.getUsuarioLogado();
+        return logado != null && Objects.equals(prova.getRegistroProfessor(), logado.getRegistro());
+    }
 
 }

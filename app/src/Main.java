@@ -34,6 +34,7 @@ public class Main {
         telas.bancoquestoes.BancoQuestoes.setQuestaoServico(questaoServico);
         telas.prova.Prova.setProvaServico(provaServico);
         telas.prova.Prova.setQuestaoServico(questaoServico);
+        telas.prova.Prova.setUsuarioStorage(usuarioStorage);
 
         // O programa começa pelo menu de provas
         Application.launch(telas.login.Login.class, args);

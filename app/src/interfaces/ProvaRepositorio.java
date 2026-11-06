@@ -1,9 +1,9 @@
 package interfaces;
 
-import modelos.Prova;
-import modelos.PesoQuestao;
-
 import java.util.List;
+
+import modelos.PesoQuestao;
+import modelos.Prova;
 
 public interface ProvaRepositorio {
 
@@ -20,5 +20,9 @@ public interface ProvaRepositorio {
     List<PesoQuestao> listarQuestoes(String codigo);
 
     void salvarQuestoes(String codigo, List<PesoQuestao> questoes);
+
+    List<String> listarAlunos(String codigo);
+
+    void salvarAlunos(String codigo, List<String> registros);
 
 }

@@ -12,18 +12,27 @@ import modelos.Prova;
 import servicos.ProvaServico;
 
 public class ProvaFormularioController {
-    @FXML private Label tituloTela;
-    @FXML private Label codigoLabel;
-    @FXML private TextField tituloCaixaTexto;
-    @FXML private TextField materiaCaixaTexto;
-    @FXML private DatePicker dataPicker;
-    @FXML private TextField cursoCaixaTexto;
-    @FXML private TextField bimestreCaixaTexto;
+    @FXML
+    private Label tituloTela;
+    @FXML
+    private Label codigoLabel;
+    @FXML
+    private TextField tituloCaixaTexto;
+    @FXML
+    private TextField materiaCaixaTexto;
+    @FXML
+    private DatePicker dataPicker;
+    @FXML
+    private TextField cursoCaixaTexto;
+    @FXML
+    private TextField bimestreCaixaTexto;
 
     private final ProvaServico provaServico;
     private String codigo;
 
-    public ProvaFormularioController(ProvaServico provaServico) { this.provaServico = provaServico; }
+    public ProvaFormularioController(ProvaServico provaServico) {
+        this.provaServico = provaServico;
+    }
 
     public void definirProva(Prova prova) {
         if (prova == null) {
@@ -48,6 +57,9 @@ public class ProvaFormularioController {
             String registroProfessor = Sessao.getUsuarioLogado().getRegistro();
             Prova prova = new Prova(codigo, tituloCaixaTexto.getText().trim(), materiaCaixaTexto.getText().trim(),
                     dataPicker.getValue(), cursoCaixaTexto.getText().trim(), bimestre, registroProfessor);
+            if (codigo != null && provaServico.aplicada(codigo))
+                throw new IllegalArgumentException("A prova já foi aplicada a alunos e não pode mais ser editada.");
+
             provaServico.salvarProva(prova);
             info("Prova salva com sucesso. Código: " + prova.getCodigo());
             voltarParaProvas();
@@ -60,14 +72,23 @@ public class ProvaFormularioController {
         }
     }
 
-    @FXML private void voltar(ActionEvent event) { voltarParaProvas(); }
-
-    private void voltarParaProvas() {
-        try { telas.prova.Prova.abrir((Stage) tituloTela.getScene().getWindow()); }
-        catch (Exception e) { mostrar(Alert.AlertType.ERROR, "Não foi possível voltar à lista de provas."); }
+    @FXML
+    private void voltar(ActionEvent event) {
+        voltarParaProvas();
     }
 
-    private void info(String mensagem) { mostrar(Alert.AlertType.INFORMATION, mensagem); }
+    private void voltarParaProvas() {
+        try {
+            telas.prova.Prova.abrir((Stage) tituloTela.getScene().getWindow());
+        } catch (Exception e) {
+            mostrar(Alert.AlertType.ERROR, "Não foi possível voltar à lista de provas.");
+        }
+    }
+
+    private void info(String mensagem) {
+        mostrar(Alert.AlertType.INFORMATION, mensagem);
+    }
+
     private void mostrar(Alert.AlertType tipo, String mensagem) {
         Alert alerta = new Alert(tipo, mensagem);
         alerta.setHeaderText(null);

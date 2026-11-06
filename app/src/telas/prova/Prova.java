@@ -6,15 +6,19 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import servicos.ProvaServico;
 import servicos.QuestaoServico;
+import storage.UsuarioStorage;
 import telas.componentes.Janela;
 
 public class Prova extends Application {
     private static ProvaServico provaServico;
     private static QuestaoServico questaoServico;
+    private static UsuarioStorage usuarioStorage;
 
     public static void setProvaServico(ProvaServico servico) { provaServico = servico; }
     public static void setQuestaoServico(QuestaoServico servico) { questaoServico = servico; }
     public static QuestaoServico getQuestaoServico() { return questaoServico; }
+    public static void setUsuarioStorage(UsuarioStorage storage) { usuarioStorage = storage; }
+    public static UsuarioStorage getUsuarioStorage() { return usuarioStorage; }
 
     public static void abrir(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Prova.class.getResource("/telas/prova/prova.fxml"));

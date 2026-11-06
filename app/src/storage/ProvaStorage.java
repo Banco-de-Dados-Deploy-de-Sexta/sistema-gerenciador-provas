@@ -38,6 +38,7 @@ public class ProvaStorage implements Storage<String, Prova> {
     private static final String SQL_LISTAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre, registro_professor FROM prova ORDER BY codigo";
     private static final String SQL_REMOVER = "DELETE FROM prova WHERE codigo = ?";
     private static final String SQL_LISTAR_QUESTOES = "SELECT id_questao, peso_questao FROM prova_questao WHERE codigo_prova = ? ORDER BY id_questao";
+    private static final String SQL_LISTAR_ALUNOS = "SELECT registro_aluno FROM prova_aluno WHERE codigo_prova = ? ORDER BY registro_aluno";
 
     private final ConexaoMySQL conexao;
 
@@ -190,6 +191,50 @@ public class ProvaStorage implements Storage<String, Prova> {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao salvar questões da prova " + codigo, e);
+        }
+    }
+
+    public List<String> listarAlunos(String codigo) {
+        List<String> alunos = new ArrayList<>();
+        try {
+            Connection con = conexao.conectar();
+            try (PreparedStatement ps = con.prepareStatement(SQL_LISTAR_ALUNOS)) {
+                ps.setString(1, codigo);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) alunos.add(rs.getString("registro_aluno"));
+                }
+                return alunos;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao listar alunos da prova " + codigo, e);
+        }
+    }
+
+    // Substitui os alunos vinculados à prova pela lista informada, na mesma transação
+    public void salvarAlunos(String codigo, List<String> registros) {
+        try {
+            Connection con = conexao.conectar();
+            boolean autoCommitAnterior = con.getAutoCommit();
+            con.setAutoCommit(false);
+            try (PreparedStatement remover = con.prepareStatement("DELETE FROM prova_aluno WHERE codigo_prova = ?");
+                 PreparedStatement inserir = con.prepareStatement("INSERT INTO prova_aluno (codigo_prova, registro_aluno) VALUES (?, ?)")) {
+                remover.setString(1, codigo);
+                remover.executeUpdate();
+                for (String registro : registros) {
+                    inserir.setString(1, codigo);
+                    inserir.setString(2, registro);
+                    inserir.addBatch();
+                }
+                inserir.executeBatch();
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            } finally {
+                con.setAutoCommit(autoCommitAnterior);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao salvar alunos da prova " + codigo, e);
         }
     }
 

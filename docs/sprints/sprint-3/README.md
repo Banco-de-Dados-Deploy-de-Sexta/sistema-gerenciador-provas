@@ -58,7 +58,7 @@ Completar o ciclo de vida da prova, da aplicação pelo professor à nota final 
 
 Itens que não são User Stories, mas precisam existir para que as histórias da sprint possam ser desenvolvidas:
 
-- **Acesso por perfil:** ao abrir o sistema, o usuário escolhe entrar como **professor** ou como **aluno** (selecionando seu nome/RA). Autenticação com senha fica fora do escopo desta sprint.
+- **Acesso por perfil:** ao abrir o sistema, o usuário informa seu registro na tela de login e o sistema o reconhece como **professor** ou **aluno** pelo campo `tipo_usuario` da tabela `usuario`. O usuário logado fica disponível para as telas durante a sessão. Autenticação com senha fica fora do escopo desta sprint.
 - **Estado "aplicada" da prova:** com a PB07, uma prova aplicada deixa de poder ser editada (PB03) ou excluída (PB04), cumprindo a regra de negócio da PB04 que dependia desta sprint.
 - **Persistência das respostas:** as respostas de cada aluno, a ordem em que as questões e alternativas foram exibidas e a nota calculada precisam ser gravadas no banco (PB09, PB13, PB15 e PB16).
 
@@ -86,7 +86,7 @@ Itens que não são User Stories, mas precisam existir para que as histórias da
   - Um mesmo aluno não pode ser associado duas vezes à mesma prova.
   - Ao ser aplicada, a prova passa para o estado **Aplicada** e não pode mais ser editada (PB03) nem excluída (PB04).
   - É possível remover um aluno da aplicação enquanto ele ainda não tiver realizado a prova.
-  - O professor só pode aplicar as suas próprias provas (RN2). Como não há autenticação nesta sprint, a regra fica registrada para quando houver login.
+  - O professor só pode aplicar as suas próprias provas (RN2). O professor é identificado pelo registro informado na tela de login e gravado na prova (`registro_professor`) no momento da criação; a mesma verificação vale para editar, excluir, agendar e compor a prova.
 - **Dependências:** PB02 e PB14 (Sprint 2) e a entidade Aluno (ver pré-requisitos).
 - **Escopo:** Tela para selecionar um ou mais alunos e associá-los à prova, listagem dos alunos associados e remoção de associação.
 - **Protótipo:** **Pendente:** criar a tela de seleção de alunos no Figma e incluir o botão "Aplicar prova" no [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)).

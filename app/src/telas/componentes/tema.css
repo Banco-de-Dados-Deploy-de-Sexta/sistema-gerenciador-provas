@@ -400,3 +400,18 @@
 .botao-icone:hover .icone {
     -fx-fill: #be123c;
 }
+
+.usuario-logado {
+    -fx-padding: 4 14 12 14;
+    -fx-border-color: transparent transparent #e5e7eb transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.usuario-logado-rotulo {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+.usuario-logado-nome {
+    -fx-text-fill: #111827;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
