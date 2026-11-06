@@ -16,7 +16,7 @@ Completar o ciclo de vida da prova, da aplicação pelo professor à nota final 
 | Rank | Prioridade | User Story | Story Points | Requisito do Cliente | Status |
 |:----:|:----------:|------------|:------------:|:---------------------:|:------:|
 | 1 | Média | **PB21** — Como professor, quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados. | 5 | RF-20 | ⬜ |
-| 2 | Média | **PB07** — Como professor, quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema. | 5 | RF-06 | ⬜ |
+| 2 | Média | **PB07** — Como professor, quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema. | 5 | RF-06 | ✅ |
 | 3 | Média | **PB08** — Como professor, quero agendar uma prova em uma data específica para que os alunos associados possam realizá-la naquele dia. | 3 | RF-07 | ⬜ |
 | 4 | Média | **PB06** — Como aluno, quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas. | 3 | RF-05 | ⬜ |
 | 5 | Média | **PB09** — Como aluno, quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade. | 8 | RF-06 | ⬜ |

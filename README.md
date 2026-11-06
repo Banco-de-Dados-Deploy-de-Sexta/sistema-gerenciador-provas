@@ -29,7 +29,7 @@ O desafio consiste em desenvolver um sistema gerenciador de avaliações para um
 | 15 | PB03 | Média | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ✅ |
 | 16 | PB04 | Média | Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ✅ |
 | 17 | PB21 | Média | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ⬜ |
-| 18 | PB07 | Média | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ⬜ |
+| 18 | PB07 | Média | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ✅ |
 | 19 | PB08 | Média | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | 3 | RF-07 | ⬜ |
 | 20 | PB06 | Média | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | 3 | RF-05 | ⬜ |
 | 21 | PB09 | Média | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 8 | 3 | RF-06 | ⬜ |
