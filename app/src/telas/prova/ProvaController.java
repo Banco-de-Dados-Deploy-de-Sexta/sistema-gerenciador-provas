@@ -302,7 +302,7 @@ public class ProvaController {
             }
         });
 
-        var horarios = FXCollections.observableArrayList(
+        List<String> todosHorarios = List.of(
             // Manhã
             "07:10", "07:55", "08:40", "09:40", "10:25", "11:10",
             // Tarde
@@ -312,20 +312,84 @@ public class ProvaController {
         );
 
         String horaInicioInicial = prova.getDataHora() != null ? prova.getDataHora().format(FORMATO_HORA) : "07:10";
-        ComboBox<String> campoHoraInicio = new ComboBox<>(horarios);
+        ComboBox<String> campoHoraInicio = new ComboBox<>(FXCollections.observableArrayList(todosHorarios));
         campoHoraInicio.setEditable(true);
         campoHoraInicio.setValue(horaInicioInicial);
         campoHoraInicio.setMaxWidth(Double.MAX_VALUE);
         campoHoraInicio.setPromptText("Selecione ou digite (HH:mm)");
 
         String horaFimInicial = prova.getDataHoraFim() != null ? prova.getDataHoraFim().format(FORMATO_HORA) : "";
-        ComboBox<String> campoHoraFim = new ComboBox<>(horarios);
+        ComboBox<String> campoHoraFim = new ComboBox<>(FXCollections.observableArrayList(todosHorarios));
         campoHoraFim.setEditable(true);
         if (!horaFimInicial.isEmpty()) {
             campoHoraFim.setValue(horaFimInicial);
         }
         campoHoraFim.setMaxWidth(Double.MAX_VALUE);
         campoHoraFim.setPromptText("Opcional (HH:mm)");
+
+        // Atualiza dinamicamente as opções de horários de início e término
+        Runnable atualizarOpcoesHorarios = () -> {
+            LocalDate dataSel = campoData.getValue();
+            boolean dataEhHoje = dataSel != null && dataSel.equals(LocalDate.now());
+            java.time.LocalTime agora = java.time.LocalTime.now();
+
+            List<String> horariosInicioValidos = todosHorarios.stream().filter(h -> {
+                if (!dataEhHoje) return true;
+                try {
+                    return java.time.LocalTime.parse(h, DateTimeFormatter.ofPattern("HH:mm")).isAfter(agora);
+                } catch (Exception e) {
+                    return true;
+                }
+            }).toList();
+
+            String valorInicioAtual = campoHoraInicio.getEditor().getText() != null
+                    ? campoHoraInicio.getEditor().getText().trim()
+                    : campoHoraInicio.getValue();
+
+            campoHoraInicio.setItems(FXCollections.observableArrayList(horariosInicioValidos));
+            if (valorInicioAtual != null && !valorInicioAtual.isEmpty()) {
+                campoHoraInicio.getEditor().setText(valorInicioAtual);
+                campoHoraInicio.setValue(valorInicioAtual);
+            }
+
+            java.time.LocalTime inicioParseado = null;
+            if (valorInicioAtual != null && valorInicioAtual.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
+                String normalizado = valorInicioAtual.length() == 4 ? "0" + valorInicioAtual : valorInicioAtual;
+                inicioParseado = java.time.LocalTime.parse(normalizado, DateTimeFormatter.ofPattern("HH:mm"));
+            }
+
+            final java.time.LocalTime refInicio = inicioParseado;
+            List<String> horariosFimValidos = todosHorarios.stream().filter(h -> {
+                try {
+                    java.time.LocalTime ht = java.time.LocalTime.parse(h, DateTimeFormatter.ofPattern("HH:mm"));
+                    if (refInicio != null && !ht.isAfter(refInicio)) {
+                        return false;
+                    }
+                    if (dataEhHoje && !ht.isAfter(agora)) {
+                        return false;
+                    }
+                    return true;
+                } catch (Exception e) {
+                    return true;
+                }
+            }).toList();
+
+            String valorFimAtual = campoHoraFim.getEditor().getText() != null
+                    ? campoHoraFim.getEditor().getText().trim()
+                    : campoHoraFim.getValue();
+
+            campoHoraFim.setItems(FXCollections.observableArrayList(horariosFimValidos));
+            if (valorFimAtual != null && !valorFimAtual.isEmpty()) {
+                campoHoraFim.getEditor().setText(valorFimAtual);
+                campoHoraFim.setValue(valorFimAtual);
+            }
+        };
+
+        campoData.valueProperty().addListener((obs, antigo, novo) -> atualizarOpcoesHorarios.run());
+        campoHoraInicio.valueProperty().addListener((obs, antigo, novo) -> atualizarOpcoesHorarios.run());
+        campoHoraInicio.getEditor().textProperty().addListener((obs, antigo, novo) -> atualizarOpcoesHorarios.run());
+
+        atualizarOpcoesHorarios.run();
 
         Dialog<ButtonType> dialogo = new Dialog<>();
         dialogo.setTitle("Agendar prova");
