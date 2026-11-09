@@ -53,7 +53,8 @@ public class QuestaoServico {
             throw new IllegalArgumentException("O texto das alternativas não pode ficar vazio.");
         if (alternativas.stream().anyMatch(a -> a.getTexto().trim().length() > MAX_TEXTO_ALTERNATIVA))
             throw new IllegalArgumentException("Cada alternativa pode ter até %d caracteres.".formatted(MAX_TEXTO_ALTERNATIVA));
-        if (alternativas.stream().filter(Alternativa::isCorreta).count() != 1)
-            throw new IllegalArgumentException("Marque exatamente uma alternativa correta.");
+        // A validação do gabarito depende do tipo e é feita no QuestaoController:
+        // múltipla escolha usa uma opção selecionada; V/F em sequência guarda um
+        // valor booleano independente para cada afirmação.
     }
 }

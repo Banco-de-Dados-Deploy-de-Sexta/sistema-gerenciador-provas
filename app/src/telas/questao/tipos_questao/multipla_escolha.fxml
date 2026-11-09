@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+<?import telas.componentes.Icones?>
+
+<VBox
+        spacing="10.0"
+        stylesheets="@../../componentes/tema.css"
+        xmlns="http://javafx.com/javafx/21"
+        xmlns:fx="http://javafx.com/fxml/1">
+
+    <TextArea
+            fx:id="enunciadoCaixaTexto"
+            prefRowCount="3"
+            promptText="Digite o enunciado da questão"
+            styleClass="campo-questao"
+            wrapText="true" />
+
+    <Label text="Alternativas" styleClass="questao-titulo" />
+    <Label
+            text="Marque uma opção como correta. Você pode adicionar de 4 a 5 alternativas."
+            wrapText="true" />
+
+    <HBox alignment="CENTER_LEFT">
+        <Button
+                mnemonicParsing="false"
+                onAction="#adicionarAlternativa"
+                styleClass="botao-claro"
+                text="Adicionar alternativa">
+            <graphic>
+                <SVGPath scaleX="0.7" scaleY="0.7" styleClass="icone">
+                    <content>
+                        <Icones fx:constant="ADICIONAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <VBox fx:id="listaAlternativas" spacing="8.0" />
+
+    <HBox alignment="CENTER_LEFT" spacing="6.0">
+        <Label
+                fx:id="proximaLetraLabel"
+                styleClass="alternativa-letra"
+                text="a)" />
+        <TextField
+                fx:id="perguntaCaixaTexto"
+                onAction="#adicionarAlternativa"
+                promptText="Digite uma alternativa"
+                styleClass="campo-alternativa"
+                HBox.hgrow="ALWAYS" />
+    </HBox>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+        <Button
+                mnemonicParsing="false"
+                onAction="#confirmar"
+                styleClass="botao-claro, primario"
+                text="Confirmar" />
+    </HBox>
+</VBox>

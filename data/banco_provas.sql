@@ -65,6 +65,7 @@ CREATE TABLE alternativa (
 id_alternativa int,
 id_questao int not null, -- FK
 texto varchar(300) not null,
+texto_correspondencia varchar(300),
 correta boolean not null,
 PRIMARY KEY (id_alternativa, id_questao),
 CONSTRAINT fk_alternativa_questao

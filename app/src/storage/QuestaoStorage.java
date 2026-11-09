@@ -29,16 +29,17 @@ public class QuestaoStorage implements Storage<Long, Questao> {
 
     private static final String SQL_BUSCAR = "SELECT id_questao, titulo, descricao FROM questao WHERE id_questao = ?";
     private static final String SQL_LISTAR = "SELECT id_questao, titulo, descricao FROM questao ORDER BY id_questao";
-    private static final String SQL_LISTAR_TODAS_ALTERNATIVAS = "SELECT id_alternativa, id_questao, texto, correta FROM alternativa ORDER BY id_questao, id_alternativa";
+    private static final String SQL_LISTAR_TODAS_ALTERNATIVAS = "SELECT id_alternativa, id_questao, texto, texto_correspondencia, correta FROM alternativa ORDER BY id_questao, id_alternativa";
     private static final String SQL_REMOVER_QUESTAO = "DELETE FROM questao WHERE id_questao = ?";
     private static final String SQL_REMOVER_ALTERNATIVAS = "DELETE FROM alternativa WHERE id_questao = ?";
     private static final String SQL_CONTAR_VINCULOS = "SELECT COUNT(*) FROM prova_questao WHERE id_questao = ?";
     private static final String SQL_LISTAR_ALTERNATIVAS = """
-            SELECT id_alternativa, texto, correta FROM alternativa
+            SELECT id_alternativa, texto, texto_correspondencia, correta FROM alternativa
             WHERE id_questao = ? ORDER BY id_alternativa
             """;
     private static final String SQL_SALVAR_ALTERNATIVA = """
-            INSERT INTO alternativa (id_alternativa, id_questao, texto, correta) VALUES (?, ?, ?, ?)
+            INSERT INTO alternativa (id_alternativa, id_questao, texto, texto_correspondencia, correta)
+            VALUES (?, ?, ?, ?, ?)
             """;
 
     private final ConexaoMySQL conexao;
@@ -74,6 +75,7 @@ public class QuestaoStorage implements Storage<Long, Questao> {
                     mapaAlternativas.computeIfAbsent(idQ, k -> new ArrayList<>()).add(new Alternativa(
                             rsAlt.getInt("id_alternativa"),
                             rsAlt.getString("texto"),
+                            rsAlt.getString("texto_correspondencia"),
                             rsAlt.getBoolean("correta")
                     ));
                 }
@@ -134,7 +136,8 @@ public class QuestaoStorage implements Storage<Long, Questao> {
                 ps.setInt(1, id++);
                 ps.setLong(2, idQuestao);
                 ps.setString(3, texto);
-                ps.setBoolean(4, alternativa.isCorreta());
+                ps.setString(4, alternativa.getTextoCorrespondencia());
+                ps.setBoolean(5, alternativa.isCorreta());
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -217,6 +220,7 @@ public class QuestaoStorage implements Storage<Long, Questao> {
                     alternativas.add(new Alternativa(
                             alternativasRs.getInt("id_alternativa"),
                             alternativasRs.getString("texto"),
+                            alternativasRs.getString("texto_correspondencia"),
                             alternativasRs.getBoolean("correta")
                     ));
                 }
