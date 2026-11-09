@@ -82,6 +82,37 @@ public class ProvaServico {
         return prova.getData().isBefore(LocalDate.now()) ? "Encerrada" : "Agendada";
     }
 
+    public String estadoParaAluno(Prova prova) {
+        java.time.LocalDateTime agora = java.time.LocalDateTime.now();
+        java.time.LocalDateTime inicio = prova.getDataHora();
+        java.time.LocalDateTime fim = prova.getDataHoraFim();
+
+        if (inicio == null) {
+            return "Agendada";
+        }
+
+        if (fim != null) {
+            if (agora.isBefore(inicio)) {
+                return "Agendada";
+            } else if (!agora.isAfter(fim)) {
+                return "Disponível";
+            } else {
+                return "Encerrada";
+            }
+        }
+
+        // Sem horário de fim explícito: disponível durante todo o dia agendado
+        LocalDate hoje = agora.toLocalDate();
+        LocalDate diaProva = inicio.toLocalDate();
+        if (diaProva.isAfter(hoje)) {
+            return "Agendada";
+        } else if (diaProva.isEqual(hoje)) {
+            return agora.isBefore(inicio) ? "Agendada" : "Disponível";
+        } else {
+            return "Encerrada";
+        }
+    }
+
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
         garantirNaoAplicada(codigoProva, "alterada");
         if (buscarProva(codigoProva) == null)
@@ -97,6 +128,13 @@ public class ProvaServico {
 
     public List<String> listarAlunos(String codigoProva) {
         return provaRepositorio.listarAlunos(codigoProva);
+    }
+
+    public List<Prova> listarProvasPorAluno(String registroAluno) {
+        if (registroAluno == null || registroAluno.isBlank()) {
+            return List.of();
+        }
+        return provaRepositorio.listarPorAluno(registroAluno);
     }
 
     // Aplica a prova aos alunos informados (PB07): exige ao menos uma questão e

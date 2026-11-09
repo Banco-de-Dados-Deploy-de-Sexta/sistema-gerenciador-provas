@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import modelos.Usuario;
 import storage.UsuarioStorage;
 import telas.prova.Prova;
+import telas.aluno.Aluno;
 
 public class LoginController {
 
@@ -55,13 +56,14 @@ public class LoginController {
             }
             Stage stage = (Stage) txt_registro.getScene().getWindow();
             if (usuario.isProfessor()) {
-                Sessao.iniciar(usuario);
                 // Redireciona para o painel de provas do professor
+                Sessao.iniciar(usuario);
                 Prova.abrir(stage);
             } else if (usuario.isAluno()) {
                 // Redireciona para a tela do aluno (quando criada)
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Bem-vindo(a) " + usuario.getNome() + "! (Área do Aluno)");
-                // Exemplo: AlunoProva.abrir(stage, usuario);
+                Sessao.iniciar(usuario);
+                Aluno.abrir(stage);
+                // mostrarAlerta(Alert.AlertType.INFORMATION, "Bem-vindo(a) " + usuario.getNome() + "! (Área do Aluno)");
             } else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Tipo de usuário desconhecido: " + usuario.getTipoUsuario());
             }

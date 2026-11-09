@@ -36,6 +36,10 @@ public class Main {
         telas.prova.Prova.setQuestaoServico(questaoServico);
         telas.prova.Prova.setUsuarioStorage(usuarioStorage);
 
+        telas.aluno.Aluno.setProvaServico(provaServico);
+        telas.aluno.Aluno.setQuestaoServico(questaoServico);
+        telas.aluno.Aluno.setUsuarioStorage(usuarioStorage);
+
         // O programa começa pelo menu de provas
         Application.launch(telas.login.Login.class, args);
     }

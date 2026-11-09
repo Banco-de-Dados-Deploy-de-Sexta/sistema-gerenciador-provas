@@ -25,4 +25,6 @@ public interface ProvaRepositorio {
 
     void salvarAlunos(String codigo, List<String> registros);
 
+    List<Prova> listarPorAluno(String registroAluno);
+
 }

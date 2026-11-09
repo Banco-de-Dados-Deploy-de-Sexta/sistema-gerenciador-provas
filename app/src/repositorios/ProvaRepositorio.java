@@ -58,4 +58,9 @@ public class ProvaRepositorio implements interfaces.ProvaRepositorio {
         storage.salvarAlunos(codigo, registros);
     }
 
+    @Override
+    public List<Prova> listarPorAluno(String registroAluno) {
+        return storage.listarPorAluno(registroAluno);
+    }
+
 }

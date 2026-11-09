@@ -41,6 +41,13 @@ public class ProvaStorage implements Storage<String, Prova> {
     private static final String SQL_REMOVER = "DELETE FROM prova WHERE codigo = ?";
     private static final String SQL_LISTAR_QUESTOES = "SELECT id_questao, peso_questao FROM prova_questao WHERE codigo_prova = ? ORDER BY id_questao";
     private static final String SQL_LISTAR_ALUNOS = "SELECT registro_aluno FROM prova_aluno WHERE codigo_prova = ? ORDER BY registro_aluno";
+    private static final String SQL_LISTAR_POR_ALUNO = """
+            SELECT p.codigo, p.titulo, p.materia, p.data_prova, p.data_prova_fim, p.curso, p.bimestre, p.registro_professor
+            FROM prova p
+            INNER JOIN prova_aluno pa ON p.codigo = pa.codigo_prova
+            WHERE pa.registro_aluno = ?
+            ORDER BY p.data_prova ASC, p.codigo ASC
+            """;
 
     private final ConexaoMySQL conexao;
 
@@ -209,6 +216,21 @@ public class ProvaStorage implements Storage<String, Prova> {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao listar alunos da prova " + codigo, e);
+        }
+    }
+
+    public List<Prova> listarPorAluno(String registroAluno) {
+        List<Prova> provas = new ArrayList<>();
+        try (PreparedStatement stmt = conexao.conectar().prepareStatement(SQL_LISTAR_POR_ALUNO)) {
+            stmt.setString(1, registroAluno);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    provas.add(paraProva(rs));
+                }
+                return provas;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao listar provas do aluno " + registroAluno, e);
         }
     }
 
