@@ -37,6 +37,7 @@ public class Main {
         telas.prova.Prova.setUsuarioStorage(usuarioStorage);
 
         // O programa começa pelo menu de provas
-        Application.launch(telas.login.Login.class, args);
+        //Application.launch(telas.questao.Questao.class, args);
+        Application.launch(telas.questao.Questao.class , args);
     }
 }

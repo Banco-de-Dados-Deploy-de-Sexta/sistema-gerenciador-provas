@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modelos.Questao;
@@ -55,7 +57,7 @@ public class BancoQuestoesController {
 
     // Card da lista de questões do Figma: número, pergunta resumida e quantidade de alternativas
     private VBox cardQuestao(Questao questao) {
-        Label numero = new Label(questao.getNumero() + ")Questão " + questao.getNumero());
+        Label numero = new Label(questao.getNumero() + ") Questão " + questao.getNumero());
         numero.getStyleClass().add("card-pequeno");
         Label pergunta = new Label(questao.getTitulo());
         pergunta.getStyleClass().add("card-texto");
@@ -66,12 +68,23 @@ public class BancoQuestoesController {
         int quantidade = questao.getAlternativas().size();
         Label alternativas = new Label(quantidade + (quantidade == 1 ? " alternativa" : " alternativas"));
         alternativas.getStyleClass().add("card-pequeno");
+        Label tipo = new Label(tipoResumido(questao.getDescricao()));
+        tipo.getStyleClass().add("card-estado");
+        HBox resumo = new HBox(8, tipo, alternativas);
+        resumo.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox.setHgrow(tipo, Priority.NEVER);
 
-        VBox card = new VBox(numero, pergunta, alternativas);
+        VBox card = new VBox(numero, pergunta, resumo);
         card.getStyleClass().add("card-lista");
         card.setUserData(questao);
         card.setOnMouseClicked(event -> selecionada.set(questao));
         return card;
+    }
+
+    private String tipoResumido(String descricao) {
+        if ("Correspondência".equals(descricao)) return "Correspondência";
+        if ("Verdadeiro ou falso em sequência".equals(descricao)) return "V/F em sequência";
+        return "Múltipla escolha";
     }
 
     private void destacarSelecionada() {
