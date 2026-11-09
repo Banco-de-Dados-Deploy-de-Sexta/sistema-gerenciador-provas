@@ -23,10 +23,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -46,6 +52,8 @@ import telas.corrigirprova.CorrigirProva;
 
 public class ProvaController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_DATA_HORA = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm");
+    private static final DateTimeFormatter FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm");
 
     @FXML
     private VBox listaProvas;
@@ -128,7 +136,13 @@ public class ProvaController {
         professor.getStyleClass().add("card-pequeno");
         Label codigo = new Label(prova.getCodigo());
         codigo.getStyleClass().add("card-pequeno");
-        Label data = new Label(prova.getData() == null ? "Sem data" : prova.getData().format(FORMATO_DATA));
+        String textoData = "Sem data";
+        if (prova.getDataHora() != null) {
+            textoData = prova.getDataHora().format(FORMATO_DATA_HORA);
+        } else if (prova.getData() != null) {
+            textoData = prova.getData().format(FORMATO_DATA);
+        }
+        Label data = new Label(textoData);
         data.getStyleClass().add("card-pequeno");
         Region espaco = new Region();
         HBox.setHgrow(espaco, Priority.ALWAYS);
@@ -258,21 +272,172 @@ public class ProvaController {
         }
         if (prova == null)
             return;
-        DatePicker data = new DatePicker(prova.getData() == null ? LocalDate.now() : prova.getData());
+
+        LocalDate hoje = LocalDate.now();
+        int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
+        int anoAtual = hoje.getYear();
+
+        LocalDate dataInicial = prova.getDataHora() != null ? prova.getDataHora().toLocalDate()
+                : (prova.getData() != null ? prova.getData() : hoje);
+        DatePicker campoData = new DatePicker(dataInicial);
+        campoData.setMaxWidth(Double.MAX_VALUE);
+        campoData.setPromptText("Selecione a data");
+        campoData.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    return;
+                }
+                boolean ehPassado = item.isBefore(LocalDate.now());
+                boolean ehFimDeSemana = item.getDayOfWeek() == java.time.DayOfWeek.SATURDAY
+                        || item.getDayOfWeek() == java.time.DayOfWeek.SUNDAY;
+                int semItem = item.getMonthValue() <= 6 ? 1 : 2;
+                boolean outroSemestre = item.getYear() != anoAtual || semItem != semestreAtual;
+
+                if (ehPassado || ehFimDeSemana || outroSemestre) {
+                    setDisable(true);
+                    setStyle("-fx-opacity: 0.4;");
+                }
+            }
+        });
+
+        var horarios = FXCollections.observableArrayList(
+            // Manhã
+            "07:10", "07:55", "08:40", "09:40", "10:25", "11:10",
+            // Tarde
+            "13:10", "13:55", "14:40", "15:40", "16:25", "17:10",
+            // Noite
+            "18:45", "19:30", "19:35", "20:15", "20:25", "21:10", "21:15", "21:25", "21:55", "22:15", "23:05"
+        );
+
+        String horaInicioInicial = prova.getDataHora() != null ? prova.getDataHora().format(FORMATO_HORA) : "07:10";
+        ComboBox<String> campoHoraInicio = new ComboBox<>(horarios);
+        campoHoraInicio.setEditable(true);
+        campoHoraInicio.setValue(horaInicioInicial);
+        campoHoraInicio.setMaxWidth(Double.MAX_VALUE);
+        campoHoraInicio.setPromptText("Selecione ou digite (HH:mm)");
+
+        String horaFimInicial = prova.getDataHoraFim() != null ? prova.getDataHoraFim().format(FORMATO_HORA) : "";
+        ComboBox<String> campoHoraFim = new ComboBox<>(horarios);
+        campoHoraFim.setEditable(true);
+        if (!horaFimInicial.isEmpty()) {
+            campoHoraFim.setValue(horaFimInicial);
+        }
+        campoHoraFim.setMaxWidth(Double.MAX_VALUE);
+        campoHoraFim.setPromptText("Opcional (HH:mm)");
+
         Dialog<ButtonType> dialogo = new Dialog<>();
         dialogo.setTitle("Agendar prova");
-        dialogo.setHeaderText("Escolha a data da prova \"" + prova.getTitulo() + "\"");
-        dialogo.getDialogPane().setContent(new VBox(8, new Label("Data da prova"), data));
-        dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
-        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK || data.getValue() == null)
+
+        DialogPane dialogPane = dialogo.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/telas/componentes/prova.css").toExternalForm());
+        dialogPane.getStyleClass().add("card");
+        dialogPane.setStyle("-fx-background-color: #f5f7fb; -fx-padding: 10;");
+
+        Label labelCabecalho = new Label("Agendar: " + prova.getTitulo());
+        labelCabecalho.getStyleClass().add("titulo");
+        labelCabecalho.setStyle("-fx-font-size: 18px;");
+
+        Label labelSubtitulo = new Label("Semestre letivo: " + semestreAtual + "º semestre de " + anoAtual + " (dias úteis)");
+        labelSubtitulo.getStyleClass().add("subtitulo");
+
+        Label lblData = new Label("DATA DA PROVA");
+        lblData.getStyleClass().add("secao");
+        VBox boxData = new VBox(5, lblData, campoData);
+
+        Label lblHoraInicio = new Label("HORÁRIO DE INÍCIO");
+        lblHoraInicio.getStyleClass().add("secao");
+        VBox boxHoraInicio = new VBox(5, lblHoraInicio, campoHoraInicio);
+        HBox.setHgrow(boxHoraInicio, Priority.ALWAYS);
+
+        Label lblHoraFim = new Label("HORÁRIO DE TÉRMINO");
+        lblHoraFim.getStyleClass().add("secao");
+        VBox boxHoraFim = new VBox(5, lblHoraFim, campoHoraFim);
+        HBox.setHgrow(boxHoraFim, Priority.ALWAYS);
+
+        HBox boxHoras = new HBox(12, boxHoraInicio, boxHoraFim);
+
+        VBox conteudo = new VBox(14,
+                labelCabecalho,
+                labelSubtitulo,
+                boxData,
+                boxHoras
+        );
+        conteudo.setPrefWidth(460);
+        conteudo.getStyleClass().add("card");
+        dialogPane.setContent(conteudo);
+
+        ButtonType btnSalvar = new ButtonType("Agendar prova", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialogPane.getButtonTypes().setAll(btnCancelar, btnSalvar);
+
+        Button okButtonNode = (Button) dialogPane.lookupButton(btnSalvar);
+        if (okButtonNode != null) {
+            okButtonNode.getStyleClass().addAll("botao-primario");
+        }
+        Button cancelButtonNode = (Button) dialogPane.lookupButton(btnCancelar);
+        if (cancelButtonNode != null) {
+            cancelButtonNode.getStyleClass().addAll("botao-secundario");
+        }
+
+        if (dialogo.showAndWait().orElse(btnCancelar) != btnSalvar)
             return;
-        LocalDate anterior = prova.getData();
+
+        LocalDate dataEscolhida = campoData.getValue();
+        if (dataEscolhida == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Selecione uma data para a prova.");
+            return;
+        }
+
+        String textoHoraInicio = campoHoraInicio.getEditor().getText() != null ? campoHoraInicio.getEditor().getText().trim() : "";
+        if (!textoHoraInicio.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Horário de início inválido. Informe no formato HH:mm (exemplo: 07:10 ou 18:45).");
+            return;
+        }
+
+        java.time.LocalTime horarioInicio = java.time.LocalTime.parse(
+                textoHoraInicio.length() == 4 ? "0" + textoHoraInicio : textoHoraInicio,
+                DateTimeFormatter.ofPattern("HH:mm")
+        );
+        java.time.LocalDateTime dataHoraEscolhida = java.time.LocalDateTime.of(dataEscolhida, horarioInicio);
+
         try {
-            prova.setData(data.getValue());
+            provaServico.validarAgendamento(dataHoraEscolhida);
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(Alert.AlertType.WARNING, e.getMessage());
+            return;
+        }
+
+        java.time.LocalDateTime dataHoraFimEscolhida = null;
+        String textoHoraFim = campoHoraFim.getEditor().getText() != null ? campoHoraFim.getEditor().getText().trim() : "";
+        if (!textoHoraFim.isEmpty()) {
+            if (!textoHoraFim.matches("^([01]?[0-9]|2[0-3]):[0-5][0-9]$")) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Horário de término inválido. Informe no formato HH:mm (exemplo: 08:40 ou 20:25).");
+                return;
+            }
+            java.time.LocalTime horarioFim = java.time.LocalTime.parse(
+                    textoHoraFim.length() == 4 ? "0" + textoHoraFim : textoHoraFim,
+                    DateTimeFormatter.ofPattern("HH:mm")
+            );
+            dataHoraFimEscolhida = java.time.LocalDateTime.of(dataEscolhida, horarioFim);
+            if (!dataHoraFimEscolhida.isAfter(dataHoraEscolhida)) {
+                mostrarAlerta(Alert.AlertType.WARNING, "O horário de término deve ser posterior ao horário de início.");
+                return;
+            }
+        }
+
+        java.time.LocalDateTime anteriorInicio = prova.getDataHora();
+        java.time.LocalDateTime anteriorFim = prova.getDataHoraFim();
+        try {
+            prova.setDataHora(dataHoraEscolhida);
+            prova.setDataHoraFim(dataHoraFimEscolhida);
             provaServico.salvarProva(prova);
             atualizar();
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Prova salva com sucesso. Código: " + prova.getCodigo());
         } catch (RuntimeException e) {
-            prova.setData(anterior);
+            prova.setDataHora(anteriorInicio);
+            prova.setDataHoraFim(anteriorFim);
             erro("Não foi possível agendar a prova.", e);
         }
     }
@@ -291,10 +456,16 @@ public class ProvaController {
         if (arquivo == null)
             return;
 
+        String textoData = "";
+        if (prova.getDataHora() != null) {
+            textoData = " — " + prova.getDataHora().format(FORMATO_DATA_HORA);
+        } else if (prova.getData() != null) {
+            textoData = " — " + prova.getData().format(FORMATO_DATA);
+        }
         StringBuilder texto = new StringBuilder()
                 .append(prova.getCodigo()).append(" — ").append(prova.getTitulo()).append('\n')
                 .append(descricao(prova))
-                .append(prova.getData() == null ? "" : " — " + prova.getData().format(FORMATO_DATA))
+                .append(textoData)
                 .append("\n\n");
         List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
         for (int i = 0; i < questoes.size(); i++) {
@@ -364,6 +535,12 @@ public class ProvaController {
 
     private void erro(String mensagem, Exception e) {
         Alert alerta = new Alert(Alert.AlertType.ERROR, mensagem + "\n" + e.getMessage());
+        alerta.setHeaderText(null);
+        alerta.showAndWait();
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String mensagem) {
+        Alert alerta = new Alert(tipo, mensagem);
         alerta.setHeaderText(null);
         alerta.showAndWait();
     }

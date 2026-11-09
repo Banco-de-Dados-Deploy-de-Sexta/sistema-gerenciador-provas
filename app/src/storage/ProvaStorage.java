@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,27 +16,28 @@ import modelos.Prova;
 
 public class ProvaStorage implements Storage<String, Prova> {
     private static final String SQL_SALVAR_MYSQL = """
-            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO prova (codigo, titulo, materia, data_prova, data_prova_fim, curso, bimestre, registro_professor)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE titulo = VALUES(titulo), materia = VALUES(materia),
-              data_prova = VALUES(data_prova), curso = VALUES(curso), bimestre = VALUES(bimestre),
+              data_prova = VALUES(data_prova), data_prova_fim = VALUES(data_prova_fim), curso = VALUES(curso), bimestre = VALUES(bimestre),
               registro_professor = VALUES(registro_professor)
             """;
 
     private static final String SQL_SALVAR_POSTGRES = """
-            INSERT INTO prova (codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO prova (codigo, titulo, materia, data_prova, data_prova_fim, curso, bimestre, registro_professor)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (codigo) DO UPDATE SET
               titulo = EXCLUDED.titulo,
               materia = EXCLUDED.materia,
               data_prova = EXCLUDED.data_prova,
+              data_prova_fim = EXCLUDED.data_prova_fim,
               curso = EXCLUDED.curso,
               bimestre = EXCLUDED.bimestre,
               registro_professor = EXCLUDED.registro_professor
             """;
 
-    private static final String SQL_BUSCAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre, registro_professor FROM prova WHERE codigo = ?";
-    private static final String SQL_LISTAR = "SELECT codigo, titulo, materia, data_prova, curso, bimestre, registro_professor FROM prova ORDER BY codigo";
+    private static final String SQL_BUSCAR = "SELECT codigo, titulo, materia, data_prova, data_prova_fim, curso, bimestre, registro_professor FROM prova WHERE codigo = ?";
+    private static final String SQL_LISTAR = "SELECT codigo, titulo, materia, data_prova, data_prova_fim, curso, bimestre, registro_professor FROM prova ORDER BY codigo";
     private static final String SQL_REMOVER = "DELETE FROM prova WHERE codigo = ?";
     private static final String SQL_LISTAR_QUESTOES = "SELECT id_questao, peso_questao FROM prova_questao WHERE codigo_prova = ? ORDER BY id_questao";
     private static final String SQL_LISTAR_ALUNOS = "SELECT registro_aluno FROM prova_aluno WHERE codigo_prova = ? ORDER BY registro_aluno";
@@ -86,13 +88,13 @@ public class ProvaStorage implements Storage<String, Prova> {
                 ps.setString(1, key);
                 ps.setString(2, value.getTitulo());
                 ps.setString(3, value.getMateria());
-                if (value.getData() == null)
-                    ps.setNull(4, java.sql.Types.DATE);
-                else
-                    ps.setDate(4, Date.valueOf(value.getData()));
-                ps.setString(5, value.getCurso());
-                ps.setInt(6, value.getBimestre());
-                ps.setString(7, value.getRegistroProfessor());
+                if (value.getDataHora() == null) ps.setNull(4, java.sql.Types.TIMESTAMP);
+                else ps.setTimestamp(4, Timestamp.valueOf(value.getDataHora()));
+                if (value.getDataHoraFim() == null) ps.setNull(5, java.sql.Types.TIMESTAMP);
+                else ps.setTimestamp(5, Timestamp.valueOf(value.getDataHoraFim()));
+                ps.setString(6, value.getCurso());
+                ps.setInt(7, value.getBimestre());
+                ps.setString(8, value.getRegistroProfessor());
                 ps.executeUpdate();
                 value.setCodigo(key);
                 return value;
@@ -239,10 +241,18 @@ public class ProvaStorage implements Storage<String, Prova> {
     }
 
     private Prova paraProva(ResultSet rs) throws SQLException {
-        Date data = rs.getDate("data_prova");
-        return new Prova(rs.getString("codigo"), rs.getString("titulo"), rs.getString("materia"),
-                data == null ? null : data.toLocalDate(), rs.getString("curso"), rs.getInt("bimestre"),
-                rs.getString("registro_professor"));
+        Timestamp dataHora = rs.getTimestamp("data_prova");
+        Timestamp dataHoraFim = rs.getTimestamp("data_prova_fim");
+        return new Prova(
+                rs.getString("codigo"),
+                rs.getString("titulo"),
+                rs.getString("materia"),
+                dataHora == null ? null : dataHora.toLocalDateTime(),
+                dataHoraFim == null ? null : dataHoraFim.toLocalDateTime(),
+                rs.getString("curso"),
+                rs.getInt("bimestre"),
+                rs.getString("registro_professor")
+        );
     }
 
 }
