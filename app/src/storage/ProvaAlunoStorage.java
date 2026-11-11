@@ -51,6 +51,23 @@ public class ProvaAlunoStorage {
         }
     }
 
+    // Quantidade de alunos que já entregaram a prova (regra da PB09)
+    public int contarEntregas(String codigoProva) {
+        String sql = """
+            SELECT COUNT(*) FROM prova_aluno
+            WHERE codigo_prova = ?
+              AND (data_realizacao IS NOT NULL OR UPPER(status) IN ('REALIZADA', 'CORRIGIDA'))
+        """;
+        try (PreparedStatement stmt = conexao.conectar().prepareStatement(sql)) {
+            stmt.setString(1, codigoProva);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao contar entregas da prova.", e);
+        }
+    }
+
     public void registrarEntrega(ProvaAluno provaAluno) {
         String sql = """
             UPDATE prova_aluno 

@@ -47,7 +47,22 @@ public class ProvaServico {
         validar(prova);
         if (prova.getCodigo() == null || prova.getCodigo().isBlank())
             prova.setCodigo(gerarCodigo());
+        else
+            garantirAgendamentoInalteradoComEntregas(prova);
         return provaRepositorio.save(prova);
+    }
+
+    // Depois que algum aluno entregou a prova, a data/horário não pode mais mudar:
+    // reagendar reabriria a prova (com as mesmas questões) para quem ainda não fez.
+    private void garantirAgendamentoInalteradoComEntregas(Prova prova) {
+        Prova atual = provaRepositorio.findByKey(prova.getCodigo());
+        if (atual == null)
+            return;
+        boolean mudouAgendamento = !java.util.Objects.equals(atual.getData(), prova.getData())
+                || !java.util.Objects.equals(atual.getDataHora(), prova.getDataHora())
+                || !java.util.Objects.equals(atual.getDataHoraFim(), prova.getDataHoraFim());
+        if (mudouAgendamento)
+            garantirSemEntregas(prova.getCodigo(), "reagendada");
     }
 
     public Prova buscarProva(String codigo) {
@@ -180,6 +195,18 @@ public class ProvaServico {
     private void garantirNaoAplicada(String codigoProva, String acao) {
         if (aplicada(codigoProva))
             throw new IllegalArgumentException("A prova já foi aplicada a alunos e não pode mais ser " + acao + ".");
+    }
+
+    // Indica se ao menos um aluno já entregou a prova
+    public boolean temEntregas(String codigoProva) {
+        if (provaAlunoStorage == null || codigoProva == null)
+            return false;
+        return provaAlunoStorage.contarEntregas(codigoProva) > 0;
+    }
+
+    private void garantirSemEntregas(String codigoProva, String acao) {
+        if (temEntregas(codigoProva))
+            throw new IllegalArgumentException("Alunos já entregaram esta prova e ela não pode mais ser " + acao + ".");
     }
 
     public ResultadoCorrecao corrigir(String codigoProva, Map<Long, Integer> respostas) {
@@ -335,6 +362,11 @@ public class ProvaServico {
             throw new IllegalArgumentException(
                     "A prova deve ser agendada no semestre letivo atual (" + semestreAtual + "º semestre de " + hoje.getYear() + ").");
         }
+    }
+
+    public void validarAgendamento(String codigoProva, java.time.LocalDateTime dataHora) {
+        garantirSemEntregas(codigoProva, "reagendada");
+        validarAgendamento(dataHora);
     }
 
     public void validarAgendamento(java.time.LocalDateTime dataHora) {

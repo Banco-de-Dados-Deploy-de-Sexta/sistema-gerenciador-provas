@@ -80,6 +80,7 @@ public class ProvaController {
     private final ObjectProperty<Prova> selecionada = new SimpleObjectProperty<>();
     private final BooleanProperty aplicada = new SimpleBooleanProperty();
     private final BooleanProperty ehDona = new SimpleBooleanProperty();
+    private final BooleanProperty temEntregas = new SimpleBooleanProperty();
     // registro do professor -> nome, preenchido sob demanda ao montar os cards
     private final HashMap<String, String> nomesProfessores = new HashMap<>();
 
@@ -97,13 +98,15 @@ public class ProvaController {
         // bind substitui o anterior):
         // - sem prova selecionada: tudo bloqueado, exceto Criar;
         // - prova de outro professor: tudo bloqueado, exceto Baixar;
-        // - prova já aplicada a alunos: Editar, Excluir e Questões bloqueados.
+        // - prova já aplicada a alunos: Editar, Excluir e Questões bloqueados;
+        // - algum aluno já entregou a prova: Agendar também bloqueado.
         var nenhuma = selecionada.isNull();
         var semPermissao = nenhuma.or(ehDona.not());
         var bloqueada = semPermissao.or(aplicada);
         baixarButton.disableProperty().bind(nenhuma);
-        for (Button botao : List.of(agendarButton, corrigirButton, aplicarButton))
+        for (Button botao : List.of(corrigirButton, aplicarButton))
             botao.disableProperty().bind(semPermissao);
+        agendarButton.disableProperty().bind(semPermissao.or(temEntregas));
         for (Button botao : List.of(editarButton, excluirButton, questoesButton))
             botao.disableProperty().bind(bloqueada);
         selecionada.addListener((obs, antiga, nova) -> {
@@ -135,6 +138,7 @@ public class ProvaController {
         Prova prova = selecionada.get();
         ehDona.set(prova != null && ehDona(prova));
         aplicada.set(prova != null && provaServico.aplicada(prova.getCodigo()));
+        temEntregas.set(prova != null && provaServico.temEntregas(prova.getCodigo()));
     }
 
     private String nomeProfessor(Prova prova) {
@@ -290,6 +294,10 @@ public class ProvaController {
         }
         if (prova == null)
             return;
+        if (provaServico.temEntregas(prova.getCodigo())) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Alunos já entregaram esta prova e ela não pode mais ser reagendada.");
+            return;
+        }
 
         LocalDate hoje = auxiliares.Relogio.hoje();
         int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
@@ -485,7 +493,7 @@ public class ProvaController {
         java.time.LocalDateTime dataHoraEscolhida = java.time.LocalDateTime.of(dataEscolhida, horarioInicio);
 
         try {
-            provaServico.validarAgendamento(dataHoraEscolhida);
+            provaServico.validarAgendamento(prova.getCodigo(), dataHoraEscolhida);
         } catch (IllegalArgumentException e) {
             mostrarAlerta(Alert.AlertType.WARNING, e.getMessage());
             return;
