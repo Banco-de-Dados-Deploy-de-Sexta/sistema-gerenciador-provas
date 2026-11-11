@@ -42,6 +42,12 @@ FOREIGN KEY (registro_aluno)
 REFERENCES usuario(registro)
 );
 
+CREATE TABLE questao (
+id_questao int primary key,
+titulo varchar(500) not null,
+descricao varchar(300) not null
+);
+
 CREATE TABLE resposta_aluno (
 id_resposta INT AUTO_INCREMENT PRIMARY KEY,
 codigo_prova VARCHAR(7) NOT NULL,
@@ -63,11 +69,6 @@ CONSTRAINT fk_resposta_questao
     REFERENCES questao(id_questao)
 );
 
-CREATE TABLE questao (
-id_questao int primary key,
-titulo varchar(500) not null,
-descricao varchar(300) not null
-);
 
 CREATE TABLE prova_questao (
 codigo_prova varchar(7),
