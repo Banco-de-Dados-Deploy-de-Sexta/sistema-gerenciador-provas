@@ -79,6 +79,7 @@ public class ProvaController {
     private final ProvaServico provaServico;
     private final ObjectProperty<Prova> selecionada = new SimpleObjectProperty<>();
     private final BooleanProperty aplicada = new SimpleBooleanProperty();
+    private final BooleanProperty ehDona = new SimpleBooleanProperty();
     // registro do professor -> nome, preenchido sob demanda ao montar os cards
     private final HashMap<String, String> nomesProfessores = new HashMap<>();
 
@@ -92,30 +93,25 @@ public class ProvaController {
         nomeUsuario.setText(logado == null ? "" : logado.getNome());
         Label registroUsuario = (Label) ((VBox) nomeUsuario.getParent()).getChildren().get(2);
         registroUsuario.setText(Sessao.getRegistroUsuarioLogado() == null ? "" : Sessao.getRegistroUsuarioLogado());
+        // Regras de bloqueio dos botões (um único bind por botão, pois um novo
+        // bind substitui o anterior):
+        // - sem prova selecionada: tudo bloqueado, exceto Criar;
+        // - prova de outro professor: tudo bloqueado, exceto Baixar;
+        // - prova já aplicada a alunos: Editar, Excluir e Questões bloqueados.
         var nenhuma = selecionada.isNull();
-        var bloqueada = nenhuma.or(aplicada);
-        for (Button botao : List.of(agendarButton, baixarButton, corrigirButton, aplicarButton))
-            botao.disableProperty().bind(nenhuma);
+        var semPermissao = nenhuma.or(ehDona.not());
+        var bloqueada = semPermissao.or(aplicada);
+        baixarButton.disableProperty().bind(nenhuma);
+        for (Button botao : List.of(agendarButton, corrigirButton, aplicarButton))
+            botao.disableProperty().bind(semPermissao);
         for (Button botao : List.of(editarButton, excluirButton, questoesButton))
             botao.disableProperty().bind(bloqueada);
         selecionada.addListener((obs, antiga, nova) -> {
-            aplicada.set(nova != null && provaServico.aplicada(nova.getCodigo()));
+            atualizarPermissoes();
             destacarSelecionada();
             mostrarQuestoes();
         });
 
-        // bloquear botoes caso a prova nao pertenca ao usuario logado
-        BooleanProperty ehDona = new SimpleBooleanProperty();
-        selecionada.addListener((obs, antiga, nova) -> {
-            ehDona.set(nova != null && Sessao.getRegistroUsuarioLogado().equals(nova.getRegistroProfessor()));
-        });
-        editarButton.disableProperty().bind(ehDona.not());
-        excluirButton.disableProperty().bind(ehDona.not());
-        agendarButton.disableProperty().bind(ehDona.not());
-        questoesButton.disableProperty().bind(ehDona.not());
-        corrigirButton.disableProperty().bind(ehDona.not());
-        aplicarButton.disableProperty().bind(ehDona.not());
-        
         atualizar();
     }
 
@@ -128,8 +124,17 @@ public class ProvaController {
         if (provas.isEmpty())
             listaProvas.getChildren().add(vazio("Nenhuma prova cadastrada. Use Criar prova."));
         selecionada.set(provas.stream().filter(p -> p.getCodigo().equals(codigoSelecionado)).findFirst().orElse(null));
+        atualizarPermissoes();
         destacarSelecionada();
         mostrarQuestoes();
+    }
+
+    // Recalcula se a prova selecionada é do professor logado e se já foi aplicada
+    // (chamado também após atualizar(), pois aplicar alunos não troca a seleção)
+    private void atualizarPermissoes() {
+        Prova prova = selecionada.get();
+        ehDona.set(prova != null && ehDona(prova));
+        aplicada.set(prova != null && provaServico.aplicada(prova.getCodigo()));
     }
 
     private String nomeProfessor(Prova prova) {
