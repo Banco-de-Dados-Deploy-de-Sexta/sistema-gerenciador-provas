@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<VBox spacing="14.0" styleClass="tela" stylesheets="@../componentes/prova.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="20.0" left="24.0" right="24.0" top="20.0" />
+    </padding>
+
+    <VBox spacing="4.0">
+        <Label fx:id="tituloTela" styleClass="titulo" text="Realizar prova" />
+        <Label fx:id="subtituloTela" styleClass="subtitulo" text="Leia as questões atentamente e selecione ou preencha as respostas. Ao terminar, clique em Entregar prova." wrapText="true" />
+    </VBox>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+        <content>
+            <VBox fx:id="listaQuestoes" spacing="14.0">
+                <padding>
+                    <Insets bottom="10.0" left="6.0" right="6.0" top="6.0" />
+                </padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <HBox alignment="CENTER_LEFT" spacing="12.0">
+        <Button fx:id="btnEntregar" mnemonicParsing="false" onAction="#entregar" styleClass="botao-primario" text="Entregar prova" />
+        <Button mnemonicParsing="false" onAction="#limparRespostas" styleClass="botao-secundario" text="Limpar respostas" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" onAction="#cancelar" styleClass="botao-secundario" text="Cancelar e Sair" />
+    </HBox>
+</VBox>

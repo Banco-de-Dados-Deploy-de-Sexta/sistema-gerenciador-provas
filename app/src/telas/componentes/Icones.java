@@ -18,6 +18,7 @@ public final class Icones {
     public static final String CONFIRMAR ="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z";
     public static final String CANCELAR = "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z";
     public static final String VOLTAR = "M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z";
+    public static final String ATUALIZAR = "M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.1-.3 2.13-.82 3.01l1.46 1.46C19.53 14.53 20 13.33 20 12c0-4.42-3.58-8-8-8zm-6.36 2.64L4.22 7.06C3.47 8.47 3 10.33 3 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.1.3-2.13.82-3.01l-1.46-1.46z";
 
     private Icones() { }
 

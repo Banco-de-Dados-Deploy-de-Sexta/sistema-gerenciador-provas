@@ -30,6 +30,9 @@ REFERENCES usuario(registro)
 CREATE table prova_aluno (
 codigo_prova varchar(7),
 registro_aluno varchar(20),
+data_realizacao datetime,
+nota_final decimal(4,2),
+status varchar(20) NOT NULL DEFAULT 'PENDENTE',
 PRIMARY KEY(codigo_prova, registro_aluno),
 CONSTRAINT fk_prova_aluno_prova
 FOREIGN KEY (codigo_prova)
@@ -37,6 +40,27 @@ REFERENCES prova(codigo),
 CONSTRAINT fk_prova_aluno_usuario
 FOREIGN KEY (registro_aluno)
 REFERENCES usuario(registro)
+);
+
+CREATE TABLE resposta_aluno (
+id_resposta INT AUTO_INCREMENT PRIMARY KEY,
+codigo_prova VARCHAR(7) NOT NULL,
+registro_aluno VARCHAR(20) NOT NULL,
+id_questao INT NOT NULL,
+id_alternativa_escolhida INT NULL,     -- Alternativa marcada (questão de múltipla escolha)
+resposta_texto TEXT NULL,              -- Texto dissertativo ou formato de correspondência
+ordem_questao INT NOT NULL DEFAULT 1,  -- Ordem em que a questão apareceu para o aluno (PB15)
+acertou BOOLEAN NULL,                  -- NULL = pendente de correção manual, TRUE = correta, FALSE = incorreta
+nota_obtida DECIMAL(4, 2) NULL,        -- Pontos obtidos nesta questão
+
+CONSTRAINT fk_resposta_prova_aluno 
+    FOREIGN KEY (codigo_prova, registro_aluno) 
+    REFERENCES prova_aluno(codigo_prova, registro_aluno) 
+    ON DELETE CASCADE,
+    
+CONSTRAINT fk_resposta_questao 
+    FOREIGN KEY (id_questao) 
+    REFERENCES questao(id_questao)
 );
 
 CREATE TABLE questao (

@@ -57,7 +57,7 @@ public class AlunoController {
             registroUsuario.setText("RA: " + usuario.getRegistro());
         }
 
-        realizarButton.disableProperty().bind(selecionada.isNull());
+        atualizarBotaoRealizar(selecionada.get());
         selecionada.addListener((obs, antes, agora) -> {
             destacarSelecionada();
             mostrarDetalhesProva();
@@ -117,7 +117,10 @@ public class AlunoController {
         Region espacoRodape = new Region();
         HBox.setHgrow(espacoRodape, Priority.ALWAYS);
 
-        String estadoTexto = provaServico.estadoParaAluno(prova);
+        Usuario usuario = Sessao.getUsuarioLogado();
+        String estadoTexto = usuario != null
+                ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
+                : provaServico.estadoParaAluno(prova);
         Label estado = new Label(estadoTexto);
         estado.getStyleClass().add("card-estado");
 
@@ -186,15 +189,31 @@ public class AlunoController {
         Label data = new Label("Data e Horário: " + dataTexto);
         data.setStyle("-fx-text-fill: #4b5563;");
 
-        String estadoTexto = provaServico.estadoParaAluno(prova);
+        Usuario usuario = Sessao.getUsuarioLogado();
+        String estadoTexto = usuario != null
+                ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
+                : provaServico.estadoParaAluno(prova);
         Label status = new Label("Status: " + estadoTexto);
         status.setStyle("-fx-font-weight: bold; -fx-text-fill: #1d4ed8;");
 
-        Label aviso = new Label("As questões estarão disponíveis para realização no dia e horário agendados.");
-        aviso.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic;");
-        aviso.setWrapText(true);
+        painel.getChildren().addAll(titulo, materiaCurso, qtd, data, status);
 
-        painel.getChildren().addAll(titulo, materiaCurso, qtd, data, status, aviso);
+        if (usuario != null && provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro())) {
+            modelos.ProvaAluno realizacao = provaServico.buscarRealizacaoAluno(prova.getCodigo(), usuario.getRegistro());
+            if (realizacao != null && realizacao.getNotaFinal() != null) {
+                Label nota = new Label("Sua Nota: " + String.format(Locale.US, "%.2f", realizacao.getNotaFinal()) + " / 10.00");
+                nota.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #059669;");
+                painel.getChildren().add(nota);
+            }
+            Label msgRealizada = new Label("Você já realizou e enviou esta prova.");
+            msgRealizada.setStyle("-fx-text-fill: #059669; -fx-font-weight: bold;");
+            painel.getChildren().add(msgRealizada);
+        } else {
+            Label aviso = new Label("As questões estarão disponíveis para realização no dia e horário agendados.");
+            aviso.setStyle("-fx-text-fill: #6b7280; -fx-font-style: italic;");
+            aviso.setWrapText(true);
+            painel.getChildren().add(aviso);
+        }
         questoesProva.getChildren().add(painel);
     }
 
@@ -203,7 +222,14 @@ public class AlunoController {
             realizarButton.setDisable(true);
             return;
         }
-        String estado = provaServico.estadoParaAluno(prova);
+        Usuario usuario = Sessao.getUsuarioLogado();
+        if (usuario != null && provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro())) {
+            realizarButton.setDisable(true);
+            return;
+        }
+        String estado = usuario != null
+                ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
+                : provaServico.estadoParaAluno(prova);
         boolean disponivel = "Disponível".equalsIgnoreCase(estado);
         realizarButton.setDisable(!disponivel);
     }
@@ -214,12 +240,24 @@ public class AlunoController {
         if (prova == null) {
             return;
         }
-        String estado = provaServico.estadoParaAluno(prova);
+        Usuario usuario = Sessao.getUsuarioLogado();
+        if (usuario != null && provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro())) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Você já realizou esta prova anteriormente.");
+            return;
+        }
+        String estado = usuario != null
+                ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
+                : provaServico.estadoParaAluno(prova);
         if (!"Disponível".equalsIgnoreCase(estado)) {
             mostrarAlerta(Alert.AlertType.WARNING, "Esta prova só pode ser realizada quando estiver no estado 'Disponível'.");
             return;
         }
-        mostrarAlerta(Alert.AlertType.INFORMATION, "A tela de realização da prova (PB09) será iniciada aqui.");
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            telas.realizarprova.RealizarProva.abrir(stage, prova, provaServico);
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Não foi possível abrir a tela de realização da prova: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -231,6 +269,12 @@ public class AlunoController {
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Erro ao retornar para a tela de login: " + e.getMessage());
         }
+    }
+
+    // implementar corretamente novo botao do fxml para dar refresh
+    @FXML
+    private void atualizarProvas() {
+        atualizarLista();
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String mensagem) {

@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import configuracao.ConexaoMySQL;
 import interfaces.Storage;
@@ -240,18 +242,62 @@ public class ProvaStorage implements Storage<String, Prova> {
             Connection con = conexao.conectar();
             boolean autoCommitAnterior = con.getAutoCommit();
             con.setAutoCommit(false);
-            try (PreparedStatement remover = con.prepareStatement("DELETE FROM prova_aluno WHERE codigo_prova = ?");
-                 PreparedStatement inserir = con.prepareStatement("INSERT INTO prova_aluno (codigo_prova, registro_aluno) VALUES (?, ?)")) {
-                remover.setString(1, codigo);
-                remover.executeUpdate();
-                for (String registro : registros) {
-                    inserir.setString(1, codigo);
-                    inserir.setString(2, registro);
-                    inserir.addBatch();
+            try {
+                Set<String> alunosExistentes = new HashSet<>();
+                Set<String> alunosRealizados = new HashSet<>();
+                try (PreparedStatement consultar = con.prepareStatement("""
+                        SELECT registro_aluno, data_realizacao, status
+                        FROM prova_aluno
+                        WHERE codigo_prova = ?
+                        FOR UPDATE
+                        """)) {
+                    consultar.setString(1, codigo);
+                    try (ResultSet rs = consultar.executeQuery()) {
+                        while (rs.next()) {
+                            String registro = rs.getString("registro_aluno");
+                            alunosExistentes.add(registro);
+                            String status = rs.getString("status");
+                            if (rs.getTimestamp("data_realizacao") != null
+                                    || "REALIZADA".equalsIgnoreCase(status)
+                                    || "CORRIGIDA".equalsIgnoreCase(status)) {
+                                alunosRealizados.add(registro);
+                            }
+                        }
+                    }
                 }
-                inserir.executeBatch();
+
+                for (String registro : alunosRealizados) {
+                    if (!registros.contains(registro)) {
+                        throw new IllegalArgumentException(
+                                "Não é possível remover um aluno que já realizou esta prova.");
+                    }
+                }
+
+                try (PreparedStatement remover = con.prepareStatement(
+                        "DELETE FROM prova_aluno WHERE codigo_prova = ? AND registro_aluno = ?");
+                     PreparedStatement inserir = con.prepareStatement(
+                        "INSERT INTO prova_aluno (codigo_prova, registro_aluno, status) VALUES (?, ?, ?)")) {
+                    for (String registro : alunosExistentes) {
+                        if (!registros.contains(registro)) {
+                            remover.setString(1, codigo);
+                            remover.setString(2, registro);
+                            remover.addBatch();
+                        }
+                    }
+                    remover.executeBatch();
+
+                    for (String registro : registros) {
+                        if (!alunosExistentes.contains(registro)) {
+                            inserir.setString(1, codigo);
+                            inserir.setString(2, registro);
+                            inserir.setString(3, "PENDENTE");
+                            inserir.addBatch();
+                        }
+                    }
+                    inserir.executeBatch();
+                }
                 con.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 con.rollback();
                 throw e;
             } finally {

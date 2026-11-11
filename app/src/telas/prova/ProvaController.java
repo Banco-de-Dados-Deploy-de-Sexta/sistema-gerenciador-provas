@@ -103,6 +103,19 @@ public class ProvaController {
             destacarSelecionada();
             mostrarQuestoes();
         });
+
+        // bloquear botoes caso a prova nao pertenca ao usuario logado
+        BooleanProperty ehDona = new SimpleBooleanProperty();
+        selecionada.addListener((obs, antiga, nova) -> {
+            ehDona.set(nova != null && Sessao.getRegistroUsuarioLogado().equals(nova.getRegistroProfessor()));
+        });
+        editarButton.disableProperty().bind(ehDona.not());
+        excluirButton.disableProperty().bind(ehDona.not());
+        agendarButton.disableProperty().bind(ehDona.not());
+        questoesButton.disableProperty().bind(ehDona.not());
+        corrigirButton.disableProperty().bind(ehDona.not());
+        aplicarButton.disableProperty().bind(ehDona.not());
+        
         atualizar();
     }
 
