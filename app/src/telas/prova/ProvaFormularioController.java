@@ -58,7 +58,7 @@ public class ProvaFormularioController {
             horaTerminoComboBox.setItems(horarios);
         }
         if (dataPicker != null) {
-            java.time.LocalDate hoje = java.time.LocalDate.now();
+            java.time.LocalDate hoje = auxiliares.Relogio.hoje();
             int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
             int anoAtual = hoje.getYear();
             dataPicker.setDayCellFactory(picker -> new DateCell() {

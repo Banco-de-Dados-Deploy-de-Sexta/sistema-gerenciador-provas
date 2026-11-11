@@ -60,7 +60,7 @@ public class ProvaAlunoStorage {
         try (PreparedStatement stmt = conexao.conectar().prepareStatement(sql)) {
             stmt.setTimestamp(1, provaAluno.getDataRealizacao() != null 
                     ? Timestamp.valueOf(provaAluno.getDataRealizacao()) 
-                    : Timestamp.valueOf(java.time.LocalDateTime.now()));
+                    : Timestamp.valueOf(auxiliares.Relogio.agora()));
             if (provaAluno.getNotaFinal() != null) {
                 stmt.setDouble(2, provaAluno.getNotaFinal());
             } else {

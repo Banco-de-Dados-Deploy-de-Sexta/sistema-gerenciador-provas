@@ -286,7 +286,7 @@ public class ProvaController {
         if (prova == null)
             return;
 
-        LocalDate hoje = LocalDate.now();
+        LocalDate hoje = auxiliares.Relogio.hoje();
         int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
         int anoAtual = hoje.getYear();
 
@@ -302,7 +302,7 @@ public class ProvaController {
                 if (empty || item == null) {
                     return;
                 }
-                boolean ehPassado = item.isBefore(LocalDate.now());
+                boolean ehPassado = item.isBefore(hoje);
                 boolean ehFimDeSemana = item.getDayOfWeek() == java.time.DayOfWeek.SATURDAY
                         || item.getDayOfWeek() == java.time.DayOfWeek.SUNDAY;
                 int semItem = item.getMonthValue() <= 6 ? 1 : 2;
@@ -343,8 +343,8 @@ public class ProvaController {
         // Atualiza dinamicamente as opções de horários de início e término
         Runnable atualizarOpcoesHorarios = () -> {
             LocalDate dataSel = campoData.getValue();
-            boolean dataEhHoje = dataSel != null && dataSel.equals(LocalDate.now());
-            java.time.LocalTime agora = java.time.LocalTime.now();
+            boolean dataEhHoje = dataSel != null && dataSel.equals(auxiliares.Relogio.hoje());
+            java.time.LocalTime agora = auxiliares.Relogio.horaAtual();
 
             List<String> horariosInicioValidos = todosHorarios.stream().filter(h -> {
                 if (!dataEhHoje) return true;

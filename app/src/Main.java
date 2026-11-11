@@ -17,6 +17,13 @@ public class Main {
 
         ConexaoMySQL conexao = new ConexaoMySQL();
 
+        // Horário confiável: API externa -> banco -> (último recurso) relógio local.
+        // Evita que o aluno burle o horário da prova alterando a data/hora do Windows.
+        auxiliares.Relogio.configurarFonteBanco(conexao::conectar);
+        Thread sincronizadorRelogio = new Thread(auxiliares.Relogio::sincronizar, "sincronizador-relogio");
+        sincronizadorRelogio.setDaemon(true);
+        sincronizadorRelogio.start();
+
         // Usuário / Login
         UsuarioStorage usuarioStorage = new UsuarioStorage(conexao);
         Login.setUsuarioStorage(usuarioStorage);

@@ -37,6 +37,22 @@ DB_PASSWORD=sua_senha
 
 > O `.env` contém credenciais e **não deve ser versionado** (já está no `.gitignore`).
 
+### Horário confiável
+
+A aplicação **não usa o relógio do computador** para decidir se uma prova está agendada, disponível ou encerrada (alterar a data/hora do Windows não libera a prova). O horário é obtido, nesta ordem:
+
+1. API pública de horário (`https://timeapi.io`);
+2. cabeçalho `Date` de uma resposta HTTPS;
+3. horário do servidor de banco de dados;
+4. relógio local, apenas como último recurso (sem internet e sem banco).
+
+Depois de sincronizado, o horário avança por um contador monotônico da JVM e é ressincronizado a cada 5 minutos. Variáveis opcionais no `.env`:
+
+```env
+FUSO_HORARIO=America/Sao_Paulo
+TIME_API_URL=https://timeapi.io/api/time/current/zone?timeZone=America/Sao_Paulo
+```
+
 ## 4. Executar
 
 O arquivo `.env` é lido a partir da pasta de execução, por isso execute a aplicação **a partir da pasta `app`**:

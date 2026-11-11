@@ -90,14 +90,14 @@ public class ProvaServico {
     public String estado(Prova prova, int totalQuestoes) {
         if (totalQuestoes == 0) return "Rascunho";
         if (prova.getDataHora() != null) {
-            return prova.getDataHora().isBefore(java.time.LocalDateTime.now()) ? "Encerrada" : "Agendada";
+            return prova.getDataHora().isBefore(auxiliares.Relogio.agora()) ? "Encerrada" : "Agendada";
         }
         if (prova.getData() == null) return "Pronta";
-        return prova.getData().isBefore(LocalDate.now()) ? "Encerrada" : "Agendada";
+        return prova.getData().isBefore(auxiliares.Relogio.hoje()) ? "Encerrada" : "Agendada";
     }
 
     public String estadoParaAluno(Prova prova) {
-        java.time.LocalDateTime agora = java.time.LocalDateTime.now();
+        java.time.LocalDateTime agora = auxiliares.Relogio.agora();
         java.time.LocalDateTime inicio = prova.getDataHora();
         java.time.LocalDateTime fim = prova.getDataHoraFim();
 
@@ -282,7 +282,7 @@ public class ProvaServico {
             ProvaAluno pa = new ProvaAluno(
                     codigoProva,
                     registroAluno,
-                    java.time.LocalDateTime.now(),
+                    auxiliares.Relogio.agora(),
                     notaFinal,
                     status
             );
@@ -321,14 +321,14 @@ public class ProvaServico {
         if (data == null) {
             throw new IllegalArgumentException("Informe a data da prova.");
         }
-        if (data.isBefore(LocalDate.now())) {
+        if (data.isBefore(auxiliares.Relogio.hoje())) {
             throw new IllegalArgumentException("Não é possível agendar para uma data passada.");
         }
         java.time.DayOfWeek diaSemana = data.getDayOfWeek();
         if (diaSemana == java.time.DayOfWeek.SATURDAY || diaSemana == java.time.DayOfWeek.SUNDAY) {
             throw new IllegalArgumentException("A data da prova deve ser em um dia útil (segunda a sexta-feira).");
         }
-        LocalDate hoje = LocalDate.now();
+        LocalDate hoje = auxiliares.Relogio.hoje();
         int semestreAtual = hoje.getMonthValue() <= 6 ? 1 : 2;
         int semestreData = data.getMonthValue() <= 6 ? 1 : 2;
         if (data.getYear() != hoje.getYear() || semestreData != semestreAtual) {
@@ -342,7 +342,7 @@ public class ProvaServico {
             throw new IllegalArgumentException("Informe a data e o horário da prova.");
         }
         validarDataAgendamento(dataHora.toLocalDate());
-        if (dataHora.isBefore(java.time.LocalDateTime.now())) {
+        if (dataHora.isBefore(auxiliares.Relogio.agora())) {
             throw new IllegalArgumentException("Não é possível agendar para um horário que já passou.");
         }
     }
