@@ -41,7 +41,6 @@ public class Main {
         telas.aluno.Aluno.setUsuarioStorage(usuarioStorage);
 
         // O programa começa pelo menu de provas
-        //Application.launch(telas.questao.Questao.class, args);
-        Application.launch(telas.questao.Questao.class , args);
+        Application.launch(telas.login.Login.class , args);
     }
 }
