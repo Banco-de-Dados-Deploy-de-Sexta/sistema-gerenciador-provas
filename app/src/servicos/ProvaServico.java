@@ -10,17 +10,31 @@ import java.util.Map;
 import interfaces.ProvaRepositorio;
 import modelos.PesoQuestao;
 import modelos.Prova;
+import modelos.ProvaAluno;
+import modelos.RespostaAluno;
 import modelos.Questao;
 import modelos.QuestaoComPeso;
 import modelos.ResultadoCorrecao;
+import modelos.RespostaAluno;
+import modelos.ProvaAluno;
 
 public class ProvaServico {
     private final ProvaRepositorio provaRepositorio;
     private final QuestaoServico questaoServico;
+    private final storage.ProvaAlunoStorage provaAlunoStorage;
+    private final storage.RespostaAlunoStorage respostaAlunoStorage;
 
     public ProvaServico(ProvaRepositorio provaRepositorio, QuestaoServico questaoServico) {
+        this(provaRepositorio, questaoServico, null, null);
+    }
+
+    public ProvaServico(ProvaRepositorio provaRepositorio, QuestaoServico questaoServico,
+                        storage.ProvaAlunoStorage provaAlunoStorage,
+                        storage.RespostaAlunoStorage respostaAlunoStorage) {
         this.provaRepositorio = provaRepositorio;
         this.questaoServico = questaoServico;
+        this.provaAlunoStorage = provaAlunoStorage;
+        this.respostaAlunoStorage = respostaAlunoStorage;
     }
 
     public Prova criarProva(String titulo, String materia, LocalDate data, String curso, int bimestre,
@@ -113,6 +127,17 @@ public class ProvaServico {
         }
     }
 
+    public String estadoParaAluno(Prova prova, String registroAluno) {
+        if (alunoJaRealizou(prova.getCodigo(), registroAluno)) {
+            ProvaAluno pa = buscarRealizacaoAluno(prova.getCodigo(), registroAluno);
+            if (pa != null && "CORRIGIDA".equalsIgnoreCase(pa.getStatus())) {
+                return "Corrigida";
+            }
+            return "Realizada";
+        }
+        return estadoParaAluno(prova);
+    }
+
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
         garantirNaoAplicada(codigoProva, "alterada");
         if (buscarProva(codigoProva) == null)
@@ -174,6 +199,97 @@ public class ProvaServico {
         return new ResultadoCorrecao(obtidos, possiveis);
     }
 
+    public ProvaAluno buscarRealizacaoAluno(String codigoProva, String registroAluno) {
+        if (provaAlunoStorage == null || codigoProva == null || registroAluno == null) {
+            return null;
+        }
+        return provaAlunoStorage.buscar(codigoProva, registroAluno);
+    }
+
+    public boolean alunoJaRealizou(String codigoProva, String registroAluno) {
+        ProvaAluno pa = buscarRealizacaoAluno(codigoProva, registroAluno);
+        return pa != null && pa.isRealizada();
+    }
+
+    public List<RespostaAluno> listarRespostasAluno(String codigoProva, String registroAluno) {
+        if (respostaAlunoStorage == null || codigoProva == null || registroAluno == null) {
+            return List.of();
+        }
+        return respostaAlunoStorage.listarPorAlunoEProva(codigoProva, registroAluno);
+    }
+
+    // Regra da PB09: entrega de prova com tentativa única e correção automática
+    public void entregarProva(String codigoProva, String registroAluno, List<RespostaAluno> respostas) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) {
+            throw new IllegalArgumentException("Prova não encontrada.");
+        }
+
+        if (alunoJaRealizou(codigoProva, registroAluno)) {
+            throw new IllegalStateException("Esta prova já foi realizada e entregue anteriormente.");
+        }
+
+        List<QuestaoComPeso> questoesComPeso = listarQuestoes(codigoProva);
+        double pesoTotal = questoesComPeso.stream().mapToDouble(QuestaoComPeso::getPeso).sum();
+        double pesoObtido = 0.0;
+        boolean temDissertativa = false;
+
+        // Correção das questões
+        for (RespostaAluno resp : respostas) {
+            resp.setCodigoProva(codigoProva);
+            resp.setRegistroAluno(registroAluno);
+
+            QuestaoComPeso qcp = questoesComPeso.stream()
+                    .filter(q -> q.getQuestao().getNumero() == resp.getIdQuestao())
+                    .findFirst().orElse(null);
+
+            if (qcp == null) continue;
+
+            if (resp.getIdAlternativaEscolhida() != null) {
+                // Questão de múltipla escolha
+                boolean acertou = qcp.getQuestao().getAlternativas().stream()
+                        .anyMatch(alt -> alt.getId() == resp.getIdAlternativaEscolhida() && alt.isCorreta());
+                resp.setAcertou(acertou);
+                double notaQuestao = acertou ? qcp.getPeso() : 0.0;
+                resp.setNotaObtida(notaQuestao);
+                if (acertou) {
+                    pesoObtido += qcp.getPeso();
+                }
+            } else if (resp.getRespostaTexto() != null && !resp.getRespostaTexto().isBlank()) {
+                // Dissertativa ou correspondência (correção manual ou pendente)
+                temDissertativa = true;
+                resp.setAcertou(null);
+                resp.setNotaObtida(null);
+            } else {
+                // Em branco
+                resp.setAcertou(false);
+                resp.setNotaObtida(0.0);
+            }
+        }
+
+        if (respostaAlunoStorage != null) {
+            respostaAlunoStorage.salvarRespostas(respostas);
+        }
+
+        Double notaFinal = null;
+        String status = "REALIZADA";
+        if (!temDissertativa && pesoTotal > 0) {
+            notaFinal = Math.round(((pesoObtido / pesoTotal) * 10.0) * 100.0) / 100.0;
+            status = "CORRIGIDA";
+        }
+
+        if (provaAlunoStorage != null) {
+            ProvaAluno pa = new ProvaAluno(
+                    codigoProva,
+                    registroAluno,
+                    java.time.LocalDateTime.now(),
+                    notaFinal,
+                    status
+            );
+            provaAlunoStorage.registrarEntrega(pa);
+        }
+    }
+
     private String gerarCodigo() {
         int proximo = provaRepositorio.findAll().stream()
                 .map(Prova::getCodigo)
@@ -182,7 +298,7 @@ public class ProvaServico {
                 .max().orElse(0) + 1;
         if (proximo > 9999)
             throw new IllegalStateException("Limite de provas cadastradas atingido.");
-        return "PRV%04d".formatted(proximo);
+        return "PRV%03d".formatted(proximo);
     }
 
     private void validar(Prova prova) {

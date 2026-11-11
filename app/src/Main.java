@@ -27,8 +27,10 @@ public class Main {
         QuestaoServico questaoServico = new QuestaoServico(questaoRepositorio);
 
         ProvaStorage provaStorage = new ProvaStorage(conexao);
+        storage.ProvaAlunoStorage provaAlunoStorage = new storage.ProvaAlunoStorage(conexao);
+        storage.RespostaAlunoStorage respostaAlunoStorage = new storage.RespostaAlunoStorage(conexao);
         ProvaRepositorio provaRepositorio = new ProvaRepositorio(provaStorage);
-        ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico);
+        ProvaServico provaServico = new ProvaServico(provaRepositorio, questaoServico, provaAlunoStorage, respostaAlunoStorage);
 
         telas.questao.Questao.setQuestaoServico(questaoServico);
         telas.bancoquestoes.BancoQuestoes.setQuestaoServico(questaoServico);

@@ -68,6 +68,7 @@ public class LoginController {
                 mostrarAlerta(Alert.AlertType.ERROR, "Tipo de usuário desconhecido: " + usuario.getTipoUsuario());
             }
         } catch (Exception e) {
+            System.err.println("Erro ao autenticar: " + e.getMessage());
             mostrarAlerta(Alert.AlertType.ERROR, "Erro ao autenticar: " + e.getMessage());
         }
     }
