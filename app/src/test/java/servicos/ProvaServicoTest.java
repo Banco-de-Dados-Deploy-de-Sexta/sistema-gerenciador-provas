@@ -24,6 +24,7 @@ import auxiliares.Relogio;
 import modelos.Alternativa;
 import modelos.PesoQuestao;
 import modelos.Prova;
+import modelos.ProvaAluno;
 import modelos.Questao;
 
 // Casos de teste das regras de negócio de prova (PB02, PB03, PB04, PB07, PB08,
@@ -464,6 +465,106 @@ class ProvaServicoTest {
             servico.salvarProva(editada);
             assertEquals(PROFESSOR, provas.findByKey(prova.getCodigo()).getRegistroProfessor());
             assertEquals("Novo título", provas.findByKey(prova.getCodigo()).getTitulo());
+        }
+    }
+
+    // ---- reagendamento com entregas ---------------------------------------
+
+    @Nested
+    @DisplayName("Reagendar com entregas (PB08)")
+    class ReagendarComEntregas {
+
+        private ProvaAlunoStorageMemoria entregas;
+        private ProvaServico servicoComEntregas;
+        private Prova prova;
+        private LocalDate dia;
+
+        @BeforeEach
+        void prepararComEntregas() {
+            entregas = new ProvaAlunoStorageMemoria();
+            servicoComEntregas = new ProvaServico(provas, new QuestaoServico(questoes), entregas, null);
+            servicoComEntregas.definirProfessorLogado(() -> PROFESSOR);
+            dia = proximoDiaUtil();
+            assumeTrue(dia != null, "sem dia útil restante no semestre");
+            multiplaEscolha(1, true);
+            prova = servicoComEntregas.salvarProva(
+                    new Prova(null, "Prova", "Matemática", dia.atTime(10, 0), dia.atTime(11, 0), null, 1, PROFESSOR));
+            servicoComEntregas.salvarQuestoes(prova.getCodigo(), List.of(new PesoQuestao(1, 1.0)));
+            servicoComEntregas.salvarAlunos(prova.getCodigo(), List.of("ALU001", "ALU002"));
+        }
+
+        private void entregar(String registro, String status) {
+            entregas.registrarEntrega(new ProvaAluno(prova.getCodigo(), registro, Relogio.agora(), 8.0, status));
+        }
+
+        @Test
+        @DisplayName("sem entregas a data pode ser alterada")
+        void semEntregasPodeReagendar() {
+            assertFalse(servicoComEntregas.temEntregas(prova.getCodigo()));
+            assertDoesNotThrow(() -> servicoComEntregas.validarAgendamento(prova.getCodigo(), dia.atTime(14, 0)));
+            prova.setDataHora(dia.atTime(14, 0));
+            prova.setDataHoraFim(dia.atTime(15, 0));
+            assertDoesNotThrow(() -> servicoComEntregas.salvarProva(prova));
+            assertEquals(dia.atTime(14, 0), provas.findByKey(prova.getCodigo()).getDataHora());
+        }
+
+        @Test
+        @DisplayName("aluno apenas vinculado (sem realizar) não bloqueia o reagendamento")
+        void vinculoPendenteNaoBloqueia() {
+            entregas.registrarEntrega(new ProvaAluno(prova.getCodigo(), "ALU001", null, null, "PENDENTE"));
+            assertFalse(servicoComEntregas.temEntregas(prova.getCodigo()));
+            assertDoesNotThrow(() -> servicoComEntregas.validarAgendamento(prova.getCodigo(), dia.atTime(14, 0)));
+        }
+
+        @Test
+        @DisplayName("após uma entrega o diálogo de agendar é recusado")
+        void entregaBloqueiaDialogo() {
+            entregar("ALU001", "CORRIGIDA");
+            assertTrue(servicoComEntregas.temEntregas(prova.getCodigo()));
+            assertTrue(mensagem(() -> servicoComEntregas.validarAgendamento(prova.getCodigo(), dia.atTime(14, 0)))
+                    .contains("reagendada"));
+        }
+
+        @Test
+        @DisplayName("após uma entrega a edição não pode mudar data nem horários")
+        void entregaBloqueiaEdicaoDoAgendamento() {
+            entregar("ALU001", "REALIZADA");
+            Prova editada = new Prova(prova.getCodigo(), "Prova", "Matemática", dia.atTime(10, 0), dia.atTime(12, 0),
+                    null, 1, PROFESSOR);
+            assertTrue(mensagem(() -> servicoComEntregas.salvarProva(editada)).contains("reagendada"));
+            Prova outroDia = new Prova(prova.getCodigo(), "Prova", "Matemática", dia.atTime(10, 0), null, null, 1,
+                    PROFESSOR);
+            assertTrue(mensagem(() -> servicoComEntregas.salvarProva(outroDia)).contains("reagendada"));
+            assertEquals(dia.atTime(11, 0), provas.findByKey(prova.getCodigo()).getDataHoraFim());
+        }
+
+        @Test
+        @DisplayName("após uma entrega os demais dados continuam editáveis")
+        void entregaPermiteEditarOutrosDados() {
+            entregar("ALU001", "CORRIGIDA");
+            Prova editada = new Prova(prova.getCodigo(), "Título novo", "Física", dia.atTime(10, 0), dia.atTime(11, 0),
+                    "ADS", 2, PROFESSOR);
+            assertDoesNotThrow(() -> servicoComEntregas.salvarProva(editada));
+            Prova salva = provas.findByKey(prova.getCodigo());
+            assertEquals("Título novo", salva.getTitulo());
+            assertEquals(2, salva.getBimestre());
+        }
+
+        @Test
+        @DisplayName("agendar sem data e horário é recusado")
+        void agendarSemDataHora() {
+            assertTrue(mensagem(() -> servicoComEntregas.validarAgendamento(prova.getCodigo(), null))
+                    .contains("Informe a data"));
+        }
+
+        @Test
+        @DisplayName("estado do aluno após entregar: Realizada e Corrigida")
+        void estadoDoAlunoAposEntrega() {
+            entregar("ALU001", "REALIZADA");
+            entregar("ALU002", "CORRIGIDA");
+            assertEquals("Realizada", servicoComEntregas.estadoParaAluno(prova, "ALU001"));
+            assertEquals("Corrigida", servicoComEntregas.estadoParaAluno(prova, "ALU002"));
+            assertEquals("Agendada", servicoComEntregas.estadoParaAluno(prova, "ALU003"));
         }
     }
 

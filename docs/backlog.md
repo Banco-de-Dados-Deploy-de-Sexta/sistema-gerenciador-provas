@@ -72,11 +72,11 @@
 
 ## PB-08 - Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia
 - **Épico:** Aplicação, Agendamento e Realização de Provas
-- **Descrição:** O sistema deve permitir o professor a agendar uma prova em alguma data de segunda à sexta.
+- **Descrição:** O sistema deve permitir o professor agendar uma prova em alguma data de segunda a sexta do semestre letivo atual, com horário de início obrigatório ao agendar (opcional ao criar a prova) e horário de término opcional.
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 

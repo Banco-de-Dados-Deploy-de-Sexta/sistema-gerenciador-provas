@@ -30,10 +30,10 @@ Todas as provas cadastradas aparecem na lista, de todos os professores. Só o pr
   - **Agendada:** tem questões e data de hoje em diante.
   - **Encerrada:** a data da prova já passou.
   - **Aplicada:** a prova já foi aplicada a pelo menos um aluno (veja [Aplicar prova a alunos](#aplicar-prova-a-alunos)).
-- **Criar prova:** clique em **Criar prova**, preencha título, matéria, curso, bimestre (1 a 4) e, se quiser, a data, e clique em **Salvar prova**. O código (ex.: `PRV0001`) é gerado automaticamente e a prova fica registrada em nome do professor logado.
+- **Criar prova:** clique em **Criar prova**, preencha título (até 100 caracteres), matéria, curso, bimestre (1 a 4) e, se quiser, a data e os horários, e clique em **Salvar prova**. O código (ex.: `PRV001`) é gerado automaticamente e a prova fica registrada em nome do professor logado.
 - **Editar prova:** selecione a prova e clique em **Editar prova**. Não é possível editar uma prova **Aplicada**.
 - **Excluir prova:** selecione a prova e clique em **Excluir prova**. É pedida uma confirmação. As questões continuam no banco de questões. Não é possível excluir uma prova **Aplicada**.
-- **Agendar prova:** selecione a prova, clique em **Agendar prova** e escolha a data.
+- **Agendar prova:** selecione a prova e clique em **Agendar prova**. Escolha a data (só dias úteis do semestre letivo atual, de hoje em diante), o horário de início (obrigatório) e, se quiser, o horário de término (no mesmo dia e depois do início). Para hoje, só aparecem horários que ainda não passaram. Depois que algum aluno entregar a prova, a data e os horários não podem mais ser alterados, e o botão fica desabilitado.
 - **Baixar prova:** selecione a prova e clique em **Baixar prova** para salvar um arquivo `.txt` com as questões e alternativas (sem indicar as corretas).
 
 ## Montar a prova (questões e pesos)
