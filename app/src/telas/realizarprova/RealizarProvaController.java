@@ -67,6 +67,8 @@ public class RealizarProvaController {
         questoesExibidas.clear();
 
         List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
+        // Embaralha as questões
+        Collections.shuffle(questoes);
         questoesExibidas.addAll(questoes);
 
         if (questoes.isEmpty()) {
@@ -102,8 +104,11 @@ public class RealizarProvaController {
             if (alternativas != null && !alternativas.isEmpty()) {
                 // Questão de alternativas (múltipla escolha)
                 ToggleGroup grupo = new ToggleGroup();
-                for (int j = 0; j < alternativas.size(); j++) {
-                    Alternativa alt = alternativas.get(j);
+                // Embaralha as alternativas
+                List<Alternativa> alternativasEmbaralhadas = new ArrayList<>(alternativas);
+                Collections.shuffle(alternativasEmbaralhadas);
+                for (int j = 0; j < alternativasEmbaralhadas.size(); j++) {
+                    Alternativa alt = alternativasEmbaralhadas.get(j);
                     RadioButton rb = new RadioButton(CardQuestao.letra(j) + " " + alt.getTexto());
                     rb.setWrapText(true);
                     rb.setToggleGroup(grupo);
