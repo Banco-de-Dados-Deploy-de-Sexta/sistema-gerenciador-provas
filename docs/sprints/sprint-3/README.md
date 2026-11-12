@@ -82,14 +82,15 @@ Itens que não são User Stories, mas precisam existir para que as histórias da
 ### PB07 — Aplicar prova a um ou mais alunos
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
 - **Regras de Negócio:**
-  - Só é possível aplicar provas com pelo menos uma questão, e todas as questões precisam estar completas (alternativa correta definida ou pares de associação cadastrados).
-  - Um mesmo aluno não pode ser associado duas vezes à mesma prova.
+  - Só é possível aplicar provas com pelo menos uma questão, e todas as questões precisam estar completas (alternativa correta definida ou pares de correspondência cadastrados). As duas regras são verificadas no serviço (`ProvaServico.salvarAlunos`), não só na tela.
+  - Um mesmo aluno não pode ser associado duas vezes à mesma prova (registros repetidos ou vazios são ignorados; a tabela `prova_aluno` tem chave primária composta).
   - Ao ser aplicada, a prova passa para o estado **Aplicada** e não pode mais ser editada (PB03) nem excluída (PB04).
   - É possível remover um aluno da aplicação enquanto ele ainda não tiver realizado a prova.
-  - O professor só pode aplicar as suas próprias provas (RN2). O professor é identificado pelo registro informado na tela de login e gravado na prova (`registro_professor`) no momento da criação; a mesma verificação vale para editar, excluir, agendar e compor a prova.
+  - O professor só pode aplicar as suas próprias provas (RN2). O professor é identificado pelo registro informado na tela de login e gravado na prova (`registro_professor`) no momento da criação; a mesma verificação vale para editar, excluir, agendar e compor a prova, e é feita tanto nos botões da tela quanto no serviço.
 - **Dependências:** PB02 e PB14 (Sprint 2) e a entidade Aluno (ver pré-requisitos).
 - **Escopo:** Tela para selecionar um ou mais alunos e associá-los à prova, listagem dos alunos associados e remoção de associação.
-- **Protótipo:** **Pendente:** criar a tela de seleção de alunos no Figma e incluir o botão "Aplicar prova" no [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)).
+- **Protótipo:** Tela de seleção de alunos ("Alunos da prova") e botão "Aplicar prova" no [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)).
+- **Casos de teste:** `app/src/test/java/servicos/ProvaServicoTest.java` (executar com `mvnw -f app/pom.xml test`).
 
 ### PB08 — Agendar prova
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.

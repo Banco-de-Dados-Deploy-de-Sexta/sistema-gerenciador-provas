@@ -44,11 +44,11 @@ Selecione uma prova e clique em **Questões e pesos**. Escolha as questões do b
 
 Selecione uma prova sua e clique em **Aplicar prova**. A tela **Alunos da prova** lista todos os alunos cadastrados; marque os que farão a prova, individualmente ou com **Marcar todos** / **Desmarcar todos**, e clique em **Salvar alunos**. O subtítulo mostra quantos alunos estão selecionados.
 
-- A prova precisa ter **pelo menos uma questão** para ser aplicada. Como toda questão é criada com a alternativa correta definida, todas as questões da prova já estão completas.
+- A prova precisa ter **pelo menos uma questão** para ser aplicada, e todas as questões precisam estar **completas**: alternativa correta marcada (múltipla escolha) ou todos os pares preenchidos (correspondência). Se alguma questão estiver incompleta, o sistema avisa qual é.
 - Um mesmo aluno não pode ser vinculado duas vezes à mesma prova.
 - Ao salvar com pelo menos um aluno marcado, a prova passa ao estado **Aplicada** e os botões **Editar prova**, **Excluir prova** e **Questões e pesos** ficam desabilitados para ela.
 - Para **remover** um aluno da aplicação, abra **Aplicar prova** de novo, desmarque o aluno e clique em **Salvar alunos**. Se nenhum aluno ficar marcado, a prova deixa de estar aplicada e volta a poder ser editada ou excluída.
-- Só o professor dono da prova pode aplicá-la. Ao tentar aplicar uma prova de outro professor, o sistema avisa que não há permissão.
+- Só o professor dono da prova pode aplicá-la, editá-la, excluí-la, agendá-la ou alterar suas questões. Ao tentar fazer isso com uma prova de outro professor, o sistema avisa que não há permissão.
 
 ## Corrigir prova
 

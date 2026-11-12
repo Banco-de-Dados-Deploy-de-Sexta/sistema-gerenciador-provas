@@ -16,6 +16,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -31,8 +32,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.collections.FXCollections;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -81,6 +80,7 @@ public class ProvaController {
     private final BooleanProperty aplicada = new SimpleBooleanProperty();
     private final BooleanProperty ehDona = new SimpleBooleanProperty();
     private final BooleanProperty temEntregas = new SimpleBooleanProperty();
+    private final BooleanProperty semQuestoes = new SimpleBooleanProperty();
     // registro do professor -> nome, preenchido sob demanda ao montar os cards
     private final HashMap<String, String> nomesProfessores = new HashMap<>();
 
@@ -99,13 +99,14 @@ public class ProvaController {
         // - sem prova selecionada: tudo bloqueado, exceto Criar;
         // - prova de outro professor: tudo bloqueado, exceto Baixar;
         // - prova já aplicada a alunos: Editar, Excluir e Questões bloqueados;
-        // - algum aluno já entregou a prova: Agendar também bloqueado.
+        // - algum aluno já entregou a prova: Agendar também bloqueado;
+        // - prova sem questões: Aplicar bloqueado (PB07).
         var nenhuma = selecionada.isNull();
         var semPermissao = nenhuma.or(ehDona.not());
         var bloqueada = semPermissao.or(aplicada);
         baixarButton.disableProperty().bind(nenhuma);
-        for (Button botao : List.of(corrigirButton, aplicarButton))
-            botao.disableProperty().bind(semPermissao);
+        corrigirButton.disableProperty().bind(semPermissao);
+        aplicarButton.disableProperty().bind(semPermissao.or(semQuestoes));
         agendarButton.disableProperty().bind(semPermissao.or(temEntregas));
         for (Button botao : List.of(editarButton, excluirButton, questoesButton))
             botao.disableProperty().bind(bloqueada);
@@ -139,6 +140,7 @@ public class ProvaController {
         ehDona.set(prova != null && ehDona(prova));
         aplicada.set(prova != null && provaServico.aplicada(prova.getCodigo()));
         temEntregas.set(prova != null && provaServico.temEntregas(prova.getCodigo()));
+        semQuestoes.set(prova != null && provaServico.contarQuestoes(prova.getCodigo()) == 0);
     }
 
     private String nomeProfessor(Prova prova) {
@@ -183,8 +185,7 @@ public class ProvaController {
         questoes.getStyleClass().add("card-destaque");
         Region espacoRodape = new Region();
         HBox.setHgrow(espacoRodape, Priority.ALWAYS);
-        Label estado = new Label(provaServico.estado(prova));
-        estado.getStyleClass().add("card-estado");
+        Label estado = telas.componentes.EstadoProva.criarBadge(provaServico.estado(prova));
         HBox rodape = new HBox(questoes, espacoRodape, estado);
         rodape.setAlignment(Pos.CENTER_LEFT);
         rodape.setPadding(new Insets(16, 0, 0, 0));
@@ -261,14 +262,12 @@ public class ProvaController {
     @FXML
     private void excluirProva() {
         Prova prova = selecionada.get();
-        if (ehDona(prova) == false) {
-            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
-            aviso.setHeaderText(null);
-            aviso.showAndWait();
-            return;
-        }
         if (prova == null)
             return;
+        if (!ehDona(prova)) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Você não tem permissão para excluir esta prova.");
+            return;
+        }
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
                 "Excluir a prova e seus vínculos com questões?", ButtonType.CANCEL, ButtonType.OK);
         confirmacao.setHeaderText("Excluir prova");
@@ -286,14 +285,12 @@ public class ProvaController {
     @FXML
     private void agendarProva() {
         Prova prova = selecionada.get();
-        if (ehDona(prova) == false) {
-            Alert aviso = new Alert(Alert.AlertType.WARNING, "Você não tem permissão para editar esta prova.");
-            aviso.setHeaderText(null);
-            aviso.showAndWait();
-            return;
-        }
         if (prova == null)
             return;
+        if (!ehDona(prova)) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Você não tem permissão para agendar esta prova.");
+            return;
+        }
         if (provaServico.temEntregas(prova.getCodigo())) {
             mostrarAlerta(Alert.AlertType.WARNING, "Alunos já entregaram esta prova e ela não pode mais ser reagendada.");
             return;

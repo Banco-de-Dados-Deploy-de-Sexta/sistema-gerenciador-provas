@@ -66,7 +66,7 @@
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 

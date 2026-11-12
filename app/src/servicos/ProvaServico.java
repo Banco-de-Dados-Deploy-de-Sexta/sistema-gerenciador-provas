@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import interfaces.ProvaRepositorio;
+import modelos.Alternativa;
 import modelos.PesoQuestao;
 import modelos.Prova;
 import modelos.ProvaAluno;
@@ -19,10 +21,17 @@ import modelos.RespostaAluno;
 import modelos.ProvaAluno;
 
 public class ProvaServico {
+    public static final int MAX_TITULO = 100;
+    public static final int MAX_MATERIA = 50;
+    public static final int MAX_CURSO = 50;
+
     private final ProvaRepositorio provaRepositorio;
     private final QuestaoServico questaoServico;
     private final storage.ProvaAlunoStorage provaAlunoStorage;
     private final storage.RespostaAlunoStorage respostaAlunoStorage;
+    // Registro do professor logado (RN2): só o dono edita, exclui, agenda, compõe
+    // e aplica a prova. Substituível nos testes por definirProfessorLogado.
+    private Supplier<String> professorLogado = auxiliares.Sessao::getRegistroUsuarioLogado;
 
     public ProvaServico(ProvaRepositorio provaRepositorio, QuestaoServico questaoServico) {
         this(provaRepositorio, questaoServico, null, null);
@@ -37,6 +46,10 @@ public class ProvaServico {
         this.respostaAlunoStorage = respostaAlunoStorage;
     }
 
+    public void definirProfessorLogado(Supplier<String> fornecedor) {
+        this.professorLogado = fornecedor == null ? () -> null : fornecedor;
+    }
+
     public Prova criarProva(String titulo, String materia, LocalDate data, String curso, int bimestre,
             String registro_professor) {
         String codigo = gerarCodigo();
@@ -45,19 +58,27 @@ public class ProvaServico {
 
     public Prova salvarProva(Prova prova) {
         validar(prova);
-        if (prova.getCodigo() == null || prova.getCodigo().isBlank())
-            prova.setCodigo(gerarCodigo());
-        else
-            garantirAgendamentoInalteradoComEntregas(prova);
+        Prova atual = prova.getCodigo() == null || prova.getCodigo().isBlank()
+                ? null
+                : provaRepositorio.findByKey(prova.getCodigo());
+        if (atual == null) {
+            // Prova nova: nasce em nome do professor logado
+            if (prova.getRegistroProfessor() == null || prova.getRegistroProfessor().isBlank())
+                throw new IllegalArgumentException("A prova precisa estar vinculada ao professor logado.");
+            if (prova.getCodigo() == null || prova.getCodigo().isBlank())
+                prova.setCodigo(gerarCodigo());
+        } else {
+            garantirDona(atual, "editar esta prova");
+            // A edição não transfere a prova para outro professor
+            prova.setRegistroProfessor(atual.getRegistroProfessor());
+            garantirAgendamentoInalteradoComEntregas(atual, prova);
+        }
         return provaRepositorio.save(prova);
     }
 
     // Depois que algum aluno entregou a prova, a data/horário não pode mais mudar:
     // reagendar reabriria a prova (com as mesmas questões) para quem ainda não fez.
-    private void garantirAgendamentoInalteradoComEntregas(Prova prova) {
-        Prova atual = provaRepositorio.findByKey(prova.getCodigo());
-        if (atual == null)
-            return;
+    private void garantirAgendamentoInalteradoComEntregas(Prova atual, Prova prova) {
         boolean mudouAgendamento = !java.util.Objects.equals(atual.getData(), prova.getData())
                 || !java.util.Objects.equals(atual.getDataHora(), prova.getDataHora())
                 || !java.util.Objects.equals(atual.getDataHoraFim(), prova.getDataHoraFim());
@@ -74,6 +95,10 @@ public class ProvaServico {
     }
 
     public void excluirProva(String codigo) {
+        Prova prova = buscarProva(codigo);
+        if (prova == null)
+            throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "excluir esta prova");
         garantirNaoAplicada(codigo, "excluída");
         provaRepositorio.remove(codigo);
     }
@@ -154,10 +179,19 @@ public class ProvaServico {
     }
 
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
-        garantirNaoAplicada(codigoProva, "alterada");
-        if (buscarProva(codigoProva) == null)
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
             throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "alterar as questões desta prova");
+        garantirNaoAplicada(codigoProva, "alterada");
+        if (questoes == null)
+            throw new IllegalArgumentException("Informe as questões da prova.");
+        java.util.Set<Long> vistas = new java.util.HashSet<>();
         for (PesoQuestao item : questoes) {
+            if (item == null)
+                throw new IllegalArgumentException("Uma das questões selecionadas é inválida.");
+            if (!vistas.add(item.getIdQuestao()))
+                throw new IllegalArgumentException("Uma mesma questão não pode ser adicionada duas vezes à prova.");
             if (questaoServico.buscarQuestao(item.getIdQuestao()) == null)
                 throw new IllegalArgumentException("Uma das questões selecionadas não existe.");
             if (!Double.isFinite(item.getPeso()) || item.getPeso() <= 0)
@@ -177,15 +211,61 @@ public class ProvaServico {
         return provaRepositorio.listarPorAluno(registroAluno);
     }
 
-    // Aplica a prova aos alunos informados (PB07): exige ao menos uma questão e
-    // ignora registros repetidos
+    // Aplica a prova aos alunos informados (PB07): só o professor dono, exige ao
+    // menos uma questão, todas com gabarito, e ignora registros repetidos ou vazios
     public void salvarAlunos(String codigoProva, List<String> registros) {
-        if (buscarProva(codigoProva) == null)
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
             throw new IllegalArgumentException("A prova não existe.");
-        List<String> unicos = new ArrayList<>(new LinkedHashSet<>(registros));
-        if (!unicos.isEmpty() && contarQuestoes(codigoProva) == 0)
-            throw new IllegalArgumentException("A prova precisa ter pelo menos uma questão antes de ser aplicada.");
+        garantirDona(prova, "aplicar esta prova");
+        List<String> unicos = new ArrayList<>();
+        if (registros != null) {
+            for (String registro : new LinkedHashSet<>(registros)) {
+                if (registro != null && !registro.isBlank() && !unicos.contains(registro.trim()))
+                    unicos.add(registro.trim());
+            }
+        }
+        if (!unicos.isEmpty()) {
+            if (contarQuestoes(codigoProva) == 0)
+                throw new IllegalArgumentException("A prova precisa ter pelo menos uma questão antes de ser aplicada.");
+            garantirQuestoesCompletas(codigoProva);
+        }
         provaRepositorio.salvarAlunos(codigoProva, unicos);
+    }
+
+    // Regra da PB07: toda questão da prova precisa estar completa (gabarito
+    // definido) antes da aplicação
+    private void garantirQuestoesCompletas(String codigoProva) {
+        for (QuestaoComPeso item : listarQuestoes(codigoProva)) {
+            if (!questaoCompleta(item.getQuestao()))
+                throw new IllegalArgumentException("A questão #" + item.getQuestao().getNumero()
+                        + " não tem gabarito definido. Complete-a antes de aplicar a prova.");
+        }
+    }
+
+    // O tipo da questão fica guardado na descrição (ver QuestaoController):
+    // correspondência exige a definição de cada par; V/F em sequência guarda um
+    // booleano por afirmação (sempre completa); múltipla escolha exige uma correta.
+    static boolean questaoCompleta(Questao questao) {
+        if (questao == null)
+            return false;
+        List<Alternativa> alternativas = questao.getAlternativas();
+        if (alternativas == null || alternativas.isEmpty())
+            return false;
+        String tipo = questao.getDescricao() == null ? "" : questao.getDescricao().trim();
+        if ("Correspondência".equalsIgnoreCase(tipo))
+            return alternativas.stream()
+                    .allMatch(a -> a.getTextoCorrespondencia() != null && !a.getTextoCorrespondencia().isBlank());
+        if ("Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo))
+            return true;
+        return alternativas.stream().anyMatch(Alternativa::isCorreta);
+    }
+
+    private void garantirDona(Prova prova, String acao) {
+        String logado = professorLogado.get();
+        String dona = prova.getRegistroProfessor();
+        if (logado == null || logado.isBlank() || dona == null || !dona.equals(logado))
+            throw new IllegalArgumentException("Só o professor dono da prova pode " + acao + ".");
     }
 
     public boolean aplicada(String codigoProva) {
@@ -320,7 +400,7 @@ public class ProvaServico {
     private String gerarCodigo() {
         int proximo = provaRepositorio.findAll().stream()
                 .map(Prova::getCodigo)
-                .filter(codigo -> codigo != null && codigo.matches("PRV[0-9]{4}"))
+                .filter(codigo -> codigo != null && codigo.matches("PRV[0-9]{3,}"))
                 .mapToInt(codigo -> Integer.parseInt(codigo.substring(3)))
                 .max().orElse(0) + 1;
         if (proximo > 9999)
@@ -329,18 +409,40 @@ public class ProvaServico {
     }
 
     private void validar(Prova prova) {
+        if (prova == null)
+            throw new IllegalArgumentException("Informe os dados da prova.");
         if (prova.getTitulo() == null || prova.getTitulo().isBlank())
             throw new IllegalArgumentException("Informe o título.");
-        if (prova.getMateria() == null || prova.getMateria().isBlank() || prova.getMateria().length() > 50)
-            throw new IllegalArgumentException("Informe a matéria (até 50 caracteres).");
-        if (prova.getCurso() != null && prova.getCurso().length() > 50)
-            throw new IllegalArgumentException("O curso deve ter até 50 caracteres.");
+        if (prova.getTitulo().length() > MAX_TITULO)
+            throw new IllegalArgumentException("O título deve ter até " + MAX_TITULO + " caracteres.");
+        if (prova.getMateria() == null || prova.getMateria().isBlank() || prova.getMateria().length() > MAX_MATERIA)
+            throw new IllegalArgumentException("Informe a matéria (até " + MAX_MATERIA + " caracteres).");
+        if (prova.getCurso() != null && prova.getCurso().length() > MAX_CURSO)
+            throw new IllegalArgumentException("O curso deve ter até " + MAX_CURSO + " caracteres.");
         if (prova.getBimestre() < 1 || prova.getBimestre() > 4)
             throw new IllegalArgumentException("O bimestre deve estar entre 1 e 4.");
-        if (prova.getDataHora() != null) {
-            validarAgendamento(prova.getDataHora());
-        } else if (prova.getData() != null) {
-            validarDataAgendamento(prova.getData());
+        LocalDateTime inicio = prova.getDataHora();
+        LocalDateTime fim = prova.getDataHoraFim();
+        if (inicio == null) {
+            if (fim != null)
+                throw new IllegalArgumentException("Informe a data e o horário de início antes do término.");
+            return;
+        }
+        // Prova salva só com a data (sem horário) fica em 00:00: valida apenas o dia,
+        // senão uma prova de hoje seria recusada como "horário que já passou".
+        boolean somenteData = inicio.toLocalTime().equals(java.time.LocalTime.MIDNIGHT);
+        if (somenteData) {
+            validarDataAgendamento(inicio.toLocalDate());
+            if (fim != null)
+                throw new IllegalArgumentException("Informe o horário de início para definir o horário de término.");
+            return;
+        }
+        validarAgendamento(inicio);
+        if (fim != null) {
+            if (!fim.toLocalDate().equals(inicio.toLocalDate()))
+                throw new IllegalArgumentException("O término da prova deve ser no mesmo dia do início.");
+            if (!fim.isAfter(inicio))
+                throw new IllegalArgumentException("O horário de término deve ser posterior ao horário de início.");
         }
     }
 
@@ -365,6 +467,10 @@ public class ProvaServico {
     }
 
     public void validarAgendamento(String codigoProva, java.time.LocalDateTime dataHora) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
+            throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "agendar esta prova");
         garantirSemEntregas(codigoProva, "reagendada");
         validarAgendamento(dataHora);
     }

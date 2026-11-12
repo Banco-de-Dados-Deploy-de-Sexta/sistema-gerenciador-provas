@@ -121,8 +121,7 @@ public class AlunoController {
         String estadoTexto = usuario != null
                 ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
                 : provaServico.estadoParaAluno(prova);
-        Label estado = new Label(estadoTexto);
-        estado.getStyleClass().add("card-estado");
+        Label estado = telas.componentes.EstadoProva.criarBadge(estadoTexto);
 
         HBox rodape = new HBox(questoes, espacoRodape, estado);
         rodape.setAlignment(Pos.CENTER_LEFT);
@@ -193,8 +192,12 @@ public class AlunoController {
         String estadoTexto = usuario != null
                 ? provaServico.estadoParaAluno(prova, usuario.getRegistro())
                 : provaServico.estadoParaAluno(prova);
-        Label status = new Label("Status: " + estadoTexto);
-        status.setStyle("-fx-font-weight: bold; -fx-text-fill: #1d4ed8;");
+        Label rotuloStatus = new Label("Status:");
+        rotuloStatus.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151;");
+        Label badgeStatus = telas.componentes.EstadoProva.criarBadge(estadoTexto);
+        badgeStatus.setStyle("-fx-font-size: 12px; -fx-padding: 2 10 2 10;");
+        HBox status = new HBox(8, rotuloStatus, badgeStatus);
+        status.setAlignment(Pos.CENTER_LEFT);
 
         painel.getChildren().addAll(titulo, materiaCurso, qtd, data, status);
 
