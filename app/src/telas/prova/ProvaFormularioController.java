@@ -116,6 +116,10 @@ public class ProvaFormularioController {
                 return;
             }
 
+            if (Sessao.getUsuarioLogado() == null) {
+                mostrar(Alert.AlertType.WARNING, "Faça login como professor para salvar a prova.");
+                return;
+            }
             String registroProfessor = Sessao.getUsuarioLogado().getRegistro();
             java.time.LocalDate data = dataPicker.getValue();
 
@@ -138,6 +142,9 @@ public class ProvaFormularioController {
                             java.time.format.DateTimeFormatter.ofPattern("HH:mm")
                     );
                     dataHoraInicio = java.time.LocalDateTime.of(data, horarioInicio);
+                } else if (!textoHoraFim.isEmpty()) {
+                    mostrar(Alert.AlertType.WARNING, "Informe o horário de início para definir o horário de término.");
+                    return;
                 } else {
                     dataHoraInicio = data.atStartOfDay();
                 }
