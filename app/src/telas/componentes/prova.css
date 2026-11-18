@@ -199,6 +199,50 @@
     -fx-padding: 6 10;
 }
 
+.question-row .feedback-texto {
+    -fx-padding: 0 4 2 4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.question-row .feedback-correto {
+    -fx-text-fill: #047857;
+}
+
+.question-row .feedback-incorreto {
+    -fx-text-fill: #b91c1c;
+}
+
+.answer-row {
+    -fx-padding: 8;
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8;
+}
+
+.answer-row.feedback-correto {
+    -fx-background-color: #ecfdf5;
+    -fx-border-color: #86efac;
+}
+
+.answer-row.feedback-incorreto {
+    -fx-background-color: #fef2f2;
+    -fx-border-color: #fca5a5;
+}
+
+.radio-button.feedback-correto,
+.combo-box.feedback-correto {
+    -fx-text-fill: #047857;
+    -fx-border-color: #86efac;
+}
+
+.radio-button.feedback-incorreto,
+.combo-box.feedback-incorreto {
+    -fx-text-fill: #b91c1c;
+    -fx-border-color: #fca5a5;
+}
+
 .table-view {
     -fx-background-color: white;
     -fx-background-radius: 8;

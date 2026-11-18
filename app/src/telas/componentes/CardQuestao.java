@@ -36,7 +36,6 @@ public final class CardQuestao {
 
         Label tipo = new Label(rotuloTipo(questao.getDescricao()));
         tipo.getStyleClass().add("questao-tipo");
-        cabecalho.getChildren().add(tipo);
         if (peso != null) {
             Label etiquetaPeso = new Label(String.format(Locale.forLanguageTag("pt-BR"), "Peso %.1f", peso));
             etiquetaPeso.getStyleClass().add("questao-peso");
@@ -55,7 +54,7 @@ public final class CardQuestao {
             default -> listaAlternativas(alternativas);
         };
 
-        card.getChildren().addAll(cabecalho, pergunta, conteudo);
+        card.getChildren().addAll(cabecalho, tipo, pergunta, conteudo);
         return card;
     }
 

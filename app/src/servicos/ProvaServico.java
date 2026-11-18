@@ -17,8 +17,6 @@ import modelos.RespostaAluno;
 import modelos.Questao;
 import modelos.QuestaoComPeso;
 import modelos.ResultadoCorrecao;
-import modelos.RespostaAluno;
-import modelos.ProvaAluno;
 
 public class ProvaServico {
     public static final int MAX_TITULO = 100;
@@ -290,20 +288,49 @@ public class ProvaServico {
     }
 
     public ResultadoCorrecao corrigir(String codigoProva, Map<Long, Integer> respostas) {
+        Map<Long, RespostaAluno> respostasFormatadas = new java.util.HashMap<>();
+        if (respostas != null) {
+            respostas.forEach((idQuestao, idAlternativa) -> {
+                if (idQuestao != null && idAlternativa != null) {
+                    RespostaAluno resposta = new RespostaAluno();
+                    resposta.setIdAlternativaEscolhida(idAlternativa);
+                    respostasFormatadas.put(idQuestao, resposta);
+                }
+            });
+        }
+        return corrigirRespostas(codigoProva, respostasFormatadas);
+    }
+
+    public ResultadoCorrecao corrigirRespostas(String codigoProva, Map<Long, RespostaAluno> respostas) {
         List<QuestaoComPeso> questoes = listarQuestoes(codigoProva);
         double possiveis = 0;
         double obtidos = 0;
+        Map<Long, Boolean> acertosPorQuestao = new java.util.LinkedHashMap<>();
         for (QuestaoComPeso item : questoes) {
             possiveis += item.getPeso();
-            Integer resposta = respostas.get(item.getQuestao().getNumero());
-            if (resposta == null)
-                continue;
-            boolean correta = item.getQuestao().getAlternativas().stream()
-                    .anyMatch(a -> a.getId() == resposta && a.isCorreta());
+            RespostaAluno resposta = respostas == null ? null : respostas.get(item.getQuestao().getNumero());
+            String tipo = item.getQuestao().getDescricao() == null
+                    ? ""
+                    : item.getQuestao().getDescricao().trim();
+            boolean correta;
+            if (resposta == null) {
+                correta = false;
+            } else if ("Correspondência".equalsIgnoreCase(tipo)) {
+                correta = resposta.getRespostaTexto() != null
+                        && correspondenciaCorreta(item.getQuestao(), resposta.getRespostaTexto());
+            } else if ("Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo)) {
+                correta = resposta.getRespostaTexto() != null
+                        && sequenciaVerdadeiroFalsoCorreta(item.getQuestao(), resposta.getRespostaTexto());
+            } else {
+                Integer idAlternativa = resposta.getIdAlternativaEscolhida();
+                correta = idAlternativa != null && item.getQuestao().getAlternativas().stream()
+                        .anyMatch(a -> a.getId() == idAlternativa && a.isCorreta());
+            }
+            acertosPorQuestao.put(item.getQuestao().getNumero(), correta);
             if (correta)
                 obtidos += item.getPeso();
         }
-        return new ResultadoCorrecao(obtidos, possiveis);
+        return new ResultadoCorrecao(obtidos, possiveis, acertosPorQuestao);
     }
 
     public ProvaAluno buscarRealizacaoAluno(String codigoProva, String registroAluno) {
@@ -352,7 +379,23 @@ public class ProvaServico {
 
             if (qcp == null) continue;
 
-            if (resp.getIdAlternativaEscolhida() != null) {
+            String tipo = qcp.getQuestao().getDescricao() == null
+                    ? ""
+                    : qcp.getQuestao().getDescricao().trim();
+            boolean correspondencia = "Correspondência".equalsIgnoreCase(tipo);
+            boolean sequenciaVF = "Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo);
+
+            if (correspondencia || sequenciaVF) {
+                String resposta = resp.getRespostaTexto();
+                boolean acertou = resposta != null && !resposta.isBlank()
+                        && (correspondencia
+                        ? correspondenciaCorreta(qcp.getQuestao(), resposta)
+                        : sequenciaVerdadeiroFalsoCorreta(qcp.getQuestao(), resposta));
+                resp.setAcertou(acertou);
+                double notaQuestao = acertou ? qcp.getPeso() : 0.0;
+                resp.setNotaObtida(notaQuestao);
+                if (acertou) pesoObtido += qcp.getPeso();
+            } else if (resp.getIdAlternativaEscolhida() != null) {
                 // Questão de múltipla escolha
                 boolean acertou = qcp.getQuestao().getAlternativas().stream()
                         .anyMatch(alt -> alt.getId() == resp.getIdAlternativaEscolhida() && alt.isCorreta());
@@ -363,7 +406,7 @@ public class ProvaServico {
                     pesoObtido += qcp.getPeso();
                 }
             } else if (resp.getRespostaTexto() != null && !resp.getRespostaTexto().isBlank()) {
-                // Dissertativa ou correspondência (correção manual ou pendente)
+                // Questões dissertativas permanecem pendentes de correção manual.
                 temDissertativa = true;
                 resp.setAcertou(null);
                 resp.setNotaObtida(null);
@@ -395,6 +438,38 @@ public class ProvaServico {
             );
             provaAlunoStorage.registrarEntrega(pa);
         }
+    }
+
+    // Correspondência é serializada como os IDs das definições escolhidas,
+    // na ordem dos conceitos. A resposta só recebe o peso se todos os pares
+    // estiverem corretos.
+    private boolean correspondenciaCorreta(Questao questao, String resposta) {
+        List<Alternativa> pares = questao.getAlternativas();
+        String[] definicoesEscolhidas = resposta.split(",", -1);
+        if (definicoesEscolhidas.length != pares.size()) return false;
+
+        for (int i = 0; i < pares.size(); i++) {
+            try {
+                int idDefinicao = Integer.parseInt(definicoesEscolhidas[i].trim());
+                if (idDefinicao != pares.get(i).getId()) return false;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // V/F é serializado como V,F,V,... e comparado posição a posição com o gabarito.
+    private boolean sequenciaVerdadeiroFalsoCorreta(Questao questao, String resposta) {
+        List<Alternativa> afirmacoes = questao.getAlternativas();
+        String[] respostas = resposta.split(",", -1);
+        if (respostas.length != afirmacoes.size()) return false;
+
+        for (int i = 0; i < afirmacoes.size(); i++) {
+            String esperada = afirmacoes.get(i).isCorreta() ? "V" : "F";
+            if (!esperada.equalsIgnoreCase(respostas[i].trim())) return false;
+        }
+        return true;
     }
 
     private String gerarCodigo() {
