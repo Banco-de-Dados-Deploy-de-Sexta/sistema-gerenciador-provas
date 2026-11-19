@@ -248,9 +248,11 @@ public class ProvaServico {
         if (questao == null)
             return false;
         List<Alternativa> alternativas = questao.getAlternativas();
-        if (alternativas == null || alternativas.isEmpty())
-            return false;
+        if (alternativas == null) return false;
         String tipo = questao.getDescricao() == null ? "" : questao.getDescricao().trim();
+        if ("Dissertativa".equalsIgnoreCase(tipo))
+            return alternativas.isEmpty();
+        if (alternativas.isEmpty()) return false;
         if ("Correspondência".equalsIgnoreCase(tipo))
             return alternativas.stream()
                     .allMatch(a -> a.getTextoCorrespondencia() != null && !a.getTextoCorrespondencia().isBlank());
@@ -307,28 +309,39 @@ public class ProvaServico {
         double obtidos = 0;
         Map<Long, Boolean> acertosPorQuestao = new java.util.LinkedHashMap<>();
         for (QuestaoComPeso item : questoes) {
-            possiveis += item.getPeso();
             RespostaAluno resposta = respostas == null ? null : respostas.get(item.getQuestao().getNumero());
             String tipo = item.getQuestao().getDescricao() == null
                     ? ""
                     : item.getQuestao().getDescricao().trim();
+            // A correção dissertativa exige uma entrega de aluno e uma nota do professor;
+            // essa tela calcula apenas as respostas objetivas.
+            if ("Dissertativa".equalsIgnoreCase(tipo)) continue;
+            possiveis += item.getPeso();
             boolean correta;
+            double pontosQuestao;
             if (resposta == null) {
                 correta = false;
+                pontosQuestao = 0.0;
             } else if ("Correspondência".equalsIgnoreCase(tipo)) {
-                correta = resposta.getRespostaTexto() != null
-                        && correspondenciaCorreta(item.getQuestao(), resposta.getRespostaTexto());
+                int totalPares = item.getQuestao().getAlternativas().size();
+                int acertos = contarParesCorretos(item.getQuestao(), resposta.getRespostaTexto());
+                correta = totalPares > 0 && acertos == totalPares;
+                pontosQuestao = pontuacaoProporcional(item.getPeso(), acertos, totalPares);
             } else if ("Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo)) {
-                correta = resposta.getRespostaTexto() != null
-                        && sequenciaVerdadeiroFalsoCorreta(item.getQuestao(), resposta.getRespostaTexto());
+                int totalAfirmacoes = item.getQuestao().getAlternativas().size();
+                int acertos = contarAcertosSequenciaVerdadeiroFalso(item.getQuestao(), resposta.getRespostaTexto());
+                correta = totalAfirmacoes > 0 && acertos == totalAfirmacoes;
+                pontosQuestao = totalAfirmacoes == 0
+                        ? 0.0
+                        : item.getPeso() * acertos / totalAfirmacoes;
             } else {
                 Integer idAlternativa = resposta.getIdAlternativaEscolhida();
                 correta = idAlternativa != null && item.getQuestao().getAlternativas().stream()
                         .anyMatch(a -> a.getId() == idAlternativa && a.isCorreta());
+                pontosQuestao = correta ? item.getPeso() : 0.0;
             }
             acertosPorQuestao.put(item.getQuestao().getNumero(), correta);
-            if (correta)
-                obtidos += item.getPeso();
+            obtidos += pontosQuestao;
         }
         return new ResultadoCorrecao(obtidos, possiveis, acertosPorQuestao);
     }
@@ -350,6 +363,89 @@ public class ProvaServico {
             return List.of();
         }
         return respostaAlunoStorage.listarPorAlunoEProva(codigoProva, registroAluno);
+    }
+
+    public List<ProvaAluno> listarEntregasProva(String codigoProva) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "corrigir as respostas dissertativas");
+        if (provaAlunoStorage == null) return List.of();
+        return provaAlunoStorage.listarEntregasPorProva(codigoProva);
+    }
+
+    public List<ProvaAluno> listarResultadosProva(String codigoProva) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "visualizar os resultados desta prova");
+        if (provaAlunoStorage == null) return List.of();
+        return provaAlunoStorage.listarPorProva(codigoProva);
+    }
+
+    public List<RespostaAluno> listarRespostasResultadoProva(String codigoProva, String registroAluno) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "visualizar as respostas dos alunos");
+        ProvaAluno inscricao = buscarRealizacaoAluno(codigoProva, registroAluno);
+        if (inscricao == null)
+            throw new IllegalArgumentException("O aluno não está vinculado a esta prova.");
+        return listarRespostasAluno(codigoProva, registroAluno);
+    }
+
+    public boolean corrigirRespostaDissertativa(String codigoProva, String registroAluno,
+            int idQuestao, double nota) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "corrigir esta resposta");
+        if (provaAlunoStorage == null || respostaAlunoStorage == null)
+            throw new IllegalStateException("O armazenamento das entregas não está configurado.");
+
+        ProvaAluno entrega = buscarRealizacaoAluno(codigoProva, registroAluno);
+        if (entrega == null || !entrega.isRealizada())
+            throw new IllegalArgumentException("O aluno ainda não entregou esta prova.");
+
+        QuestaoComPeso questaoComPeso = listarQuestoes(codigoProva).stream()
+                .filter(item -> item.getQuestao().getNumero() == idQuestao)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("A questão não pertence a esta prova."));
+        if (!"Dissertativa".equalsIgnoreCase(questaoComPeso.getQuestao().getDescricao()))
+            throw new IllegalArgumentException("Somente questões dissertativas recebem nota manual.");
+        if (!Double.isFinite(nota) || nota < 0 || nota > questaoComPeso.getPeso())
+            throw new IllegalArgumentException("A nota deve estar entre zero e o peso da questão ("
+                    + questaoComPeso.getPeso() + ").");
+
+        List<RespostaAluno> respostas = listarRespostasAluno(codigoProva, registroAluno);
+        RespostaAluno resposta = respostas.stream()
+                .filter(item -> item.getIdQuestao() == idQuestao)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("A resposta do aluno não foi encontrada."));
+        if (resposta.getRespostaTexto() == null || resposta.getRespostaTexto().isBlank())
+            throw new IllegalArgumentException("O aluno não escreveu uma resposta para esta questão.");
+
+        respostaAlunoStorage.atualizarNotaDissertativa(codigoProva, registroAluno, idQuestao, nota);
+        resposta.setNotaObtida(nota);
+
+        Map<Integer, RespostaAluno> respostasPorQuestao = new java.util.HashMap<>();
+        for (RespostaAluno item : listarRespostasAluno(codigoProva, registroAluno))
+            respostasPorQuestao.put(item.getIdQuestao(), item);
+        List<QuestaoComPeso> questoes = listarQuestoes(codigoProva);
+        boolean aindaPendente = questoes.stream()
+                .filter(item -> "Dissertativa".equalsIgnoreCase(item.getQuestao().getDescricao()))
+                .map(item -> respostasPorQuestao.get((int) item.getQuestao().getNumero()))
+                .anyMatch(item -> item != null && item.getRespostaTexto() != null
+                        && !item.getRespostaTexto().isBlank() && item.getNotaObtida() == null);
+        if (aindaPendente) return false;
+
+        double pontosPossiveis = questoes.stream().mapToDouble(QuestaoComPeso::getPeso).sum();
+        if (pontosPossiveis <= 0) throw new IllegalStateException("A prova não possui peso válido para calcular a nota.");
+        double pontosObtidos = questoes.stream()
+                .map(item -> respostasPorQuestao.get((int) item.getQuestao().getNumero()))
+                .filter(item -> item != null && item.getNotaObtida() != null)
+                .mapToDouble(RespostaAluno::getNotaObtida)
+                .sum();
+        double notaFinal = Math.round((pontosObtidos / pontosPossiveis) * 10.0 * 100.0) / 100.0;
+        provaAlunoStorage.registrarEntrega(new ProvaAluno(
+                codigoProva, registroAluno, entrega.getDataRealizacao(), notaFinal, "CORRIGIDA"));
+        return true;
     }
 
     // Regra da PB09: entrega de prova com tentativa única e correção automática
@@ -385,16 +481,29 @@ public class ProvaServico {
             boolean correspondencia = "Correspondência".equalsIgnoreCase(tipo);
             boolean sequenciaVF = "Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo);
 
-            if (correspondencia || sequenciaVF) {
-                String resposta = resp.getRespostaTexto();
-                boolean acertou = resposta != null && !resposta.isBlank()
-                        && (correspondencia
-                        ? correspondenciaCorreta(qcp.getQuestao(), resposta)
-                        : sequenciaVerdadeiroFalsoCorreta(qcp.getQuestao(), resposta));
-                resp.setAcertou(acertou);
-                double notaQuestao = acertou ? qcp.getPeso() : 0.0;
+            if (correspondencia && respostaTemDefinicaoRepetida(resp.getRespostaTexto())) {
+                throw new IllegalArgumentException("Cada definição de correspondência só pode ser usada uma vez.");
+            }
+
+            if (sequenciaVF) {
+                int totalAfirmacoes = qcp.getQuestao().getAlternativas().size();
+                int acertos = contarAcertosSequenciaVerdadeiroFalso(qcp.getQuestao(), resp.getRespostaTexto());
+                boolean acertouTudo = totalAfirmacoes > 0 && acertos == totalAfirmacoes;
+                double notaQuestao = totalAfirmacoes == 0
+                        ? 0.0
+                        : qcp.getPeso() * acertos / totalAfirmacoes;
+                resp.setAcertou(acertouTudo);
                 resp.setNotaObtida(notaQuestao);
-                if (acertou) pesoObtido += qcp.getPeso();
+                pesoObtido += notaQuestao;
+            } else if (correspondencia) {
+                String resposta = resp.getRespostaTexto();
+                int totalPares = qcp.getQuestao().getAlternativas().size();
+                int acertos = contarParesCorretos(qcp.getQuestao(), resposta);
+                boolean acertouTudo = totalPares > 0 && acertos == totalPares;
+                double notaQuestao = pontuacaoProporcional(qcp.getPeso(), acertos, totalPares);
+                resp.setAcertou(acertouTudo);
+                resp.setNotaObtida(notaQuestao);
+                pesoObtido += notaQuestao;
             } else if (resp.getIdAlternativaEscolhida() != null) {
                 // Questão de múltipla escolha
                 boolean acertou = qcp.getQuestao().getAlternativas().stream()
@@ -441,35 +550,53 @@ public class ProvaServico {
     }
 
     // Correspondência é serializada como os IDs das definições escolhidas,
-    // na ordem dos conceitos. A resposta só recebe o peso se todos os pares
-    // estiverem corretos.
-    private boolean correspondenciaCorreta(Questao questao, String resposta) {
+    // na ordem dos conceitos. Cada par correto recebe a fração correspondente do peso.
+    private int contarParesCorretos(Questao questao, String resposta) {
         List<Alternativa> pares = questao.getAlternativas();
+        if (pares == null || pares.isEmpty() || resposta == null) return 0;
         String[] definicoesEscolhidas = resposta.split(",", -1);
-        if (definicoesEscolhidas.length != pares.size()) return false;
+        java.util.Set<Integer> definicoesUsadas = new java.util.HashSet<>();
+        int acertos = 0;
 
-        for (int i = 0; i < pares.size(); i++) {
+        for (int i = 0; i < Math.min(pares.size(), definicoesEscolhidas.length); i++) {
+            if (definicoesEscolhidas[i].isBlank()) continue;
             try {
                 int idDefinicao = Integer.parseInt(definicoesEscolhidas[i].trim());
-                if (idDefinicao != pares.get(i).getId()) return false;
+                if (!definicoesUsadas.add(idDefinicao)) return 0;
+                if (idDefinicao == pares.get(i).getId()) acertos++;
             } catch (NumberFormatException e) {
-                return false;
+                // Uma definição inválida não pontua, mas não invalida os outros pares respondidos.
             }
         }
-        return true;
+        return acertos;
     }
 
-    // V/F é serializado como V,F,V,... e comparado posição a posição com o gabarito.
-    private boolean sequenciaVerdadeiroFalsoCorreta(Questao questao, String resposta) {
-        List<Alternativa> afirmacoes = questao.getAlternativas();
-        String[] respostas = resposta.split(",", -1);
-        if (respostas.length != afirmacoes.size()) return false;
-
-        for (int i = 0; i < afirmacoes.size(); i++) {
-            String esperada = afirmacoes.get(i).isCorreta() ? "V" : "F";
-            if (!esperada.equalsIgnoreCase(respostas[i].trim())) return false;
+    private boolean respostaTemDefinicaoRepetida(String resposta) {
+        if (resposta == null || resposta.isBlank()) return false;
+        java.util.Set<String> definicoesUsadas = new java.util.HashSet<>();
+        for (String definicao : resposta.split(",", -1)) {
+            String id = definicao.trim();
+            if (!id.isEmpty() && !definicoesUsadas.add(id)) return true;
         }
-        return true;
+        return false;
+    }
+
+    private double pontuacaoProporcional(double peso, int acertos, int total) {
+        return total <= 0 ? 0.0 : peso * acertos / total;
+    }
+
+    // V/F é serializado como V,F,V,... e pontuado por afirmação correta.
+    private int contarAcertosSequenciaVerdadeiroFalso(Questao questao, String resposta) {
+        List<Alternativa> afirmacoes = questao.getAlternativas();
+        if (afirmacoes == null || afirmacoes.isEmpty() || resposta == null) return 0;
+        String[] respostas = resposta.split(",", -1);
+        int acertos = 0;
+
+        for (int i = 0; i < Math.min(afirmacoes.size(), respostas.length); i++) {
+            String esperada = afirmacoes.get(i).isCorreta() ? "V" : "F";
+            if (esperada.equalsIgnoreCase(respostas[i].trim())) acertos++;
+        }
+        return acertos;
     }
 
     private String gerarCodigo() {

@@ -99,6 +99,26 @@
                 </SVGPath>
             </graphic>
         </Button>
+        <Button fx:id="corrigirDissertativasButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+            onAction="#corrigirDissertativas" styleClass="botao-menu" text="Corrigir dissertativas">
+            <graphic>
+                <SVGPath styleClass="icone">
+                    <content>
+                        <Icones fx:constant="CALCULAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
+        <Button fx:id="resultadosButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+            onAction="#visualizarResultados" styleClass="botao-menu" text="Visualizar resultados">
+            <graphic>
+                <SVGPath styleClass="icone">
+                    <content>
+                        <Icones fx:constant="CALCULAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
         <Button fx:id="aplicarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
             onAction="#aplicar" styleClass="botao-menu" text="Aplicar prova">
             <graphic>

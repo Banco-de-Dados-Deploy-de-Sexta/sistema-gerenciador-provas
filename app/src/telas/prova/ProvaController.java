@@ -48,6 +48,8 @@ import telas.bancoquestoes.BancoQuestoes;
 import telas.componentes.CardQuestao;
 import telas.composicaoprova.ComposicaoProva;
 import telas.corrigirprova.CorrigirProva;
+import telas.corrigirdissertativas.CorrigirDissertativas;
+import telas.resultadosprova.ResultadosProva;
 
 public class ProvaController {
     private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -70,6 +72,10 @@ public class ProvaController {
     private Button questoesButton;
     @FXML
     private Button corrigirButton;
+    @FXML
+    private Button corrigirDissertativasButton;
+    @FXML
+    private Button resultadosButton;
     @FXML
     private Button aplicarButton;
     @FXML
@@ -106,6 +112,9 @@ public class ProvaController {
         var bloqueada = semPermissao.or(aplicada);
         baixarButton.disableProperty().bind(nenhuma);
         corrigirButton.disableProperty().bind(semPermissao);
+        corrigirDissertativasButton.disableProperty().bind(semPermissao);
+        resultadosButton.visibleProperty().bind(ehDona);
+        resultadosButton.managedProperty().bind(ehDona);
         aplicarButton.disableProperty().bind(semPermissao.or(semQuestoes));
         agendarButton.disableProperty().bind(semPermissao.or(temEntregas));
         for (Button botao : List.of(editarButton, excluirButton, questoesButton))
@@ -613,6 +622,32 @@ public class ProvaController {
             CorrigirProva.abrir(palcoDe(event), prova, provaServico);
         } catch (Exception e) {
             erro("Não foi possível abrir a correção.", e);
+        }
+    }
+
+    @FXML
+    private void corrigirDissertativas(ActionEvent event) {
+        Prova prova = selecionada.get();
+        if (prova == null) return;
+        try {
+            CorrigirDissertativas.abrir(palcoDe(event), prova, provaServico);
+        } catch (Exception e) {
+            erro("Não foi possível abrir as respostas dissertativas.", e);
+        }
+    }
+
+    @FXML
+    private void visualizarResultados(ActionEvent event) {
+        Prova prova = selecionada.get();
+        if (prova == null) return;
+        if (!ehDona(prova)) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Somente o professor responsável pode visualizar os resultados desta prova.");
+            return;
+        }
+        try {
+            ResultadosProva.abrir(palcoDe(event), prova, provaServico, telas.prova.Prova.getUsuarioStorage());
+        } catch (Exception e) {
+            erro("Não foi possível abrir os resultados da prova.", e);
         }
     }
 

@@ -17,6 +17,7 @@ public final class CardQuestao {
     private static final String TIPO_MULTIPLA_ESCOLHA = "Múltipla escolha";
     private static final String TIPO_CORRESPONDENCIA = "Correspondência";
     private static final String TIPO_VERDADEIRO_FALSO_SEQUENCIA = "Verdadeiro ou falso em sequência";
+    private static final String TIPO_DISSERTATIVA = "Dissertativa";
 
     private CardQuestao() { }
 
@@ -51,6 +52,7 @@ public final class CardQuestao {
         VBox conteudo = switch (rotuloTipo(questao.getDescricao())) {
             case TIPO_CORRESPONDENCIA -> listaCorrespondencias(alternativas);
             case TIPO_VERDADEIRO_FALSO_SEQUENCIA -> listaAfirmacoes(alternativas);
+            case TIPO_DISSERTATIVA -> respostaDissertativa();
             default -> listaAlternativas(alternativas);
         };
 
@@ -61,6 +63,7 @@ public final class CardQuestao {
     public static String rotuloTipo(String descricao) {
         if (TIPO_CORRESPONDENCIA.equals(descricao)) return TIPO_CORRESPONDENCIA;
         if (TIPO_VERDADEIRO_FALSO_SEQUENCIA.equals(descricao)) return TIPO_VERDADEIRO_FALSO_SEQUENCIA;
+        if (TIPO_DISSERTATIVA.equals(descricao)) return TIPO_DISSERTATIVA;
         return TIPO_MULTIPLA_ESCOLHA;
     }
 
@@ -139,6 +142,15 @@ public final class CardQuestao {
             lista.getChildren().add(linha);
         }
         adicionarVazioSeNecessario(lista, afirmacoes);
+        return lista;
+    }
+
+    private static VBox respostaDissertativa() {
+        VBox lista = novaLista("Resposta do aluno");
+        Label descricao = new Label("Campo de texto livre, corrigido pelo professor após a entrega.");
+        descricao.getStyleClass().add("subtitulo");
+        descricao.setWrapText(true);
+        lista.getChildren().add(descricao);
         return lista;
     }
 

@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 public class CorrigirProvaController {
     private static final String TIPO_CORRESPONDENCIA = "Correspondência";
     private static final String TIPO_VERDADEIRO_FALSO_SEQUENCIA = "Verdadeiro ou falso em sequência";
+    private static final String TIPO_DISSERTATIVA = "Dissertativa";
     private static final String CLASSE_CORRETA = "feedback-correto";
     private static final String CLASSE_INCORRETA = "feedback-incorreto";
 
@@ -83,6 +84,10 @@ public class CorrigirProvaController {
                 renderizarCorrespondencia(bloco, idQuestao, alternativas);
             } else if (TIPO_VERDADEIRO_FALSO_SEQUENCIA.equals(tipoQuestao)) {
                 renderizarSequencia(bloco, idQuestao, alternativas);
+            } else if (TIPO_DISSERTATIVA.equals(tipoQuestao)) {
+                Label informacao = new Label("A nota é atribuída à resposta enviada pelo aluno. Use “Corrigir dissertativas” no menu da prova.");
+                informacao.setWrapText(true);
+                bloco.getChildren().add(informacao);
             } else {
                 renderizarMultiplaEscolha(bloco, idQuestao, alternativas);
             }
@@ -118,7 +123,7 @@ public class CorrigirProvaController {
     }
 
     private void renderizarCorrespondencia(VBox bloco, long idQuestao, List<Alternativa> pares) {
-        Label instrucao = new Label("Associe cada conceito à definição que o aluno respondeu. Cada definição pode ser usada uma única vez.");
+        Label instrucao = new Label("Associe cada conceito à definição que o aluno respondeu. Cada definição pode ser usada uma única vez, e cada associação correta vale uma parte proporcional do peso.");
         instrucao.setWrapText(true);
         bloco.getChildren().add(instrucao);
 
@@ -174,7 +179,7 @@ public class CorrigirProvaController {
     }
 
     private void renderizarSequencia(VBox bloco, long idQuestao, List<Alternativa> afirmacoes) {
-        Label instrucao = new Label("Indique a resposta do aluno para cada afirmação.");
+        Label instrucao = new Label("Indique a resposta do aluno para cada afirmação. Cada acerto vale uma parte proporcional do peso da questão.");
         instrucao.setWrapText(true);
         bloco.getChildren().add(instrucao);
 
@@ -270,24 +275,32 @@ public class CorrigirProvaController {
             }
         });
         respostasCorrespondencia.forEach((idQuestao, linhas) -> {
-            if (!linhas.isEmpty() && linhas.stream().allMatch(linha -> linha.selecao.getValue() != null)) {
-                List<Integer> idsEscolhidos = linhas.stream()
-                        .map(linha -> linha.selecao.getValue().getId())
+            if (!linhas.isEmpty() && linhas.stream().anyMatch(linha -> linha.selecao.getValue() != null)) {
+                List<String> idsEscolhidos = linhas.stream()
+                        .map(linha -> linha.selecao.getValue() == null
+                                ? ""
+                                : String.valueOf(linha.selecao.getValue().getId()))
                         .toList();
-                if (new HashSet<>(idsEscolhidos).size() != idsEscolhidos.size()) {
+                List<Integer> idsSelecionados = linhas.stream()
+                        .map(linha -> linha.selecao.getValue() == null ? null : linha.selecao.getValue().getId())
+                        .filter(java.util.Objects::nonNull)
+                        .toList();
+                if (new HashSet<>(idsSelecionados).size() != idsSelecionados.size()) {
                     mostrar(Alert.AlertType.WARNING, "Cada definição só pode ser associada a um conceito.");
                     return;
                 }
                 RespostaAluno resposta = new RespostaAluno();
-                resposta.setRespostaTexto(idsEscolhidos.stream().map(String::valueOf).collect(Collectors.joining(",")));
+                resposta.setRespostaTexto(String.join(",", idsEscolhidos));
                 respostasInformadas.put(idQuestao, resposta);
             }
         });
         respostasSequencia.forEach((idQuestao, linhas) -> {
-            if (!linhas.isEmpty() && linhas.stream().allMatch(linha -> linha.grupo.getSelectedToggle() != null)) {
+            if (!linhas.isEmpty() && linhas.stream().anyMatch(linha -> linha.grupo.getSelectedToggle() != null)) {
                 RespostaAluno resposta = new RespostaAluno();
                 resposta.setRespostaTexto(linhas.stream()
-                        .map(linha -> String.valueOf(linha.grupo.getSelectedToggle().getUserData()))
+                        .map(linha -> linha.grupo.getSelectedToggle() == null
+                                ? ""
+                                : String.valueOf(linha.grupo.getSelectedToggle().getUserData()))
                         .collect(Collectors.joining(",")));
                 respostasInformadas.put(idQuestao, resposta);
             }
@@ -295,8 +308,11 @@ public class CorrigirProvaController {
 
         ResultadoCorrecao resultado = provaServico.corrigirRespostas(prova.getCodigo(), respostasInformadas);
         aplicarFeedback(resultado);
-        resultadoLabel.setText(String.format(Locale.forLanguageTag("pt-BR"),
-                "Resultado: %.2f de %.2f pontos", resultado.getPontosObtidos(), resultado.getPontosPossiveis()));
+        resultadoLabel.setText(resultado.getPontosPossiveis() == 0
+                ? "Esta prova não tem questões objetivas para calcular."
+                : String.format(Locale.forLanguageTag("pt-BR"),
+                        "Resultado objetivo: %.2f de %.2f pontos",
+                        resultado.getPontosObtidos(), resultado.getPontosPossiveis()));
     }
 
     private void aplicarFeedback(ResultadoCorrecao resultado) {
@@ -307,6 +323,8 @@ public class CorrigirProvaController {
                 aplicarFeedbackCorrespondencia(idQuestao);
             } else if (TIPO_VERDADEIRO_FALSO_SEQUENCIA.equals(tipo)) {
                 aplicarFeedbackSequencia(idQuestao);
+            } else if (TIPO_DISSERTATIVA.equals(tipo)) {
+                return;
             } else {
                 aplicarFeedbackMultiplaEscolha(idQuestao, item, questaoCorreta);
             }

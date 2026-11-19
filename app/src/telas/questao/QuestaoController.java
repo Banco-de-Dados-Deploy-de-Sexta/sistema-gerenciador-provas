@@ -64,10 +64,12 @@ public class QuestaoController {
     private static final String TIPO_MULTIPLA_ESCOLHA = "Múltipla escolha";
     private static final String TIPO_VERDADEIRO_FALSO_SEQUENCIA = "Verdadeiro ou falso em sequência";
     private static final String TIPO_CORRESPONDENCIA = "Correspondência";
+    private static final String TIPO_DISSERTATIVA = "Dissertativa";
     private static final Map<String, String> FORMULARIOS_POR_TIPO = Map.of(
             TIPO_MULTIPLA_ESCOLHA, "multipla_escolha.fxml",
             TIPO_VERDADEIRO_FALSO_SEQUENCIA, "verdadeiro_falso_sequencia.fxml",
-            TIPO_CORRESPONDENCIA, "correspondencia.fxml"
+            TIPO_CORRESPONDENCIA, "correspondencia.fxml",
+            TIPO_DISSERTATIVA, "dissertativa.fxml"
     );
 
     public QuestaoController(QuestaoServico questaoServico) { this.questaoServico = questaoServico; }
@@ -78,7 +80,8 @@ public class QuestaoController {
             tipoQuestaoComboBox.getItems().setAll(
                     TIPO_MULTIPLA_ESCOLHA,
                     TIPO_VERDADEIRO_FALSO_SEQUENCIA,
-                    TIPO_CORRESPONDENCIA
+                    TIPO_CORRESPONDENCIA,
+                    TIPO_DISSERTATIVA
             );
         }
     }
@@ -277,7 +280,11 @@ public class QuestaoController {
 
     @FXML
     private void confirmar() {
-        if (enunciadoCaixaTexto == null || tipoQuestaoComboBox.getValue() == null) return;
+        if (enunciadoCaixaTexto == null) return;
+        if (tipoQuestaoComboBox.getValue() == null) {
+            mostrar(Alert.AlertType.WARNING, "Selecione o tipo da questão.");
+            return;
+        }
         String tipo_questao = tipoQuestaoComboBox.getValue().trim();
         String enunciado = enunciadoCaixaTexto.getText().trim();
         if (enunciado.length() < QuestaoServico.MIN_ENUNCIADO) {
@@ -288,32 +295,41 @@ public class QuestaoController {
             mostrar(Alert.AlertType.WARNING, "O enunciado pode ter no máximo " + QuestaoServico.MAX_ENUNCIADO + " caracteres.");
             return;
         }
-        if (alternativas.isEmpty()) {
-            mostrar(Alert.AlertType.WARNING, "Adicione ao menos uma alternativa.");
-            return;
-        }
-        if (alternativas.stream().anyMatch(a -> a.getTexto() == null || a.getTexto().isBlank())) {
-            mostrar(Alert.AlertType.WARNING, "O texto das alternativas não pode ficar vazio.");
-            return;
-        }
-        if (alternativas.stream().anyMatch(a -> a.getTexto().trim().length() > QuestaoServico.MAX_TEXTO_ALTERNATIVA)) {
-            mostrar(Alert.AlertType.WARNING, "Cada alternativa pode ter até " + QuestaoServico.MAX_TEXTO_ALTERNATIVA + " caracteres.");
-            return;
-        }
-
-        if (TIPO_CORRESPONDENCIA.equals(tipo_questao)
-                && alternativas.stream().anyMatch(a -> a.getTextoCorrespondencia() == null
-                || a.getTextoCorrespondencia().isBlank()
-                || a.getTextoCorrespondencia().trim().length() > QuestaoServico.MAX_TEXTO_ALTERNATIVA)) {
-            mostrar(Alert.AlertType.WARNING, "Preencha cada definição e use até "
-                    + QuestaoServico.MAX_TEXTO_ALTERNATIVA + " caracteres.");
-            return;
-        }
-
         Toggle marcada = grupoCorreta.getSelectedToggle();
-        if (TIPO_MULTIPLA_ESCOLHA.equals(tipo_questao) && marcada == null) {
-            mostrar(Alert.AlertType.WARNING, "Marque a alternativa correta.");
-            return;
+        if (TIPO_DISSERTATIVA.equals(tipo_questao)) {
+            if (!alternativas.isEmpty()) {
+                mostrar(Alert.AlertType.WARNING, "Questões dissertativas não possuem alternativas.");
+                return;
+            }
+        } else {
+            if (alternativas.size() < QuestaoServico.MIN_ALTERNATIVAS) {
+                mostrar(Alert.AlertType.WARNING, "Adicione pelo menos " + QuestaoServico.MIN_ALTERNATIVAS + " alternativas ou itens.");
+                return;
+            }
+            if (alternativas.size() > QuestaoServico.MAX_ALTERNATIVAS) {
+                mostrar(Alert.AlertType.WARNING, "A questão pode ter no máximo " + QuestaoServico.MAX_ALTERNATIVAS + " itens.");
+                return;
+            }
+            if (alternativas.stream().anyMatch(a -> a.getTexto() == null || a.getTexto().isBlank())) {
+                mostrar(Alert.AlertType.WARNING, "O texto das alternativas ou itens não pode ficar vazio.");
+                return;
+            }
+            if (alternativas.stream().anyMatch(a -> a.getTexto().trim().length() > QuestaoServico.MAX_TEXTO_ALTERNATIVA)) {
+                mostrar(Alert.AlertType.WARNING, "Cada alternativa pode ter até " + QuestaoServico.MAX_TEXTO_ALTERNATIVA + " caracteres.");
+                return;
+            }
+            if (TIPO_CORRESPONDENCIA.equals(tipo_questao)
+                    && alternativas.stream().anyMatch(a -> a.getTextoCorrespondencia() == null
+                    || a.getTextoCorrespondencia().isBlank()
+                    || a.getTextoCorrespondencia().trim().length() > QuestaoServico.MAX_TEXTO_ALTERNATIVA)) {
+                mostrar(Alert.AlertType.WARNING, "Preencha cada definição e use até "
+                        + QuestaoServico.MAX_TEXTO_ALTERNATIVA + " caracteres.");
+                return;
+            }
+            if (TIPO_MULTIPLA_ESCOLHA.equals(tipo_questao) && marcada == null) {
+                mostrar(Alert.AlertType.WARNING, "Marque a alternativa correta.");
+                return;
+            }
         }
 
         Alternativa selecionada = marcada == null ? null : (Alternativa) marcada.getUserData();
@@ -332,7 +348,9 @@ public class QuestaoController {
         Questao questao = new Questao(idQuestao, enunciado, tipo_questao, paraSalvar);
         try {
             questaoServico.salvarQuestao(questao);
-            mostrar(Alert.AlertType.INFORMATION, "Questão e alternativas salvas.");
+            mostrar(Alert.AlertType.INFORMATION, TIPO_DISSERTATIVA.equals(tipo_questao)
+                    ? "Questão dissertativa salva."
+                    : "Questão e alternativas salvas.");
             voltarParaBanco();
         } catch (IllegalArgumentException e) {
             mostrar(Alert.AlertType.WARNING, e.getMessage());

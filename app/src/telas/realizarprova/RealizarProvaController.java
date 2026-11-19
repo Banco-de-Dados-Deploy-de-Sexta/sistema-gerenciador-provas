@@ -38,6 +38,7 @@ import telas.componentes.CardQuestao;
 public class RealizarProvaController {
     private static final String TIPO_CORRESPONDENCIA = "Correspondência";
     private static final String TIPO_VERDADEIRO_FALSO_SEQUENCIA = "Verdadeiro ou falso em sequência";
+    private static final String TIPO_DISSERTATIVA = "Dissertativa";
 
     @FXML
     private Label tituloTela;
@@ -115,6 +116,8 @@ public class RealizarProvaController {
                 renderizarCorrespondencia(cardQuestao, idQuestao, alternativas);
             } else if (alternativas != null && TIPO_VERDADEIRO_FALSO_SEQUENCIA.equals(tipo)) {
                 renderizarSequencia(cardQuestao, idQuestao, alternativas);
+            } else if (TIPO_DISSERTATIVA.equals(tipo)) {
+                renderizarDissertativa(cardQuestao, idQuestao);
             } else if (alternativas != null && !alternativas.isEmpty()) {
                 ToggleGroup grupo = new ToggleGroup();
                 for (int j = 0; j < alternativas.size(); j++) {
@@ -140,8 +143,19 @@ public class RealizarProvaController {
         }
     }
 
+    private void renderizarDissertativa(VBox card, int idQuestao) {
+        Label instrucao = new Label("Escreva sua resposta. O professor irá corrigi-la e atribuir uma nota de zero até o peso da questão.");
+        instrucao.setWrapText(true);
+        TextArea resposta = new TextArea();
+        resposta.setPromptText("Escreva sua resposta aqui...");
+        resposta.setPrefRowCount(5);
+        resposta.setWrapText(true);
+        card.getChildren().addAll(instrucao, resposta);
+        respostasDissertativas.put(idQuestao, resposta);
+    }
+
     private void renderizarCorrespondencia(VBox card, int idQuestao, List<Alternativa> pares) {
-        Label instrucao = new Label("Associe cada conceito à definição correspondente.");
+        Label instrucao = new Label("Associe cada conceito à definição correspondente. Cada associação correta vale uma parte proporcional do peso da questão.");
         instrucao.setWrapText(true);
         card.getChildren().add(instrucao);
 
@@ -152,6 +166,7 @@ public class RealizarProvaController {
         }
 
         List<ComboBox<Alternativa>> selecoes = new ArrayList<>();
+        boolean[] rejeitandoDuplicada = {false};
         for (int i = 0; i < pares.size(); i++) {
             Alternativa par = pares.get(i);
             Label numero = new Label((i + 1) + ".");
@@ -170,6 +185,19 @@ public class RealizarProvaController {
             definicao.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(definicao, Priority.ALWAYS);
             selecoes.add(definicao);
+            definicao.valueProperty().addListener((obs, antiga, nova) -> {
+                if (rejeitandoDuplicada[0]) return;
+                boolean duplicada = nova != null && selecoes.stream()
+                        .anyMatch(outra -> outra != definicao
+                                && outra.getValue() != null
+                                && outra.getValue().getId() == nova.getId());
+                if (duplicada) {
+                    rejeitandoDuplicada[0] = true;
+                    definicao.setValue(antiga);
+                    rejeitandoDuplicada[0] = false;
+                    mostrarAlerta(Alert.AlertType.WARNING, "Cada definição só pode ser associada a um conceito.");
+                }
+            });
 
             HBox linha = new HBox(10, numero, conceito, seta, definicao);
             linha.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -191,7 +219,7 @@ public class RealizarProvaController {
     }
 
     private void renderizarSequencia(VBox card, int idQuestao, List<Alternativa> afirmacoes) {
-        Label instrucao = new Label("Marque verdadeiro ou falso para cada afirmação.");
+        Label instrucao = new Label("Marque verdadeiro ou falso para cada afirmação. Cada acerto vale uma parte proporcional do peso da questão.");
         instrucao.setWrapText(true);
         card.getChildren().add(instrucao);
 
@@ -269,7 +297,7 @@ public class RealizarProvaController {
                                     ? ""
                                     : String.valueOf(combo.getValue().getId()))
                             .collect(Collectors.joining(",")));
-                    if (selecoes.stream().allMatch(combo -> combo.getValue() != null)) respondidas++;
+                    if (selecoes.stream().anyMatch(combo -> combo.getValue() != null)) respondidas++;
                 }
             } else if (respostasSequencia.containsKey(idQuestao)) {
                 List<ToggleGroup> grupos = respostasSequencia.get(idQuestao);
@@ -279,7 +307,7 @@ public class RealizarProvaController {
                                     ? ""
                                     : String.valueOf(grupo.getSelectedToggle().getUserData()))
                             .collect(Collectors.joining(",")));
-                    if (grupos.stream().allMatch(grupo -> grupo.getSelectedToggle() != null)) respondidas++;
+                    if (grupos.stream().anyMatch(grupo -> grupo.getSelectedToggle() != null)) respondidas++;
                 }
             } else if (respostasMultiplaEscolha.containsKey(idQuestao)) {
                 ToggleGroup grupo = respostasMultiplaEscolha.get(idQuestao);
@@ -302,8 +330,8 @@ public class RealizarProvaController {
         if (emBranco > 0) {
             Alert confirmacao = new Alert(Alert.AlertType.WARNING);
             confirmacao.setTitle("Atenção - Questões sem resposta");
-            confirmacao.setHeaderText("Você possui " + emBranco + " questão(ões) sem resposta!");
-            confirmacao.setContentText("Questões não respondidas serão consideradas incorretas (nota zero).\n\nDeseja realmente entregar a prova agora?");
+            confirmacao.setHeaderText("Você possui " + emBranco + " questão(ões) sem nenhuma resposta!");
+            confirmacao.setContentText("Questões inteiramente em branco recebem nota zero. Em verdadeiro ou falso em sequência, cada afirmação correta conta proporcionalmente para a nota.\n\nDeseja realmente entregar a prova agora?");
 
             ButtonType btnSim = new ButtonType("Sim, entregar agora", ButtonBar.ButtonData.OK_DONE);
             ButtonType btnVoltar = new ButtonType("Voltar e revisar", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -316,8 +344,8 @@ public class RealizarProvaController {
         } else {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacao.setTitle("Confirmar entrega");
-            confirmacao.setHeaderText("Todas as questões foram respondidas.");
-            confirmacao.setContentText("Após a entrega, suas respostas não poderão mais ser alteradas. Deseja finalizar?");
+            confirmacao.setHeaderText("Todas as questões têm alguma resposta.");
+            confirmacao.setContentText("Em verdadeiro ou falso em sequência, as afirmações corretas contam proporcionalmente para a nota. Após a entrega, suas respostas não poderão mais ser alteradas. Deseja finalizar?");
             Optional<ButtonType> resposta = confirmacao.showAndWait();
             if (resposta.isEmpty() || resposta.get() != ButtonType.OK) {
                 return;

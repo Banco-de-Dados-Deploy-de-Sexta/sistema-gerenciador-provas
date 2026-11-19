@@ -108,4 +108,23 @@ public class RespostaAlunoStorage {
             throw new IllegalStateException("Erro ao listar respostas do aluno.", e);
         }
     }
+
+    public void atualizarNotaDissertativa(String codigoProva, String registroAluno, int idQuestao, double nota) {
+        String sql = """
+                UPDATE resposta_aluno
+                SET nota_obtida = ?, acertou = NULL
+                WHERE codigo_prova = ? AND registro_aluno = ? AND id_questao = ?
+                  AND resposta_texto IS NOT NULL AND TRIM(resposta_texto) <> ''
+                """;
+        try (PreparedStatement stmt = conexao.conectar().prepareStatement(sql)) {
+            stmt.setDouble(1, nota);
+            stmt.setString(2, codigoProva);
+            stmt.setString(3, registroAluno);
+            stmt.setInt(4, idQuestao);
+            if (stmt.executeUpdate() != 1)
+                throw new IllegalArgumentException("Não foi encontrada uma resposta dissertativa entregue para corrigir.");
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao salvar a nota da questão dissertativa.", e);
+        }
+    }
 }

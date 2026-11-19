@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12.0" styleClass="tela" stylesheets="@../componentes/prova.css"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <padding><Insets bottom="20.0" left="24.0" right="24.0" top="20.0" /></padding>
+
+    <Label fx:id="tituloTela" styleClass="titulo" text="Corrigir respostas dissertativas" />
+    <Label styleClass="subtitulo"
+           text="Selecione uma entrega e atribua a cada resposta uma nota de zero até o peso da questão. A nota final é atualizada quando todas as respostas abertas forem corrigidas."
+           wrapText="true" />
+
+    <HBox alignment="CENTER_LEFT" spacing="12.0">
+        <Label styleClass="step-title" text="Entrega do aluno" />
+        <ComboBox fx:id="entregaComboBox" maxWidth="1.7976931348623157E308"
+                  promptText="Selecione o registro do aluno" HBox.hgrow="ALWAYS" />
+    </HBox>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+        <content>
+            <VBox fx:id="listaQuestoes" spacing="12.0">
+                <padding><Insets bottom="8.0" left="4.0" right="4.0" top="4.0" /></padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <HBox alignment="CENTER_LEFT" spacing="12.0">
+        <Label fx:id="estadoLabel" styleClass="resultado" text="" wrapText="true" HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" onAction="#voltar" styleClass="botao-secundario" text="Voltar" />
+    </HBox>
+</VBox>

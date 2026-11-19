@@ -51,6 +51,44 @@ public class ProvaAlunoStorage {
         }
     }
 
+    public List<ProvaAluno> listarEntregasPorProva(String codigoProva) {
+        String sql = """
+                SELECT codigo_prova, registro_aluno, data_realizacao, nota_final, status
+                FROM prova_aluno
+                WHERE codigo_prova = ? AND data_realizacao IS NOT NULL
+                ORDER BY registro_aluno
+                """;
+        List<ProvaAluno> lista = new ArrayList<>();
+        try (PreparedStatement stmt = conexao.conectar().prepareStatement(sql)) {
+            stmt.setString(1, codigoProva);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) lista.add(paraProvaAluno(rs));
+            }
+            return lista;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao listar as entregas da prova.", e);
+        }
+    }
+
+    public List<ProvaAluno> listarPorProva(String codigoProva) {
+        String sql = """
+                SELECT codigo_prova, registro_aluno, data_realizacao, nota_final, status
+                FROM prova_aluno
+                WHERE codigo_prova = ?
+                ORDER BY registro_aluno
+                """;
+        List<ProvaAluno> lista = new ArrayList<>();
+        try (PreparedStatement stmt = conexao.conectar().prepareStatement(sql)) {
+            stmt.setString(1, codigoProva);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) lista.add(paraProvaAluno(rs));
+            }
+            return lista;
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao listar os resultados da prova.", e);
+        }
+    }
+
     // Quantidade de alunos que já entregaram a prova (regra da PB09)
     public int contarEntregas(String codigoProva) {
         String sql = """
@@ -86,7 +124,8 @@ public class ProvaAlunoStorage {
             stmt.setString(3, provaAluno.getStatus() != null ? provaAluno.getStatus() : "REALIZADA");
             stmt.setString(4, provaAluno.getCodigoProva());
             stmt.setString(5, provaAluno.getRegistroAluno());
-            stmt.executeUpdate();
+            if (stmt.executeUpdate() != 1)
+                throw new IllegalArgumentException("Não foi encontrada a entrega do aluno para atualizar a nota.");
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao registrar a entrega da prova.", e);
         }
