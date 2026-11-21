@@ -56,7 +56,7 @@ public class RealizarProvaController {
     private final Map<Integer, ToggleGroup> respostasMultiplaEscolha = new HashMap<>();
     private final Map<Integer, TextArea> respostasDissertativas = new HashMap<>();
     private final Map<Integer, List<ComboBox<Alternativa>>> respostasCorrespondencia = new HashMap<>();
-    private final Map<Integer, List<ToggleGroup>> respostasSequencia = new HashMap<>();
+    private final Map<Integer, Map<Integer, ToggleGroup>> respostasSequencia = new HashMap<>();
     private final List<QuestaoComPeso> questoesExibidas = new ArrayList<>();
 
     public RealizarProvaController(Prova prova, ProvaServico provaServico) {
@@ -228,9 +228,15 @@ public class RealizarProvaController {
         instrucao.setWrapText(true);
         card.getChildren().add(instrucao);
 
-        List<ToggleGroup> respostas = new ArrayList<>();
-        for (int i = 0; i < afirmacoes.size(); i++) {
-            Alternativa afirmacao = afirmacoes.get(i);
+        // Embaralha as alternativas de verdadeiro ou falso
+        List<Alternativa> afirmacoesEmbaralhada = new ArrayList<>(afirmacoes);
+        Collections.shuffle(afirmacoesEmbaralhada);
+
+        // Declara um map para guardar o grupo de id das afirmações
+        Map<Integer, ToggleGroup> respostasPorId = new HashMap<>();
+
+        for (int i = 0; i < afirmacoesEmbaralhada.size(); i++) {
+            Alternativa afirmacao = afirmacoesEmbaralhada.get(i);
             Label numero = new Label((i + 1) + ".");
             numero.setStyle("-fx-font-weight: bold; -fx-text-fill: #2563eb;");
             Label texto = new Label(afirmacao.getTexto());
@@ -245,14 +251,16 @@ public class RealizarProvaController {
             RadioButton falso = new RadioButton("Falso");
             falso.setUserData("F");
             falso.setToggleGroup(grupo);
-            respostas.add(grupo);
+
+            // Guarda o grupo por id da afirmação
+            respostasPorId.put(afirmacao.getId(), grupo);
 
             HBox linha = new HBox(12, numero, texto, verdadeiro, falso);
             linha.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
             linha.setStyle("-fx-padding: 8; -fx-background-color: #f8fafc; -fx-background-radius: 8;");
             card.getChildren().add(linha);
         }
-        respostasSequencia.put(idQuestao, respostas);
+        respostasSequencia.put(idQuestao, respostasPorId);
     }
 
     @FXML
@@ -260,7 +268,7 @@ public class RealizarProvaController {
         respostasMultiplaEscolha.values().forEach(g -> g.selectToggle(null));
         respostasDissertativas.values().forEach(t -> t.setText(""));
         respostasCorrespondencia.values().forEach(lista -> lista.forEach(combo -> combo.setValue(null)));
-        respostasSequencia.values().forEach(lista -> lista.forEach(grupo -> grupo.selectToggle(null)));
+        respostasSequencia.values().forEach(mapa -> mapa.values().forEach(grupo -> grupo.selectToggle(null)));
     }
 
     @FXML
@@ -304,15 +312,25 @@ public class RealizarProvaController {
                             .collect(Collectors.joining(",")));
                     if (selecoes.stream().anyMatch(combo -> combo.getValue() != null)) respondidas++;
                 }
-            } else if (respostasSequencia.containsKey(idQuestao)) {
-                List<ToggleGroup> grupos = respostasSequencia.get(idQuestao);
-                if (!grupos.isEmpty()) {
-                    ra.setRespostaTexto(grupos.stream()
-                            .map(grupo -> grupo.getSelectedToggle() == null
-                                    ? ""
-                                    : String.valueOf(grupo.getSelectedToggle().getUserData()))
-                            .collect(Collectors.joining(",")));
-                    if (grupos.stream().anyMatch(grupo -> grupo.getSelectedToggle() != null)) respondidas++;
+            }
+            // Verifica as respostas com as alternativas na ordem original
+            else if (respostasSequencia.containsKey(idQuestao)) {
+                Map<Integer, ToggleGroup> gruposPorId = respostasSequencia.get(idQuestao);
+                List<Alternativa> originais = item.getQuestao().getAlternativas();
+                if (originais != null && !originais.isEmpty()) {
+                    List<String> valoresNaOrdemOriginal = new ArrayList<>();
+                    boolean algumaMarcada = false;
+                    for (Alternativa alt : originais) {
+                        ToggleGroup grupo = gruposPorId.get(alt.getId());
+                        if (grupo != null && grupo.getSelectedToggle() != null) {
+                            valoresNaOrdemOriginal.add(String.valueOf(grupo.getSelectedToggle().getUserData()));
+                            algumaMarcada = true;
+                        } else {
+                            valoresNaOrdemOriginal.add("");
+                        }
+                    }
+                    ra.setRespostaTexto(String.join(",", valoresNaOrdemOriginal));
+                    if (algumaMarcada) respondidas++;
                 }
             } else if (respostasMultiplaEscolha.containsKey(idQuestao)) {
                 ToggleGroup grupo = respostasMultiplaEscolha.get(idQuestao);
