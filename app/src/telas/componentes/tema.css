@@ -134,15 +134,59 @@
     -fx-text-fill: #2563eb;
 }
 
-.card-lista .card-estado {
-    -fx-background-color: #eff6ff;
+/* Badge de estado da prova. A cor vem de uma classe estado-* (ver
+   telas.componentes.EstadoProva); sem ela, cai no cinza neutro. */
+.card-estado {
     -fx-background-radius: 999;
-    -fx-border-color: #bfdbfe;
     -fx-border-radius: 999;
     -fx-padding: 1 8 1 8;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
+    -fx-background-color: #f3f4f6;
+    -fx-border-color: #d1d5db;
+    -fx-text-fill: #4b5563;
+}
+
+/* Rascunho */
+.card-estado.estado-cinza {
+    -fx-background-color: #f3f4f6;
+    -fx-border-color: #d1d5db;
+    -fx-text-fill: #4b5563;
+}
+
+/* Agendada */
+.card-estado.estado-azul {
+    -fx-background-color: #eff6ff;
+    -fx-border-color: #bfdbfe;
     -fx-text-fill: #2563eb;
+}
+
+/* Pronta (professor) / Realizada (aluno) */
+.card-estado.estado-roxo {
+    -fx-background-color: #f5f3ff;
+    -fx-border-color: #ddd6fe;
+    -fx-text-fill: #7c3aed;
+}
+
+/* Disponível (aluno) / Aplicada (professor) / Corrigida (aluno) */
+.card-estado.estado-verde {
+    -fx-background-color: #ecfdf5;
+    -fx-border-color: #a7f3d0;
+    -fx-text-fill: #059669;
+}
+
+/* Encerrada */
+.card-estado.estado-ambar {
+    -fx-background-color: #fffbeb;
+    -fx-border-color: #fde68a;
+    -fx-text-fill: #b45309;
+}
+
+/* Reservado para estados de erro/cancelamento */
+.card-estado.estado-vermelho {
+    -fx-background-color: #fef2f2;
+    -fx-border-color: #fecaca;
+    -fx-text-fill: #dc2626;
 }
 
 .card-lista .card-texto {

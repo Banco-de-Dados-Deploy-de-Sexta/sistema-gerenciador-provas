@@ -45,7 +45,7 @@ REFERENCES usuario(registro)
 CREATE TABLE questao (
 id_questao int primary key,
 titulo varchar(500) not null,
-descricao varchar(300) not null
+descricao varchar(300) not null -- tipo da questão, incluindo 'Dissertativa'
 );
 
 CREATE TABLE resposta_aluno (
@@ -54,10 +54,10 @@ codigo_prova VARCHAR(7) NOT NULL,
 registro_aluno VARCHAR(20) NOT NULL,
 id_questao INT NOT NULL,
 id_alternativa_escolhida INT NULL,     -- Alternativa marcada (questão de múltipla escolha)
-resposta_texto TEXT NULL,              -- Texto dissertativo ou formato de correspondência
+resposta_texto TEXT NULL,              -- Resposta aberta, pares de correspondência ou sequência V/F
 ordem_questao INT NOT NULL DEFAULT 1,  -- Ordem em que a questão apareceu para o aluno (PB15)
-acertou BOOLEAN NULL,                  -- NULL = pendente de correção manual, TRUE = correta, FALSE = incorreta
-nota_obtida DECIMAL(4, 2) NULL,        -- Pontos obtidos nesta questão
+acertou BOOLEAN NULL,                  -- NULL = usa nota numérica/manual; TRUE/FALSE = resultado automático
+nota_obtida DECIMAL(4, 2) NULL,        -- NULL = dissertativa aguardando correção; após correção, nota entre zero e peso
 
 CONSTRAINT fk_resposta_prova_aluno 
     FOREIGN KEY (codigo_prova, registro_aluno) 

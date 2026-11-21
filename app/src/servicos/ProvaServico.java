@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import interfaces.ProvaRepositorio;
+import modelos.Alternativa;
 import modelos.PesoQuestao;
 import modelos.Prova;
 import modelos.ProvaAluno;
@@ -15,14 +17,19 @@ import modelos.RespostaAluno;
 import modelos.Questao;
 import modelos.QuestaoComPeso;
 import modelos.ResultadoCorrecao;
-import modelos.RespostaAluno;
-import modelos.ProvaAluno;
 
 public class ProvaServico {
+    public static final int MAX_TITULO = 100;
+    public static final int MAX_MATERIA = 50;
+    public static final int MAX_CURSO = 50;
+
     private final ProvaRepositorio provaRepositorio;
     private final QuestaoServico questaoServico;
     private final storage.ProvaAlunoStorage provaAlunoStorage;
     private final storage.RespostaAlunoStorage respostaAlunoStorage;
+    // Registro do professor logado (RN2): só o dono edita, exclui, agenda, compõe
+    // e aplica a prova. Substituível nos testes por definirProfessorLogado.
+    private Supplier<String> professorLogado = auxiliares.Sessao::getRegistroUsuarioLogado;
 
     public ProvaServico(ProvaRepositorio provaRepositorio, QuestaoServico questaoServico) {
         this(provaRepositorio, questaoServico, null, null);
@@ -37,6 +44,10 @@ public class ProvaServico {
         this.respostaAlunoStorage = respostaAlunoStorage;
     }
 
+    public void definirProfessorLogado(Supplier<String> fornecedor) {
+        this.professorLogado = fornecedor == null ? () -> null : fornecedor;
+    }
+
     public Prova criarProva(String titulo, String materia, LocalDate data, String curso, int bimestre,
             String registro_professor) {
         String codigo = gerarCodigo();
@@ -45,19 +56,27 @@ public class ProvaServico {
 
     public Prova salvarProva(Prova prova) {
         validar(prova);
-        if (prova.getCodigo() == null || prova.getCodigo().isBlank())
-            prova.setCodigo(gerarCodigo());
-        else
-            garantirAgendamentoInalteradoComEntregas(prova);
+        Prova atual = prova.getCodigo() == null || prova.getCodigo().isBlank()
+                ? null
+                : provaRepositorio.findByKey(prova.getCodigo());
+        if (atual == null) {
+            // Prova nova: nasce em nome do professor logado
+            if (prova.getRegistroProfessor() == null || prova.getRegistroProfessor().isBlank())
+                throw new IllegalArgumentException("A prova precisa estar vinculada ao professor logado.");
+            if (prova.getCodigo() == null || prova.getCodigo().isBlank())
+                prova.setCodigo(gerarCodigo());
+        } else {
+            garantirDona(atual, "editar esta prova");
+            // A edição não transfere a prova para outro professor
+            prova.setRegistroProfessor(atual.getRegistroProfessor());
+            garantirAgendamentoInalteradoComEntregas(atual, prova);
+        }
         return provaRepositorio.save(prova);
     }
 
     // Depois que algum aluno entregou a prova, a data/horário não pode mais mudar:
     // reagendar reabriria a prova (com as mesmas questões) para quem ainda não fez.
-    private void garantirAgendamentoInalteradoComEntregas(Prova prova) {
-        Prova atual = provaRepositorio.findByKey(prova.getCodigo());
-        if (atual == null)
-            return;
+    private void garantirAgendamentoInalteradoComEntregas(Prova atual, Prova prova) {
         boolean mudouAgendamento = !java.util.Objects.equals(atual.getData(), prova.getData())
                 || !java.util.Objects.equals(atual.getDataHora(), prova.getDataHora())
                 || !java.util.Objects.equals(atual.getDataHoraFim(), prova.getDataHoraFim());
@@ -74,6 +93,10 @@ public class ProvaServico {
     }
 
     public void excluirProva(String codigo) {
+        Prova prova = buscarProva(codigo);
+        if (prova == null)
+            throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "excluir esta prova");
         garantirNaoAplicada(codigo, "excluída");
         provaRepositorio.remove(codigo);
     }
@@ -154,10 +177,19 @@ public class ProvaServico {
     }
 
     public void salvarQuestoes(String codigoProva, List<PesoQuestao> questoes) {
-        garantirNaoAplicada(codigoProva, "alterada");
-        if (buscarProva(codigoProva) == null)
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
             throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "alterar as questões desta prova");
+        garantirNaoAplicada(codigoProva, "alterada");
+        if (questoes == null)
+            throw new IllegalArgumentException("Informe as questões da prova.");
+        java.util.Set<Long> vistas = new java.util.HashSet<>();
         for (PesoQuestao item : questoes) {
+            if (item == null)
+                throw new IllegalArgumentException("Uma das questões selecionadas é inválida.");
+            if (!vistas.add(item.getIdQuestao()))
+                throw new IllegalArgumentException("Uma mesma questão não pode ser adicionada duas vezes à prova.");
             if (questaoServico.buscarQuestao(item.getIdQuestao()) == null)
                 throw new IllegalArgumentException("Uma das questões selecionadas não existe.");
             if (!Double.isFinite(item.getPeso()) || item.getPeso() <= 0)
@@ -177,15 +209,63 @@ public class ProvaServico {
         return provaRepositorio.listarPorAluno(registroAluno);
     }
 
-    // Aplica a prova aos alunos informados (PB07): exige ao menos uma questão e
-    // ignora registros repetidos
+    // Aplica a prova aos alunos informados (PB07): só o professor dono, exige ao
+    // menos uma questão, todas com gabarito, e ignora registros repetidos ou vazios
     public void salvarAlunos(String codigoProva, List<String> registros) {
-        if (buscarProva(codigoProva) == null)
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
             throw new IllegalArgumentException("A prova não existe.");
-        List<String> unicos = new ArrayList<>(new LinkedHashSet<>(registros));
-        if (!unicos.isEmpty() && contarQuestoes(codigoProva) == 0)
-            throw new IllegalArgumentException("A prova precisa ter pelo menos uma questão antes de ser aplicada.");
+        garantirDona(prova, "aplicar esta prova");
+        List<String> unicos = new ArrayList<>();
+        if (registros != null) {
+            for (String registro : new LinkedHashSet<>(registros)) {
+                if (registro != null && !registro.isBlank() && !unicos.contains(registro.trim()))
+                    unicos.add(registro.trim());
+            }
+        }
+        if (!unicos.isEmpty()) {
+            if (contarQuestoes(codigoProva) == 0)
+                throw new IllegalArgumentException("A prova precisa ter pelo menos uma questão antes de ser aplicada.");
+            garantirQuestoesCompletas(codigoProva);
+        }
         provaRepositorio.salvarAlunos(codigoProva, unicos);
+    }
+
+    // Regra da PB07: toda questão da prova precisa estar completa (gabarito
+    // definido) antes da aplicação
+    private void garantirQuestoesCompletas(String codigoProva) {
+        for (QuestaoComPeso item : listarQuestoes(codigoProva)) {
+            if (!questaoCompleta(item.getQuestao()))
+                throw new IllegalArgumentException("A questão #" + item.getQuestao().getNumero()
+                        + " não tem gabarito definido. Complete-a antes de aplicar a prova.");
+        }
+    }
+
+    // O tipo da questão fica guardado na descrição (ver QuestaoController):
+    // correspondência exige a definição de cada par; V/F em sequência guarda um
+    // booleano por afirmação (sempre completa); múltipla escolha exige uma correta.
+    static boolean questaoCompleta(Questao questao) {
+        if (questao == null)
+            return false;
+        List<Alternativa> alternativas = questao.getAlternativas();
+        if (alternativas == null) return false;
+        String tipo = questao.getDescricao() == null ? "" : questao.getDescricao().trim();
+        if ("Dissertativa".equalsIgnoreCase(tipo))
+            return alternativas.isEmpty();
+        if (alternativas.isEmpty()) return false;
+        if ("Correspondência".equalsIgnoreCase(tipo))
+            return alternativas.stream()
+                    .allMatch(a -> a.getTextoCorrespondencia() != null && !a.getTextoCorrespondencia().isBlank());
+        if ("Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo))
+            return true;
+        return alternativas.stream().anyMatch(Alternativa::isCorreta);
+    }
+
+    private void garantirDona(Prova prova, String acao) {
+        String logado = professorLogado.get();
+        String dona = prova.getRegistroProfessor();
+        if (logado == null || logado.isBlank() || dona == null || !dona.equals(logado))
+            throw new IllegalArgumentException("Só o professor dono da prova pode " + acao + ".");
     }
 
     public boolean aplicada(String codigoProva) {
@@ -210,20 +290,60 @@ public class ProvaServico {
     }
 
     public ResultadoCorrecao corrigir(String codigoProva, Map<Long, Integer> respostas) {
+        Map<Long, RespostaAluno> respostasFormatadas = new java.util.HashMap<>();
+        if (respostas != null) {
+            respostas.forEach((idQuestao, idAlternativa) -> {
+                if (idQuestao != null && idAlternativa != null) {
+                    RespostaAluno resposta = new RespostaAluno();
+                    resposta.setIdAlternativaEscolhida(idAlternativa);
+                    respostasFormatadas.put(idQuestao, resposta);
+                }
+            });
+        }
+        return corrigirRespostas(codigoProva, respostasFormatadas);
+    }
+
+    public ResultadoCorrecao corrigirRespostas(String codigoProva, Map<Long, RespostaAluno> respostas) {
         List<QuestaoComPeso> questoes = listarQuestoes(codigoProva);
         double possiveis = 0;
         double obtidos = 0;
+        Map<Long, Boolean> acertosPorQuestao = new java.util.LinkedHashMap<>();
         for (QuestaoComPeso item : questoes) {
+            RespostaAluno resposta = respostas == null ? null : respostas.get(item.getQuestao().getNumero());
+            String tipo = item.getQuestao().getDescricao() == null
+                    ? ""
+                    : item.getQuestao().getDescricao().trim();
+            // A correção dissertativa exige uma entrega de aluno e uma nota do professor;
+            // essa tela calcula apenas as respostas objetivas.
+            if ("Dissertativa".equalsIgnoreCase(tipo)) continue;
             possiveis += item.getPeso();
-            Integer resposta = respostas.get(item.getQuestao().getNumero());
-            if (resposta == null)
-                continue;
-            boolean correta = item.getQuestao().getAlternativas().stream()
-                    .anyMatch(a -> a.getId() == resposta && a.isCorreta());
-            if (correta)
-                obtidos += item.getPeso();
+            boolean correta;
+            double pontosQuestao;
+            if (resposta == null) {
+                correta = false;
+                pontosQuestao = 0.0;
+            } else if ("Correspondência".equalsIgnoreCase(tipo)) {
+                int totalPares = item.getQuestao().getAlternativas().size();
+                int acertos = contarParesCorretos(item.getQuestao(), resposta.getRespostaTexto());
+                correta = totalPares > 0 && acertos == totalPares;
+                pontosQuestao = pontuacaoProporcional(item.getPeso(), acertos, totalPares);
+            } else if ("Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo)) {
+                int totalAfirmacoes = item.getQuestao().getAlternativas().size();
+                int acertos = contarAcertosSequenciaVerdadeiroFalso(item.getQuestao(), resposta.getRespostaTexto());
+                correta = totalAfirmacoes > 0 && acertos == totalAfirmacoes;
+                pontosQuestao = totalAfirmacoes == 0
+                        ? 0.0
+                        : item.getPeso() * acertos / totalAfirmacoes;
+            } else {
+                Integer idAlternativa = resposta.getIdAlternativaEscolhida();
+                correta = idAlternativa != null && item.getQuestao().getAlternativas().stream()
+                        .anyMatch(a -> a.getId() == idAlternativa && a.isCorreta());
+                pontosQuestao = correta ? item.getPeso() : 0.0;
+            }
+            acertosPorQuestao.put(item.getQuestao().getNumero(), correta);
+            obtidos += pontosQuestao;
         }
-        return new ResultadoCorrecao(obtidos, possiveis);
+        return new ResultadoCorrecao(obtidos, possiveis, acertosPorQuestao);
     }
 
     public ProvaAluno buscarRealizacaoAluno(String codigoProva, String registroAluno) {
@@ -243,6 +363,89 @@ public class ProvaServico {
             return List.of();
         }
         return respostaAlunoStorage.listarPorAlunoEProva(codigoProva, registroAluno);
+    }
+
+    public List<ProvaAluno> listarEntregasProva(String codigoProva) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "corrigir as respostas dissertativas");
+        if (provaAlunoStorage == null) return List.of();
+        return provaAlunoStorage.listarEntregasPorProva(codigoProva);
+    }
+
+    public List<ProvaAluno> listarResultadosProva(String codigoProva) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "visualizar os resultados desta prova");
+        if (provaAlunoStorage == null) return List.of();
+        return provaAlunoStorage.listarPorProva(codigoProva);
+    }
+
+    public List<RespostaAluno> listarRespostasResultadoProva(String codigoProva, String registroAluno) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "visualizar as respostas dos alunos");
+        ProvaAluno inscricao = buscarRealizacaoAluno(codigoProva, registroAluno);
+        if (inscricao == null)
+            throw new IllegalArgumentException("O aluno não está vinculado a esta prova.");
+        return listarRespostasAluno(codigoProva, registroAluno);
+    }
+
+    public boolean corrigirRespostaDissertativa(String codigoProva, String registroAluno,
+            int idQuestao, double nota) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null) throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "corrigir esta resposta");
+        if (provaAlunoStorage == null || respostaAlunoStorage == null)
+            throw new IllegalStateException("O armazenamento das entregas não está configurado.");
+
+        ProvaAluno entrega = buscarRealizacaoAluno(codigoProva, registroAluno);
+        if (entrega == null || !entrega.isRealizada())
+            throw new IllegalArgumentException("O aluno ainda não entregou esta prova.");
+
+        QuestaoComPeso questaoComPeso = listarQuestoes(codigoProva).stream()
+                .filter(item -> item.getQuestao().getNumero() == idQuestao)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("A questão não pertence a esta prova."));
+        if (!"Dissertativa".equalsIgnoreCase(questaoComPeso.getQuestao().getDescricao()))
+            throw new IllegalArgumentException("Somente questões dissertativas recebem nota manual.");
+        if (!Double.isFinite(nota) || nota < 0 || nota > questaoComPeso.getPeso())
+            throw new IllegalArgumentException("A nota deve estar entre zero e o peso da questão ("
+                    + questaoComPeso.getPeso() + ").");
+
+        List<RespostaAluno> respostas = listarRespostasAluno(codigoProva, registroAluno);
+        RespostaAluno resposta = respostas.stream()
+                .filter(item -> item.getIdQuestao() == idQuestao)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("A resposta do aluno não foi encontrada."));
+        if (resposta.getRespostaTexto() == null || resposta.getRespostaTexto().isBlank())
+            throw new IllegalArgumentException("O aluno não escreveu uma resposta para esta questão.");
+
+        respostaAlunoStorage.atualizarNotaDissertativa(codigoProva, registroAluno, idQuestao, nota);
+        resposta.setNotaObtida(nota);
+
+        Map<Integer, RespostaAluno> respostasPorQuestao = new java.util.HashMap<>();
+        for (RespostaAluno item : listarRespostasAluno(codigoProva, registroAluno))
+            respostasPorQuestao.put(item.getIdQuestao(), item);
+        List<QuestaoComPeso> questoes = listarQuestoes(codigoProva);
+        boolean aindaPendente = questoes.stream()
+                .filter(item -> "Dissertativa".equalsIgnoreCase(item.getQuestao().getDescricao()))
+                .map(item -> respostasPorQuestao.get((int) item.getQuestao().getNumero()))
+                .anyMatch(item -> item != null && item.getRespostaTexto() != null
+                        && !item.getRespostaTexto().isBlank() && item.getNotaObtida() == null);
+        if (aindaPendente) return false;
+
+        double pontosPossiveis = questoes.stream().mapToDouble(QuestaoComPeso::getPeso).sum();
+        if (pontosPossiveis <= 0) throw new IllegalStateException("A prova não possui peso válido para calcular a nota.");
+        double pontosObtidos = questoes.stream()
+                .map(item -> respostasPorQuestao.get((int) item.getQuestao().getNumero()))
+                .filter(item -> item != null && item.getNotaObtida() != null)
+                .mapToDouble(RespostaAluno::getNotaObtida)
+                .sum();
+        double notaFinal = Math.round((pontosObtidos / pontosPossiveis) * 10.0 * 100.0) / 100.0;
+        provaAlunoStorage.registrarEntrega(new ProvaAluno(
+                codigoProva, registroAluno, entrega.getDataRealizacao(), notaFinal, "CORRIGIDA"));
+        return true;
     }
 
     // Regra da PB09: entrega de prova com tentativa única e correção automática
@@ -272,7 +475,36 @@ public class ProvaServico {
 
             if (qcp == null) continue;
 
-            if (resp.getIdAlternativaEscolhida() != null) {
+            String tipo = qcp.getQuestao().getDescricao() == null
+                    ? ""
+                    : qcp.getQuestao().getDescricao().trim();
+            boolean correspondencia = "Correspondência".equalsIgnoreCase(tipo);
+            boolean sequenciaVF = "Verdadeiro ou falso em sequência".equalsIgnoreCase(tipo);
+
+            if (correspondencia && respostaTemDefinicaoRepetida(resp.getRespostaTexto())) {
+                throw new IllegalArgumentException("Cada definição de correspondência só pode ser usada uma vez.");
+            }
+
+            if (sequenciaVF) {
+                int totalAfirmacoes = qcp.getQuestao().getAlternativas().size();
+                int acertos = contarAcertosSequenciaVerdadeiroFalso(qcp.getQuestao(), resp.getRespostaTexto());
+                boolean acertouTudo = totalAfirmacoes > 0 && acertos == totalAfirmacoes;
+                double notaQuestao = totalAfirmacoes == 0
+                        ? 0.0
+                        : qcp.getPeso() * acertos / totalAfirmacoes;
+                resp.setAcertou(acertouTudo);
+                resp.setNotaObtida(notaQuestao);
+                pesoObtido += notaQuestao;
+            } else if (correspondencia) {
+                String resposta = resp.getRespostaTexto();
+                int totalPares = qcp.getQuestao().getAlternativas().size();
+                int acertos = contarParesCorretos(qcp.getQuestao(), resposta);
+                boolean acertouTudo = totalPares > 0 && acertos == totalPares;
+                double notaQuestao = pontuacaoProporcional(qcp.getPeso(), acertos, totalPares);
+                resp.setAcertou(acertouTudo);
+                resp.setNotaObtida(notaQuestao);
+                pesoObtido += notaQuestao;
+            } else if (resp.getIdAlternativaEscolhida() != null) {
                 // Questão de múltipla escolha
                 boolean acertou = qcp.getQuestao().getAlternativas().stream()
                         .anyMatch(alt -> alt.getId() == resp.getIdAlternativaEscolhida() && alt.isCorreta());
@@ -283,7 +515,7 @@ public class ProvaServico {
                     pesoObtido += qcp.getPeso();
                 }
             } else if (resp.getRespostaTexto() != null && !resp.getRespostaTexto().isBlank()) {
-                // Dissertativa ou correspondência (correção manual ou pendente)
+                // Questões dissertativas permanecem pendentes de correção manual.
                 temDissertativa = true;
                 resp.setAcertou(null);
                 resp.setNotaObtida(null);
@@ -317,10 +549,60 @@ public class ProvaServico {
         }
     }
 
+    // Correspondência é serializada como os IDs das definições escolhidas,
+    // na ordem dos conceitos. Cada par correto recebe a fração correspondente do peso.
+    private int contarParesCorretos(Questao questao, String resposta) {
+        List<Alternativa> pares = questao.getAlternativas();
+        if (pares == null || pares.isEmpty() || resposta == null) return 0;
+        String[] definicoesEscolhidas = resposta.split(",", -1);
+        java.util.Set<Integer> definicoesUsadas = new java.util.HashSet<>();
+        int acertos = 0;
+
+        for (int i = 0; i < Math.min(pares.size(), definicoesEscolhidas.length); i++) {
+            if (definicoesEscolhidas[i].isBlank()) continue;
+            try {
+                int idDefinicao = Integer.parseInt(definicoesEscolhidas[i].trim());
+                if (!definicoesUsadas.add(idDefinicao)) return 0;
+                if (idDefinicao == pares.get(i).getId()) acertos++;
+            } catch (NumberFormatException e) {
+                // Uma definição inválida não pontua, mas não invalida os outros pares respondidos.
+            }
+        }
+        return acertos;
+    }
+
+    private boolean respostaTemDefinicaoRepetida(String resposta) {
+        if (resposta == null || resposta.isBlank()) return false;
+        java.util.Set<String> definicoesUsadas = new java.util.HashSet<>();
+        for (String definicao : resposta.split(",", -1)) {
+            String id = definicao.trim();
+            if (!id.isEmpty() && !definicoesUsadas.add(id)) return true;
+        }
+        return false;
+    }
+
+    private double pontuacaoProporcional(double peso, int acertos, int total) {
+        return total <= 0 ? 0.0 : peso * acertos / total;
+    }
+
+    // V/F é serializado como V,F,V,... e pontuado por afirmação correta.
+    private int contarAcertosSequenciaVerdadeiroFalso(Questao questao, String resposta) {
+        List<Alternativa> afirmacoes = questao.getAlternativas();
+        if (afirmacoes == null || afirmacoes.isEmpty() || resposta == null) return 0;
+        String[] respostas = resposta.split(",", -1);
+        int acertos = 0;
+
+        for (int i = 0; i < Math.min(afirmacoes.size(), respostas.length); i++) {
+            String esperada = afirmacoes.get(i).isCorreta() ? "V" : "F";
+            if (esperada.equalsIgnoreCase(respostas[i].trim())) acertos++;
+        }
+        return acertos;
+    }
+
     private String gerarCodigo() {
         int proximo = provaRepositorio.findAll().stream()
                 .map(Prova::getCodigo)
-                .filter(codigo -> codigo != null && codigo.matches("PRV[0-9]{4}"))
+                .filter(codigo -> codigo != null && codigo.matches("PRV[0-9]{3,}"))
                 .mapToInt(codigo -> Integer.parseInt(codigo.substring(3)))
                 .max().orElse(0) + 1;
         if (proximo > 9999)
@@ -329,18 +611,40 @@ public class ProvaServico {
     }
 
     private void validar(Prova prova) {
+        if (prova == null)
+            throw new IllegalArgumentException("Informe os dados da prova.");
         if (prova.getTitulo() == null || prova.getTitulo().isBlank())
             throw new IllegalArgumentException("Informe o título.");
-        if (prova.getMateria() == null || prova.getMateria().isBlank() || prova.getMateria().length() > 50)
-            throw new IllegalArgumentException("Informe a matéria (até 50 caracteres).");
-        if (prova.getCurso() != null && prova.getCurso().length() > 50)
-            throw new IllegalArgumentException("O curso deve ter até 50 caracteres.");
+        if (prova.getTitulo().length() > MAX_TITULO)
+            throw new IllegalArgumentException("O título deve ter até " + MAX_TITULO + " caracteres.");
+        if (prova.getMateria() == null || prova.getMateria().isBlank() || prova.getMateria().length() > MAX_MATERIA)
+            throw new IllegalArgumentException("Informe a matéria (até " + MAX_MATERIA + " caracteres).");
+        if (prova.getCurso() != null && prova.getCurso().length() > MAX_CURSO)
+            throw new IllegalArgumentException("O curso deve ter até " + MAX_CURSO + " caracteres.");
         if (prova.getBimestre() < 1 || prova.getBimestre() > 4)
             throw new IllegalArgumentException("O bimestre deve estar entre 1 e 4.");
-        if (prova.getDataHora() != null) {
-            validarAgendamento(prova.getDataHora());
-        } else if (prova.getData() != null) {
-            validarDataAgendamento(prova.getData());
+        LocalDateTime inicio = prova.getDataHora();
+        LocalDateTime fim = prova.getDataHoraFim();
+        if (inicio == null) {
+            if (fim != null)
+                throw new IllegalArgumentException("Informe a data e o horário de início antes do término.");
+            return;
+        }
+        // Prova salva só com a data (sem horário) fica em 00:00: valida apenas o dia,
+        // senão uma prova de hoje seria recusada como "horário que já passou".
+        boolean somenteData = inicio.toLocalTime().equals(java.time.LocalTime.MIDNIGHT);
+        if (somenteData) {
+            validarDataAgendamento(inicio.toLocalDate());
+            if (fim != null)
+                throw new IllegalArgumentException("Informe o horário de início para definir o horário de término.");
+            return;
+        }
+        validarAgendamento(inicio);
+        if (fim != null) {
+            if (!fim.toLocalDate().equals(inicio.toLocalDate()))
+                throw new IllegalArgumentException("O término da prova deve ser no mesmo dia do início.");
+            if (!fim.isAfter(inicio))
+                throw new IllegalArgumentException("O horário de término deve ser posterior ao horário de início.");
         }
     }
 
@@ -365,6 +669,10 @@ public class ProvaServico {
     }
 
     public void validarAgendamento(String codigoProva, java.time.LocalDateTime dataHora) {
+        Prova prova = buscarProva(codigoProva);
+        if (prova == null)
+            throw new IllegalArgumentException("A prova não existe.");
+        garantirDona(prova, "agendar esta prova");
         garantirSemEntregas(codigoProva, "reagendada");
         validarAgendamento(dataHora);
     }

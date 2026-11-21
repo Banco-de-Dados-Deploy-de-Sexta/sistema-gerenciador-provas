@@ -63,3 +63,22 @@ mvn javafx:run
 ```
 
 No IntelliJ IDEA, abra a pasta `app` como projeto Maven e execute a classe `Main` (o *Working directory* da configuração de execução deve ser a pasta `app`).
+
+## 5. Executar os testes
+
+Os testes automatizados (JUnit 5) ficam em `app/src/test/java` e não precisam de banco de dados: usam repositórios em memória. Execute a partir da raiz do repositório:
+
+```bash
+./mvnw -f app/pom.xml test
+```
+
+Ou, de dentro da pasta `app`:
+
+```bash
+cd app
+mvn test
+```
+
+O resumo aparece na linha `Tests run: N, Failures: 0, Errors: 0` ao final. A linha com `Tests run: 0` logo acima dela é só a classe externa; os casos ficam nas classes aninhadas por funcionalidade (criar, agendar, compor e aplicar prova, dono da prova e estados).
+
+Na primeira execução o Maven baixa o JUnit e o provedor de testes do Surefire, por isso é necessária conexão com a internet.

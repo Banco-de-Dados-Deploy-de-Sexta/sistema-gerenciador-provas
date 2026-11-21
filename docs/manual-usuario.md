@@ -30,10 +30,10 @@ Todas as provas cadastradas aparecem na lista, de todos os professores. Só o pr
   - **Agendada:** tem questões e data de hoje em diante.
   - **Encerrada:** a data da prova já passou.
   - **Aplicada:** a prova já foi aplicada a pelo menos um aluno (veja [Aplicar prova a alunos](#aplicar-prova-a-alunos)).
-- **Criar prova:** clique em **Criar prova**, preencha título, matéria, curso, bimestre (1 a 4) e, se quiser, a data, e clique em **Salvar prova**. O código (ex.: `PRV0001`) é gerado automaticamente e a prova fica registrada em nome do professor logado.
+- **Criar prova:** clique em **Criar prova**, preencha título (até 100 caracteres), matéria, curso, bimestre (1 a 4) e, se quiser, a data e os horários, e clique em **Salvar prova**. O código (ex.: `PRV001`) é gerado automaticamente e a prova fica registrada em nome do professor logado.
 - **Editar prova:** selecione a prova e clique em **Editar prova**. Não é possível editar uma prova **Aplicada**.
 - **Excluir prova:** selecione a prova e clique em **Excluir prova**. É pedida uma confirmação. As questões continuam no banco de questões. Não é possível excluir uma prova **Aplicada**.
-- **Agendar prova:** selecione a prova, clique em **Agendar prova** e escolha a data.
+- **Agendar prova:** selecione a prova e clique em **Agendar prova**. Escolha a data (só dias úteis do semestre letivo atual, de hoje em diante), o horário de início (obrigatório) e, se quiser, o horário de término (no mesmo dia e depois do início). Para hoje, só aparecem horários que ainda não passaram. Depois que algum aluno entregar a prova, a data e os horários não podem mais ser alterados, e o botão fica desabilitado.
 - **Baixar prova:** selecione a prova e clique em **Baixar prova** para salvar um arquivo `.txt` com as questões e alternativas (sem indicar as corretas).
 
 ## Montar a prova (questões e pesos)
@@ -44,11 +44,11 @@ Selecione uma prova e clique em **Questões e pesos**. Escolha as questões do b
 
 Selecione uma prova sua e clique em **Aplicar prova**. A tela **Alunos da prova** lista todos os alunos cadastrados; marque os que farão a prova, individualmente ou com **Marcar todos** / **Desmarcar todos**, e clique em **Salvar alunos**. O subtítulo mostra quantos alunos estão selecionados.
 
-- A prova precisa ter **pelo menos uma questão** para ser aplicada. Como toda questão é criada com a alternativa correta definida, todas as questões da prova já estão completas.
+- A prova precisa ter **pelo menos uma questão** para ser aplicada, e todas as questões precisam estar **completas**: alternativa correta marcada (múltipla escolha) ou todos os pares preenchidos (correspondência). Se alguma questão estiver incompleta, o sistema avisa qual é.
 - Um mesmo aluno não pode ser vinculado duas vezes à mesma prova.
 - Ao salvar com pelo menos um aluno marcado, a prova passa ao estado **Aplicada** e os botões **Editar prova**, **Excluir prova** e **Questões e pesos** ficam desabilitados para ela.
 - Para **remover** um aluno da aplicação, abra **Aplicar prova** de novo, desmarque o aluno e clique em **Salvar alunos**. Se nenhum aluno ficar marcado, a prova deixa de estar aplicada e volta a poder ser editada ou excluída.
-- Só o professor dono da prova pode aplicá-la. Ao tentar aplicar uma prova de outro professor, o sistema avisa que não há permissão.
+- Só o professor dono da prova pode aplicá-la, editá-la, excluí-la, agendá-la ou alterar suas questões. Ao tentar fazer isso com uma prova de outro professor, o sistema avisa que não há permissão.
 
 ## Corrigir prova
 

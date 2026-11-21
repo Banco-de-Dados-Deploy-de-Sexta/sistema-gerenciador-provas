@@ -66,7 +66,9 @@ public class BancoQuestoesController {
         pergunta.setMaxHeight(56);
         pergunta.setPadding(new Insets(10, 0, 0, 0));
         int quantidade = questao.getAlternativas().size();
-        Label alternativas = new Label(quantidade + (quantidade == 1 ? " alternativa" : " alternativas"));
+        Label alternativas = new Label("Dissertativa".equals(questao.getDescricao())
+                ? "Resposta aberta"
+                : quantidade + (quantidade == 1 ? " alternativa" : " alternativas"));
         alternativas.getStyleClass().add("card-pequeno");
         Label tipo = new Label(tipoResumido(questao.getDescricao()));
         tipo.getStyleClass().add("card-estado");
@@ -84,6 +86,7 @@ public class BancoQuestoesController {
     private String tipoResumido(String descricao) {
         if ("Correspondência".equals(descricao)) return "Correspondência";
         if ("Verdadeiro ou falso em sequência".equals(descricao)) return "V/F em sequência";
+        if ("Dissertativa".equals(descricao)) return "Dissertativa";
         return "Múltipla escolha";
     }
 

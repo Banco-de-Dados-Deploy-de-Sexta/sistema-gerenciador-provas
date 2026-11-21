@@ -42,6 +42,27 @@
     -fx-text-fill: #1d4ed8;
 }
 
+.indicador-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-padding: 18;
+    -fx-spacing: 8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 12, 0, 0, 2);
+}
+
+.indicador-valor {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d4ed8;
+}
+
+.indicador-contexto {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+}
+
 /* Campos */
 
 .text-field,
@@ -195,8 +216,78 @@
     -fx-text-fill: #111827;
 }
 
+.question-row .status-badge {
+    -fx-background-radius: 999;
+    -fx-padding: 5 10;
+    -fx-font-weight: bold;
+}
+
+.question-row .status-correto {
+    -fx-background-color: #ecfdf5;
+    -fx-text-fill: #047857;
+}
+
+.question-row .status-incorreto {
+    -fx-background-color: #fef2f2;
+    -fx-text-fill: #b91c1c;
+}
+
+.question-row .status-parcial {
+    -fx-background-color: #fffbeb;
+    -fx-text-fill: #b45309;
+}
+
+.question-row .status-pendente {
+    -fx-background-color: #eff6ff;
+    -fx-text-fill: #1d4ed8;
+}
+
 .question-row .text-field {
     -fx-padding: 6 10;
+}
+
+.question-row .feedback-texto {
+    -fx-padding: 0 4 2 4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.question-row .feedback-correto {
+    -fx-text-fill: #047857;
+}
+
+.question-row .feedback-incorreto {
+    -fx-text-fill: #b91c1c;
+}
+
+.answer-row {
+    -fx-padding: 8;
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8;
+}
+
+.answer-row.feedback-correto {
+    -fx-background-color: #ecfdf5;
+    -fx-border-color: #86efac;
+}
+
+.answer-row.feedback-incorreto {
+    -fx-background-color: #fef2f2;
+    -fx-border-color: #fca5a5;
+}
+
+.radio-button.feedback-correto,
+.combo-box.feedback-correto {
+    -fx-text-fill: #047857;
+    -fx-border-color: #86efac;
+}
+
+.radio-button.feedback-incorreto,
+.combo-box.feedback-incorreto {
+    -fx-text-fill: #b91c1c;
+    -fx-border-color: #fca5a5;
 }
 
 .table-view {
@@ -217,6 +308,19 @@
 
 .table-row-cell {
     -fx-cell-size: 42px;
+}
+
+.results-table .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+    -fx-text-background-color: #1e40af;
+}
+
+.results-table .table-row-cell:selected .text {
+    -fx-fill: #1e40af;
+}
+
+.results-table .table-row-cell:hover:filled:not(:selected) {
+    -fx-background-color: #f1f5f9;
 }
 
 /* Caixas de seleção e opções */

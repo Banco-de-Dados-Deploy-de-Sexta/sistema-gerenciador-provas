@@ -17,7 +17,7 @@ Completar o ciclo de vida da prova, da aplicação pelo professor à nota final 
 |:----:|:----------:|------------|:------------:|:---------------------:|:------:|
 | 1 | Média | **PB21** — Como professor, quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados. | 5 | RF-20 | ⬜ |
 | 2 | Média | **PB07** — Como professor, quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema. | 5 | RF-06 | ✅ |
-| 3 | Média | **PB08** — Como professor, quero agendar uma prova em uma data específica para que os alunos associados possam realizá-la naquele dia. | 3 | RF-07 | ⬜ |
+| 3 | Média | **PB08** — Como professor, quero agendar uma prova em uma data específica para que os alunos associados possam realizá-la naquele dia. | 3 | RF-07 | ✅ |
 | 4 | Média | **PB06** — Como aluno, quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas. | 3 | RF-05 | ⬜ |
 | 5 | Média | **PB09** — Como aluno, quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade. | 8 | RF-06 | ⬜ |
 | 6 | Média | **PB13** — Como professor, quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno. | 5 | RF-10 | ⬜ |
@@ -82,24 +82,30 @@ Itens que não são User Stories, mas precisam existir para que as histórias da
 ### PB07 — Aplicar prova a um ou mais alunos
 - **Critério de Aceitação:** O professor pode aplicar uma prova a vários alunos ou individualmente.
 - **Regras de Negócio:**
-  - Só é possível aplicar provas com pelo menos uma questão, e todas as questões precisam estar completas (alternativa correta definida ou pares de associação cadastrados).
-  - Um mesmo aluno não pode ser associado duas vezes à mesma prova.
+  - Só é possível aplicar provas com pelo menos uma questão, e todas as questões precisam estar completas (alternativa correta definida ou pares de correspondência cadastrados). As duas regras são verificadas no serviço (`ProvaServico.salvarAlunos`), não só na tela.
+  - Um mesmo aluno não pode ser associado duas vezes à mesma prova (registros repetidos ou vazios são ignorados; a tabela `prova_aluno` tem chave primária composta).
   - Ao ser aplicada, a prova passa para o estado **Aplicada** e não pode mais ser editada (PB03) nem excluída (PB04).
   - É possível remover um aluno da aplicação enquanto ele ainda não tiver realizado a prova.
-  - O professor só pode aplicar as suas próprias provas (RN2). O professor é identificado pelo registro informado na tela de login e gravado na prova (`registro_professor`) no momento da criação; a mesma verificação vale para editar, excluir, agendar e compor a prova.
+  - O professor só pode aplicar as suas próprias provas (RN2). O professor é identificado pelo registro informado na tela de login e gravado na prova (`registro_professor`) no momento da criação; a mesma verificação vale para editar, excluir, agendar e compor a prova, e é feita tanto nos botões da tela quanto no serviço.
 - **Dependências:** PB02 e PB14 (Sprint 2) e a entidade Aluno (ver pré-requisitos).
 - **Escopo:** Tela para selecionar um ou mais alunos e associá-los à prova, listagem dos alunos associados e remoção de associação.
-- **Protótipo:** **Pendente:** criar a tela de seleção de alunos no Figma e incluir o botão "Aplicar prova" no [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)).
+- **Protótipo:** Tela de seleção de alunos ("Alunos da prova") e botão "Aplicar prova" no [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)).
+- **Casos de teste:** `app/src/test/java/servicos/ProvaServicoTest.java` (executar com `mvnw -f app/pom.xml test`).
 
 ### PB08 — Agendar prova
 - **Critério de Aceitação:** O professor pode agendar a prova em alguma data de dia útil da semana.
 - **Regras de Negócio:**
   - A data deve ser um dia útil, de segunda a sexta-feira.
-  - Não é possível agendar para uma data passada.
-  - A data pode ser alterada enquanto nenhum aluno tiver realizado a prova.
-- **Dependências:** PB02 (Sprint 2). Relaciona-se com a PB07 e a PB09, já que o aluno só realiza a prova no dia agendado.
-- **Escopo:** Seleção da data da prova com validação de dia útil e de data passada. O botão "Agendar prova" já existe na tela de provas, mas ainda sem essas validações. Horário de início e término fica fora do escopo (registrado como pendência em [requisitos.md](../../requisitos.md)).
+  - Não é possível agendar para uma data passada nem, no dia de hoje, para um horário que já passou.
+  - A data deve estar no **semestre letivo atual**: 1º semestre de janeiro a junho, 2º semestre de julho a dezembro, sempre do ano corrente. O calendário só habilita essas datas.
+  - Ao **criar ou editar** a prova pelo formulário, o horário é opcional: a prova pode ficar só com a data.
+  - Ao **agendar** pelo botão "Agendar prova", o horário de início é obrigatório. O horário de término é opcional, precisa ser no mesmo dia e posterior ao início.
+  - Data e horários podem ser alterados enquanto nenhum aluno tiver realizado a prova. Após a primeira entrega, o botão "Agendar prova" fica desabilitado e o serviço recusa a alteração; os demais dados da prova continuam editáveis.
+  - Só o professor dono da prova pode agendá-la (RN2).
+- **Dependências:** PB02 (Sprint 2). Relaciona-se com a PB07 e a PB09, já que o aluno só realiza a prova no período agendado (entre início e término, ou durante o dia agendado quando não há término).
+- **Escopo:** Seleção de data e horários no formulário da prova e no diálogo "Agendar prova", com validação de dia útil, data passada, semestre letivo, horário passado e término posterior ao início, feita nas telas e no serviço (`ProvaServico`).
 - **Protótipo:** [Menu de ações da prova](../../prototipos/menu-acoes-prova.png) ([Figma](https://www.figma.com/design/6aOVWSEUFLoiedYlltR30I?node-id=5-15)), botão "Agendar prova".
+- **Casos de teste:** `app/src/test/java/servicos/ProvaServicoTest.java`, classes "Agendar prova (PB08)" e "Reagendar com entregas (PB08)".
 
 ### PB06 — Aluno visualizar suas provas
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualizá-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes após a realização da prova.

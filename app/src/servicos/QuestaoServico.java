@@ -1,7 +1,6 @@
 package servicos;
 
 import interfaces.QuestaoRepositorio;
-import modelos.Alternativa;
 import modelos.Questao;
 
 import java.util.List;
@@ -18,7 +17,6 @@ public class QuestaoServico {
     public QuestaoServico(QuestaoRepositorio questaoRepositorio) { this.questaoRepositorio = questaoRepositorio; }
 
     public Questao salvarQuestao(Questao questao) {
-        validar(questao);
         if (questao.getNumero() <= 0) {
             long proximo = questaoRepositorio.findAll().stream().mapToLong(Questao::getNumero).max().orElse(0) + 1;
             questao.setNumero(proximo);
@@ -37,24 +35,4 @@ public class QuestaoServico {
     }
 
     public boolean estaEmAlgumaProva(long id) { return questaoRepositorio.estaEmAlgumaProva(id); }
-
-    private void validar(Questao questao) {
-        String enunciado = questao.getTitulo() == null ? "" : questao.getTitulo().trim();
-        if (enunciado.length() < MIN_ENUNCIADO || enunciado.length() > MAX_ENUNCIADO)
-            throw new IllegalArgumentException("O enunciado deve ter entre %d e %d caracteres.".formatted(MIN_ENUNCIADO, MAX_ENUNCIADO));
-        if (questao.getDescricao() == null || questao.getDescricao().isBlank() || questao.getDescricao().length() > 300)
-            throw new IllegalArgumentException("A descrição é obrigatória e deve ter até 300 caracteres.");
-        List<Alternativa> alternativas = questao.getAlternativas();
-        if (alternativas.size() < MIN_ALTERNATIVAS)
-            throw new IllegalArgumentException("Adicione pelo menos %d alternativas.".formatted(MIN_ALTERNATIVAS));
-        if (alternativas.size() > MAX_ALTERNATIVAS)
-            throw new IllegalArgumentException("A questão pode ter no máximo %d alternativas (a até e).".formatted(MAX_ALTERNATIVAS));
-        if (alternativas.stream().anyMatch(a -> a.getTexto() == null || a.getTexto().isBlank()))
-            throw new IllegalArgumentException("O texto das alternativas não pode ficar vazio.");
-        if (alternativas.stream().anyMatch(a -> a.getTexto().trim().length() > MAX_TEXTO_ALTERNATIVA))
-            throw new IllegalArgumentException("Cada alternativa pode ter até %d caracteres.".formatted(MAX_TEXTO_ALTERNATIVA));
-        // A validação do gabarito depende do tipo e é feita no QuestaoController:
-        // múltipla escolha usa uma opção selecionada; V/F em sequência guarda um
-        // valor booleano independente para cada afirmação.
-    }
 }
