@@ -56,7 +56,7 @@
 - **Critério de Aceitação:** Ao consultar as provas como aluno deve ser possível visualiza-las em detalhes, como estado da prova, disciplina, conteúdo, quantidade de questões, com maiores detalhes apos a realização da prova.
 - **Prioridade:** Média
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -86,7 +86,7 @@
 - **Critério de Aceitação:** Ao ter uma prova associada a seu nome, o aluno deve poder realizar a prova no sistema no dia em que foi agendada.
 - **Prioridade:** Média
 - **Story Points:** 8
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -96,7 +96,7 @@
 - **Critério de Aceitação:** Professores devem poder salvar todas as provas armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 5
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -106,7 +106,7 @@
 - **Critério de Aceitação:** Alunos devem poder salvar as provas que realizaram em computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -126,7 +126,7 @@
 - **Critério de Aceitação:** O professor pode ver a nota da prova corrigida individualmente em cada prova.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -146,7 +146,7 @@
 - **Critério de Aceitação:** Cada aluno realiza a prova com as questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -156,7 +156,7 @@
 - **Critério de Aceitação:** Cada aluno realiza a prova com as alternativas das questões embaralhadas com critérios aleatórios.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -206,7 +206,7 @@
 - **Critério de Aceitação:** Ao criar uma questão o professor deve poder escolher entre questões de alternativa (**a** à **e**), questões de associação, ou de texto livre.
 - **Prioridade:** Média
 - **Story Points:** 5
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)
 
 ---
 
@@ -266,4 +266,4 @@
 - **Critério de Aceitação:** Professores devem poder salvar todas as questões armazenadas no sistema em seus computadores.
 - **Prioridade:** Baixa
 - **Story Points:** 3
-- **Status:** Planejado (Sprint 3)
+- **Status:** Concluído (Sprint 3)

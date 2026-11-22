@@ -21,7 +21,11 @@ Com o serviço do MySQL em execução, rode o script [`data/banco_provas.sql`](.
 mysql -u root -p < data/banco_provas.sql
 ```
 
-> Se você já tinha o banco criado antes, rode também os scripts de migração, nesta ordem: [`data/migracao_peso_prova.sql`](../data/migracao_peso_prova.sql) (peso das questões, se a coluna ainda não existir), [`data/migracao_limites_questao.sql`](../data/migracao_limites_questao.sql) (novos limites de enunciado e alternativas) e [`data/migracao_usuario_prova_aluno.sql`](../data/migracao_usuario_prova_aluno.sql) (Sprint 3: tabela `usuario`, coluna `registro_professor` na prova e tabela `prova_aluno`).
+> Se você já tinha o banco criado em uma sprint anterior, a estrutura mudou e não há scripts de migração. Apague o banco antigo e rode o script de novo (isso apaga os dados cadastrados):
+>
+> ```sql
+> DROP DATABASE IF EXISTS banco;
+> ```
 
 Registros de exemplo para o login: professores `SGP-P1231`, `SGP-P1232` e `SGP-P1233`; alunos `SGP-A1231` a `SGP-A1238`.
 
@@ -62,11 +66,18 @@ cd app
 mvn javafx:run
 ```
 
+Sem o Maven instalado, use o Maven Wrapper que fica na raiz do repositório:
+
+```bash
+cd app
+../mvnw javafx:run
+```
+
 No IntelliJ IDEA, abra a pasta `app` como projeto Maven e execute a classe `Main` (o *Working directory* da configuração de execução deve ser a pasta `app`).
 
 ## 5. Executar os testes
 
-Os testes automatizados (JUnit 5) ficam em `app/src/test/java` e não precisam de banco de dados: usam repositórios em memória. Execute a partir da raiz do repositório:
+Os testes automatizados (JUnit 5) ficam em `app/test/java` e não precisam de banco de dados: usam repositórios em memória. Execute a partir da raiz do repositório:
 
 ```bash
 ./mvnw -f app/pom.xml test
@@ -79,6 +90,6 @@ cd app
 mvn test
 ```
 
-O resumo aparece na linha `Tests run: N, Failures: 0, Errors: 0` ao final. A linha com `Tests run: 0` logo acima dela é só a classe externa; os casos ficam nas classes aninhadas por funcionalidade (criar, agendar, compor e aplicar prova, dono da prova e estados).
+O resumo aparece na linha `Tests run: N, Failures: 0, Errors: 0` ao final. A linha com `Tests run: 0` logo acima dela é só a classe externa; os casos ficam nas classes aninhadas por funcionalidade (criar, editar, agendar, compor e aplicar prova, dono da prova, estados, entrega da prova e validação das questões).
 
 Na primeira execução o Maven baixa o JUnit e o provedor de testes do Surefire, por isso é necessária conexão com a internet.

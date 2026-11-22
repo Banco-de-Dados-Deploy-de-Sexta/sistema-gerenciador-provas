@@ -28,17 +28,17 @@ O desafio consiste em desenvolver um sistema gerenciador de avaliações para um
 | 14 | PB05 | Média | Como professor quero visualizar todas as provas disponíveis no sistema para ter diferentes modelos para criar as minhas | 3 | 2 | RF-05 | ✅ |
 | 15 | PB03 | Média | Como professor quero editar uma prova para mudar uma questão ou corrigir algum erro | 3 | 2 | RF-03 | ✅ |
 | 16 | PB04 | Média | Como professor quero excluir uma prova não aplicada para manter a lista apenas com provas que estou utilizando | 2 | 2 | RF-04 | ✅ |
-| 17 | PB21 | Média | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ⬜ |
+| 17 | PB21 | Média | Como professor quero escolher entre vários tipos de questão ao criá-la para montar provas com formatos variados | 5 | 3 | RF-20 | ✅ |
 | 18 | PB07 | Média | Como professor quero aplicar uma prova a um ou mais alunos para que eles a realizem no sistema | 5 | 3 | RF-06 | ✅ |
 | 19 | PB08 | Média | Como professor quero agendar uma prova em uma data específica para que os alunos associados possam realizar naquele dia | 3 | 3 | RF-07 | ✅ |
-| 20 | PB06 | Média | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | 3 | RF-05 | ⬜ |
-| 21 | PB09 | Média | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 8 | 3 | RF-06 | ⬜ |
-| 22 | PB13 | Média | Como professor quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno | 5 | 3 | RF-10 | ⬜ |
-| 23 | PB10 | Baixa | Como professor quero salvar as provas em meu computador para enviar o arquivo da prova em outros canais de mensagem | 5 | 3 | RF-08 | ⬜ |
-| 24 | PB11 | Baixa | Como aluno quero salvar as minhas provas em meu computador para consulta-las depois com mais facilidade | 3 | 3 | RF-08 | ⬜ |
-| 25 | PB15 | Baixa | Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | 3 | RF-13 | ⬜ |
-| 26 | PB16 | Baixa | Como professor quero que as alternativas das questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | 3 | RF-12 | ⬜ |
-| 27 | PB27 | Baixa | Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem | 3 | 3 | RF-26 | ⬜ |
+| 20 | PB06 | Média | Como aluno quero visualizar as provas associadas a mim para saber se fui bem nas provas que fiz e quais serão as próximas | 3 | 3 | RF-05 | ✅ |
+| 21 | PB09 | Média | Como aluno quero realizar as provas associadas a mim para ficar com nota acima da média na faculdade | 8 | 3 | RF-06 | ✅ |
+| 22 | PB13 | Média | Como professor quero que o sistema calcule e aplique a nota final da prova após a correção para não precisar calcular manualmente a nota de cada aluno | 5 | 3 | RF-10 | ✅ |
+| 23 | PB10 | Baixa | Como professor quero salvar as provas em meu computador para enviar o arquivo da prova em outros canais de mensagem | 5 | 3 | RF-08 | ✅ |
+| 24 | PB11 | Baixa | Como aluno quero salvar as minhas provas em meu computador para consulta-las depois com mais facilidade | 3 | 3 | RF-08 | ✅ |
+| 25 | PB15 | Baixa | Como professor quero que as questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | 3 | RF-13 | ✅ |
+| 26 | PB16 | Baixa | Como professor quero que as alternativas das questões das provas sejam embaralhadas ao serem aplicadas para cada aluno para dificultar que eles colem uns dos outros | 3 | 3 | RF-12 | ✅ |
+| 27 | PB27 | Baixa | Como professor quero salvar as questões em meu computador para enviar o arquivo da questão em outros canais de mensagem | 3 | 3 | RF-26 | ✅ |
 
 Backlog detalhado: [Link](docs/backlog.md) 📄
 
@@ -46,11 +46,11 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
-| Sprint          |    Período    | Documentação                                     |
-| --------------- | :-----------: | :-----------------: |
-| 🔖 **SPRINT 1** | 07/09 - 27/09 | [Docs](./docs/sprints/sprint-1/README.md) |
-| 🔖 **SPRINT 2** | 05/10 - 25/10 | [Docs](./docs/sprints/sprint-2/README.md) |
-| 🔖 **SPRINT 3** | 02/11 - 22/11 | [Docs](./docs/sprints/sprint-3/README.md) |
+| Sprint          |    Período    | Documentação                              | Vídeo     |
+| --------------- | :-----------: | :---------------------------------------: | :-------: |
+| 🔖 **SPRINT 1** | 07/09 - 27/09 | [Docs](./docs/sprints/sprint-1/README.md) | -  |
+| 🔖 **SPRINT 2** | 05/10 - 25/10 | [Docs](./docs/sprints/sprint-2/README.md) | -  |
+| 🔖 **SPRINT 3** | 02/11 - 22/11 | [Docs](./docs/sprints/sprint-3/README.md) | -  |
 
 ---
 
