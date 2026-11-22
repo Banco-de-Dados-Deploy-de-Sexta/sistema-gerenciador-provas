@@ -56,17 +56,15 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 ## 💻 Tecnologias utilizadas<a id="tecnologias"></a>
 
-<h4 align="center">
-  <a href="https://www.java.com/pt-br/">
-    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MiIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDgyIDI4Ij4KICA8cmVjdCB3aWR0aD0iODIiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI0MSIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+SkFWQTwvdGV4dD4KPC9zdmc+Cg=="/>
-  </a>
-  <a href="https://openjfx.io/">
-    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMDYgMjgiPgogIDxyZWN0IHdpZHRoPSIxMDYiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI1MyIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+SkFWQUZYPC90ZXh0Pgo8L3N2Zz4K"/>
-  </a>
-  <a href="https://www.mysql.com/">
-    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NCIgaGVpZ2h0PSIyOCIgdmlld0JveD0iMCAwIDk0IDI4Ij4KICA8cmVjdCB3aWR0aD0iOTQiIGhlaWdodD0iMjgiIGZpbGw9IiNmNWY1ZjUiLz4KICA8dGV4dCB4PSI0NyIgeT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjEyIiBsZXR0ZXItc3BhY2luZz0iMSIgZmlsbD0iI2ZmMDAwMCI+TVlTUUw8L3RleHQ+Cjwvc3ZnPgo="/>
-  </a>
-</h4>
+<p align="center">
+  <a href="https://openjdk.org/projects/jdk/17/"><img src="https://img.shields.io/badge/Java_17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 17"/></a>
+  <a href="https://openjfx.io/"><img src="https://img.shields.io/badge/JavaFX_21-007396?style=for-the-badge&logo=java&logoColor=white" alt="JavaFX 21"/></a>
+  <a href="https://www.mysql.com/"><img src="https://img.shields.io/badge/MySQL_8-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL 8"/></a>
+  <a href="https://maven.apache.org/"><img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven"/></a>
+  <a href="https://junit.org/junit5/"><img src="https://img.shields.io/badge/JUnit_5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit 5"/></a>
+  <a href="https://www.figma.com/"><img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma"/></a>
+  <a href="https://github.com/"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+</p>
 
 ---
 
@@ -76,6 +74,7 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
   📦 sistema-gerenciador-provas
     ┣ 📁 app
       ┣ 📁 src            # código-fonte (modelos, storage, repositórios, serviços e telas)
+      ┣ 📁 test           # testes automatizados (JUnit 5)
       ┣ 📜 .env.example   # modelo do arquivo de conexão com o banco
       ┗ 📜 pom.xml
     ┣ 📁 data             # scripts SQL, DER e dados do banco
