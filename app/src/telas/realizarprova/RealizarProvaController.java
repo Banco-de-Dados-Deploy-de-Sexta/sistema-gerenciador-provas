@@ -55,7 +55,7 @@ public class RealizarProvaController {
     // Guarda mapeamentos das respostas inseridas pelo aluno
     private final Map<Integer, ToggleGroup> respostasMultiplaEscolha = new HashMap<>();
     private final Map<Integer, TextArea> respostasDissertativas = new HashMap<>();
-    private final Map<Integer, List<ComboBox<Alternativa>>> respostasCorrespondencia = new HashMap<>();
+    private final Map<Integer, Map<Integer, ComboBox<Alternativa>>> respostasCorrespondencia = new HashMap<>();
     private final Map<Integer, Map<Integer, ToggleGroup>> respostasSequencia = new HashMap<>();
     private final List<QuestaoComPeso> questoesExibidas = new ArrayList<>();
 
@@ -170,10 +170,15 @@ public class RealizarProvaController {
             Collections.rotate(definicoes, 1);
         }
 
+        // Embaralha os conceitos (lado esquerdo)
+        List<Alternativa> conceitos = new ArrayList<>(pares);
+        Collections.shuffle(conceitos);
+
+        Map<Integer, ComboBox<Alternativa>> mapaCombos = new HashMap<>();
         List<ComboBox<Alternativa>> selecoes = new ArrayList<>();
         boolean[] rejeitandoDuplicada = {false};
-        for (int i = 0; i < pares.size(); i++) {
-            Alternativa par = pares.get(i);
+        for (int i = 0; i < conceitos.size(); i++) {
+            Alternativa par = conceitos.get(i);
             Label numero = new Label((i + 1) + ".");
             numero.setStyle("-fx-font-weight: bold; -fx-text-fill: #2563eb;");
             Label conceito = new Label(par.getTexto());
@@ -190,6 +195,8 @@ public class RealizarProvaController {
             definicao.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(definicao, Priority.ALWAYS);
             selecoes.add(definicao);
+            mapaCombos.put(par.getId(), definicao);
+
             definicao.valueProperty().addListener((obs, antiga, nova) -> {
                 if (rejeitandoDuplicada[0]) return;
                 boolean duplicada = nova != null && selecoes.stream()
@@ -209,7 +216,7 @@ public class RealizarProvaController {
             linha.setStyle("-fx-padding: 8; -fx-background-color: #f8fafc; -fx-background-radius: 8;");
             card.getChildren().add(linha);
         }
-        respostasCorrespondencia.put(idQuestao, selecoes);
+        respostasCorrespondencia.put(idQuestao, mapaCombos);
     }
 
     private ListCell<Alternativa> celulaDefinicao() {
@@ -267,7 +274,7 @@ public class RealizarProvaController {
     private void limparRespostas() {
         respostasMultiplaEscolha.values().forEach(g -> g.selectToggle(null));
         respostasDissertativas.values().forEach(t -> t.setText(""));
-        respostasCorrespondencia.values().forEach(lista -> lista.forEach(combo -> combo.setValue(null)));
+        respostasCorrespondencia.values().forEach(mapa -> mapa.values().forEach(combo -> combo.setValue(null)));
         respostasSequencia.values().forEach(mapa -> mapa.values().forEach(grupo -> grupo.selectToggle(null)));
     }
 
@@ -303,14 +310,22 @@ public class RealizarProvaController {
             ra.setOrdemQuestao(i + 1);
 
             if (respostasCorrespondencia.containsKey(idQuestao)) {
-                List<ComboBox<Alternativa>> selecoes = respostasCorrespondencia.get(idQuestao);
-                if (!selecoes.isEmpty()) {
-                    ra.setRespostaTexto(selecoes.stream()
-                            .map(combo -> combo.getValue() == null
-                                    ? ""
-                                    : String.valueOf(combo.getValue().getId()))
-                            .collect(Collectors.joining(",")));
-                    if (selecoes.stream().anyMatch(combo -> combo.getValue() != null)) respondidas++;
+                Map<Integer, ComboBox<Alternativa>> mapaCombos = respostasCorrespondencia.get(idQuestao);
+                List<Alternativa> originais = item.getQuestao().getAlternativas();
+                if (originais != null && !originais.isEmpty()) {
+                    List<String> valoresNaOrdemOriginal = new ArrayList<>();
+                    boolean algumPreenchido = false;
+                    for (Alternativa alt : originais) {
+                        ComboBox<Alternativa> combo = mapaCombos.get(alt.getId());
+                        if (combo != null && combo.getValue() != null) {
+                            valoresNaOrdemOriginal.add(String.valueOf(combo.getValue().getId()));
+                            algumPreenchido = true;
+                        } else {
+                            valoresNaOrdemOriginal.add("");
+                        }
+                    }
+                    ra.setRespostaTexto(String.join(",", valoresNaOrdemOriginal));
+                    if (algumPreenchido) respondidas++;
                 }
             }
             // Verifica as respostas com as alternativas na ordem original
