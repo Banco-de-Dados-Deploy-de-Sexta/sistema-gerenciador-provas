@@ -2,13 +2,13 @@ package telas.realizarprova;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import auxiliares.Embaralhamento;
 import auxiliares.Sessao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,6 +51,7 @@ public class RealizarProvaController {
 
     private final Prova prova;
     private final ProvaServico provaServico;
+    private String registroAluno;
 
     // Guarda mapeamentos das respostas inseridas pelo aluno
     private final Map<Integer, ToggleGroup> respostasMultiplaEscolha = new HashMap<>();
@@ -68,6 +69,9 @@ public class RealizarProvaController {
         tituloTela.setText("Realizando: " + prova.getTitulo());
         String infoData = prova.getDataHora() != null 
                 ? " | Agendada para: " + prova.getDataHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                        + (prova.getDataHoraFim() != null
+                                ? " até " + prova.getDataHoraFim().format(DateTimeFormatter.ofPattern("HH:mm"))
+                                : "")
                 : "";
         subtituloTela.setText(prova.getMateria() + " (" + prova.getBimestre() + "º Bimestre)" + infoData);
 
@@ -78,9 +82,10 @@ public class RealizarProvaController {
         respostasSequencia.clear();
         questoesExibidas.clear();
 
-        List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
-        // Embaralha as questões
-        Collections.shuffle(questoes);
+        Usuario aluno = Sessao.getUsuarioLogado();
+        registroAluno = aluno == null ? "" : aluno.getRegistro();
+        List<QuestaoComPeso> questoes = Embaralhamento.questoes(
+                provaServico.listarQuestoes(prova.getCodigo()), prova.getCodigo(), registroAluno);
         questoesExibidas.addAll(questoes);
 
         if (questoes.isEmpty()) {
@@ -122,9 +127,8 @@ public class RealizarProvaController {
                 renderizarDissertativa(cardQuestao, idQuestao);
             } else if (alternativas != null && !alternativas.isEmpty()) {
                 ToggleGroup grupo = new ToggleGroup();
-                // Embaralha as alternativas
-                List<Alternativa> alternativasEmbaralhadas = new ArrayList<>(alternativas);
-                Collections.shuffle(alternativasEmbaralhadas);
+                List<Alternativa> alternativasEmbaralhadas = Embaralhamento.alternativas(
+                        alternativas, prova.getCodigo(), registroAluno, idQuestao);
                 for (int j = 0; j < alternativasEmbaralhadas.size(); j++) {
                     Alternativa alt = alternativasEmbaralhadas.get(j);
                     RadioButton rb = new RadioButton(CardQuestao.letra(j) + " " + alt.getTexto());
@@ -164,15 +168,8 @@ public class RealizarProvaController {
         instrucao.setWrapText(true);
         card.getChildren().add(instrucao);
 
-        List<Alternativa> definicoes = new ArrayList<>(pares);
-        Collections.shuffle(definicoes);
-        if (definicoes.size() > 1 && definicoes.get(0) == pares.get(0)) {
-            Collections.rotate(definicoes, 1);
-        }
-
-        // Embaralha os conceitos (lado esquerdo)
-        List<Alternativa> conceitos = new ArrayList<>(pares);
-        Collections.shuffle(conceitos);
+        List<Alternativa> definicoes = Embaralhamento.definicoes(pares, prova.getCodigo(), registroAluno, idQuestao);
+        List<Alternativa> conceitos = Embaralhamento.conceitos(pares, prova.getCodigo(), registroAluno, idQuestao);
 
         Map<Integer, ComboBox<Alternativa>> mapaCombos = new HashMap<>();
         List<ComboBox<Alternativa>> selecoes = new ArrayList<>();
@@ -235,9 +232,8 @@ public class RealizarProvaController {
         instrucao.setWrapText(true);
         card.getChildren().add(instrucao);
 
-        // Embaralha as alternativas de verdadeiro ou falso
-        List<Alternativa> afirmacoesEmbaralhada = new ArrayList<>(afirmacoes);
-        Collections.shuffle(afirmacoesEmbaralhada);
+        List<Alternativa> afirmacoesEmbaralhada = Embaralhamento.afirmacoes(
+                afirmacoes, prova.getCodigo(), registroAluno, idQuestao);
 
         // Declara um map para guardar o grupo de id das afirmações
         Map<Integer, ToggleGroup> respostasPorId = new HashMap<>();

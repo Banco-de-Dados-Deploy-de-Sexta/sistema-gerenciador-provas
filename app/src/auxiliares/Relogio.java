@@ -42,7 +42,7 @@ public final class Relogio {
     private static final String URL_DATE_HEADER = "https://www.google.com/generate_204";
     private static final Duration VALIDADE = Duration.ofMinutes(5);
     private static final Duration INTERVALO_RETENTATIVA = Duration.ofSeconds(30);
-    private static final Duration TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration TIMEOUT = Duration.ofSeconds(3);
 
     private static final Pattern DATETIME_JSON = Pattern.compile("\"dateTime\"\s*:\s*\"([^\"]+)\"");
 
@@ -110,12 +110,17 @@ public final class Relogio {
     }
 
     /** Força uma nova sincronização com as fontes externas. */
-    public static synchronized void sincronizar() {
-        ultimaTentativaNanos = System.nanoTime();
+    public static void sincronizar() {
+        synchronized (Relogio.class) {
+            ultimaTentativaNanos = System.nanoTime();
+        }
         Instant externo = consultarApi();
         if (externo == null) externo = consultarCabecalhoDate();
         if (externo == null) externo = consultarBanco();
+        aplicarSincronizacao(externo);
+    }
 
+    private static synchronized void aplicarSincronizacao(Instant externo) {
         if (externo != null) {
             referencia = externo;
             referenciaNanos = System.nanoTime();
@@ -151,23 +156,20 @@ public final class Relogio {
         t.start();
     }
 
-    public static synchronized Instant instante() {
-        long agoraNanos = System.nanoTime();
-        boolean vencido = referencia == null
-                || Duration.ofNanos(agoraNanos - referenciaNanos).compareTo(VALIDADE) > 0
-                || !confiavel;
-        // Evita travar a interface tentando a rede a cada chamada quando as fontes estão fora do ar.
-        boolean podeTentar = referencia == null
-                || Duration.ofNanos(agoraNanos - ultimaTentativaNanos).compareTo(INTERVALO_RETENTATIVA) > 0;
-        if (vencido && podeTentar) {
-            if (referencia != null && confiavel) {
-                // Já temos uma referência confiável avançando pelo nanoTime: renova em segundo plano.
-                sincronizarEmSegundoPlano();
-            } else {
-                sincronizar();
-            }
+    public static Instant instante() {
+        boolean semReferencia;
+        synchronized (Relogio.class) {
+            semReferencia = referencia == null;
         }
-        return referencia.plusNanos(System.nanoTime() - referenciaNanos);
+        if (semReferencia) sincronizar();
+        synchronized (Relogio.class) {
+            long agoraNanos = System.nanoTime();
+            boolean vencido = Duration.ofNanos(agoraNanos - referenciaNanos).compareTo(VALIDADE) > 0 || !confiavel;
+            // Evita travar a interface tentando a rede a cada chamada quando as fontes estão fora do ar.
+            boolean podeTentar = Duration.ofNanos(agoraNanos - ultimaTentativaNanos).compareTo(INTERVALO_RETENTATIVA) > 0;
+            if (vencido && podeTentar) sincronizarEmSegundoPlano();
+            return referencia.plusNanos(System.nanoTime() - referenciaNanos);
+        }
     }
 
     // ---- Fontes ----------------------------------------------------------

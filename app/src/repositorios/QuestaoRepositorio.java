@@ -42,4 +42,9 @@ public class QuestaoRepositorio implements interfaces.QuestaoRepositorio {
         return storage.estaEmAlgumaProva(numero);
     }
 
+    @Override
+    public boolean estaEmProvaAplicada(Long numero) {
+        return storage.estaEmProvaAplicada(numero);
+    }
+
 }

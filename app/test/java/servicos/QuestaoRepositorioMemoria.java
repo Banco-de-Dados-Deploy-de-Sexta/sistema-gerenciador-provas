@@ -1,15 +1,18 @@
 package servicos;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import modelos.Questao;
 
 // Repositório de questões em memória para os testes de serviço (sem banco)
 class QuestaoRepositorioMemoria implements interfaces.QuestaoRepositorio {
     final Map<Long, Questao> questoes = new LinkedHashMap<>();
+    final Set<Long> emProvaAplicada = new HashSet<>();
 
     @Override
     public Questao findByKey(Long numero) {
@@ -40,5 +43,10 @@ class QuestaoRepositorioMemoria implements interfaces.QuestaoRepositorio {
     @Override
     public boolean estaEmAlgumaProva(Long numero) {
         return false;
+    }
+
+    @Override
+    public boolean estaEmProvaAplicada(Long numero) {
+        return emProvaAplicada.contains(numero);
     }
 }

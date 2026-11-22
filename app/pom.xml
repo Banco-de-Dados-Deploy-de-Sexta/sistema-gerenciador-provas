@@ -51,14 +51,12 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <!-- Testes ficam em src/test/java e não entram na compilação principal -->
-        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testSourceDirectory>test/java</testSourceDirectory>
         <resources>
             <resource>
                 <directory>src</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
-                    <exclude>test/**</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -68,11 +66,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
-                <configuration>
-                    <excludes>
-                        <exclude>test/**</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

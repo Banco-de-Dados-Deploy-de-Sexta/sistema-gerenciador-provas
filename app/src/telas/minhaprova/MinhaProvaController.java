@@ -1,5 +1,6 @@
 package telas.minhaprova;
 
+import auxiliares.Embaralhamento;
 import auxiliares.Sessao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -129,9 +130,11 @@ public class MinhaProvaController {
             case TIPO_CORRESPONDENCIA -> {
                 String[] escolhidos = separar(resposta);
                 int acertos = 0;
-                for (int i = 0; i < alternativas.size(); i++) {
-                    Alternativa par = alternativas.get(i);
-                    Integer idEscolhido = inteiroNaPosicao(escolhidos, i);
+                List<Alternativa> exibidos = Embaralhamento.conceitos(
+                        alternativas, prova.getCodigo(), aluno.getRegistro(), questao.getNumero());
+                for (int i = 0; i < exibidos.size(); i++) {
+                    Alternativa par = exibidos.get(i);
+                    Integer idEscolhido = inteiroNaPosicao(escolhidos, alternativas.indexOf(par));
                     Alternativa definicao = porId(alternativas, idEscolhido);
                     boolean acertou = idEscolhido != null && idEscolhido == par.getId();
                     if (acertou) acertos++;
@@ -146,9 +149,12 @@ public class MinhaProvaController {
             case TIPO_SEQUENCIA -> {
                 String[] marcadas = separar(resposta);
                 int acertos = 0;
-                for (int i = 0; i < alternativas.size(); i++) {
-                    Alternativa afirmacao = alternativas.get(i);
-                    String respostaAluno = i < marcadas.length ? marcadas[i].trim().toUpperCase(Locale.ROOT) : "";
+                List<Alternativa> exibidas = Embaralhamento.afirmacoes(
+                        alternativas, prova.getCodigo(), aluno.getRegistro(), questao.getNumero());
+                for (int i = 0; i < exibidas.size(); i++) {
+                    Alternativa afirmacao = exibidas.get(i);
+                    int original = alternativas.indexOf(afirmacao);
+                    String respostaAluno = original < marcadas.length ? marcadas[original].trim().toUpperCase(Locale.ROOT) : "";
                     String gabarito = afirmacao.isCorreta() ? "V" : "F";
                     boolean acertou = gabarito.equals(respostaAluno);
                     if (acertou) acertos++;
@@ -290,8 +296,10 @@ public class MinhaProvaController {
                     .append("  (").append(bloco.tipo()).append(", peso ").append(formatar(bloco.peso())).append(")\n");
             if (!TIPO_CORRESPONDENCIA.equals(bloco.tipo()) && !TIPO_SEQUENCIA.equals(bloco.tipo())
                     && !TIPO_DISSERTATIVA.equals(bloco.tipo())) {
-                for (Alternativa alternativa : bloco.questao().getAlternativas())
-                    texto.append("   - ").append(alternativa.getTexto()).append('\n');
+                List<Alternativa> exibidas = Embaralhamento.alternativas(bloco.questao().getAlternativas(),
+                        prova.getCodigo(), aluno.getRegistro(), bloco.questao().getNumero());
+                for (int i = 0; i < exibidas.size(); i++)
+                    texto.append("   ").append(CardQuestao.letra(i)).append(' ').append(exibidas.get(i).getTexto()).append('\n');
             }
             for (Linha linha : bloco.linhas()) {
                 if (linha.titulo() != null) texto.append("   ").append(linha.titulo()).append('\n');

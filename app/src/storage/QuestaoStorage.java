@@ -33,6 +33,11 @@ public class QuestaoStorage implements Storage<Long, Questao> {
     private static final String SQL_REMOVER_QUESTAO = "DELETE FROM questao WHERE id_questao = ?";
     private static final String SQL_REMOVER_ALTERNATIVAS = "DELETE FROM alternativa WHERE id_questao = ?";
     private static final String SQL_CONTAR_VINCULOS = "SELECT COUNT(*) FROM prova_questao WHERE id_questao = ?";
+    private static final String SQL_CONTAR_PROVAS_APLICADAS = """
+            SELECT COUNT(*) FROM prova_questao pq
+            INNER JOIN prova_aluno pa ON pa.codigo_prova = pq.codigo_prova
+            WHERE pq.id_questao = ?
+            """;
     private static final String SQL_LISTAR_ALTERNATIVAS = """
             SELECT id_alternativa, texto, texto_correspondencia, correta FROM alternativa
             WHERE id_questao = ? ORDER BY id_alternativa
@@ -159,6 +164,18 @@ public class QuestaoStorage implements Storage<Long, Questao> {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao verificar os vínculos da questão " + key, e);
+        }
+    }
+
+    public boolean estaEmProvaAplicada(Long key) {
+        try {
+            Connection con = conexao.conectar();
+            try (PreparedStatement ps = con.prepareStatement(SQL_CONTAR_PROVAS_APLICADAS)) {
+                ps.setLong(1, key);
+                try (ResultSet rs = ps.executeQuery()) { return rs.next() && rs.getInt(1) > 0; }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Erro ao verificar se a questão está em uma prova aplicada " + key, e);
         }
     }
 

@@ -1,16 +1,16 @@
 CREATE DATABASE IF NOT EXISTS banco;
 USE banco;
 
---- AREA DE USUARIO ---
+-- AREA DE USUARIO --
 
 CREATE TABLE usuario (
 registro varchar(20) primary key,
 nome varchar(100) not null,
 tipo_usuario varchar(50) not null
 );
---- ------------- ---
+-- ------------- --
 
---- AREA DE PROVA ---
+-- AREA DE PROVA --
 
 CREATE TABLE prova (
 codigo varchar(7) primary key,
@@ -98,9 +98,9 @@ FOREIGN KEY (id_questao)
 REFERENCES questao(id_questao)
 );
 
---- ------------- ---
+-- ------------- --
 
---- INSERTS USUARIOS ---
+-- INSERTS USUARIOS --
 INSERT INTO usuario
 (registro, nome, tipo_usuario)
 VALUES
@@ -116,9 +116,9 @@ VALUES
 ('SGP-P1231', 'Emanuel Mineda', 'Professor'),
 ('SGP-P1232', 'Adriana', 'Professor'),
 ('SGP-P1233', 'Giuliano Bertoti', 'Professor');
---- ------------- ---
+-- ------------- --
 
---- INSERTS PROVA ---
+-- INSERTS PROVA --
 INSERT INTO prova
 (codigo, titulo, materia, data_prova, curso, bimestre, registro_professor)
 VALUES
@@ -211,4 +211,26 @@ VALUES
 (2, 10, 'Propriedades de transações em bancos de dados', TRUE),
 (3, 10, 'Um tipo de banco NoSQL', FALSE),
 (4, 10, 'Uma linguagem de consulta', FALSE);
---- ------------- ---
+-- ------------- --
+
+-- INSERTS QUESTOES DOS DEMAIS TIPOS --
+INSERT INTO questao
+(id_questao, titulo, descricao)
+VALUES
+(11, 'Julgue as afirmações sobre bancos de dados relacionais:', 'Verdadeiro ou falso em sequência'),
+(12, 'Associe cada comando SQL à sua finalidade:', 'Correspondência'),
+(13, 'Explique a diferença entre chave primária e chave estrangeira.', 'Dissertativa');
+
+INSERT INTO alternativa
+(id_alternativa, id_questao, texto, texto_correspondencia, correta)
+VALUES
+(1, 11, 'Uma chave primária pode conter valores nulos.', NULL, FALSE),
+(2, 11, 'Uma tabela pode ter mais de uma chave estrangeira.', NULL, TRUE),
+(3, 11, 'O comando DELETE remove a estrutura da tabela.', NULL, FALSE),
+(4, 11, 'Transações garantem a atomicidade das operações.', NULL, TRUE),
+
+(1, 12, 'SELECT', 'Consultar dados', TRUE),
+(2, 12, 'INSERT', 'Incluir registros', TRUE),
+(3, 12, 'UPDATE', 'Alterar registros', TRUE),
+(4, 12, 'DELETE', 'Excluir registros', TRUE);
+-- ------------- --

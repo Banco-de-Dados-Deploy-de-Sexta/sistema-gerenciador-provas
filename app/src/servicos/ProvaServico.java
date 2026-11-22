@@ -55,11 +55,12 @@ public class ProvaServico {
     }
 
     public Prova salvarProva(Prova prova) {
-        validar(prova);
+        validarDados(prova);
         Prova atual = prova.getCodigo() == null || prova.getCodigo().isBlank()
                 ? null
                 : provaRepositorio.findByKey(prova.getCodigo());
         if (atual == null) {
+            validarHorarios(prova);
             // Prova nova: nasce em nome do professor logado
             if (prova.getRegistroProfessor() == null || prova.getRegistroProfessor().isBlank())
                 throw new IllegalArgumentException("A prova precisa estar vinculada ao professor logado.");
@@ -69,19 +70,17 @@ public class ProvaServico {
             garantirDona(atual, "editar esta prova");
             // A edição não transfere a prova para outro professor
             prova.setRegistroProfessor(atual.getRegistroProfessor());
-            garantirAgendamentoInalteradoComEntregas(atual, prova);
+            if (agendamentoAlterado(atual, prova)) {
+                garantirSemEntregas(prova.getCodigo(), "reagendada");
+                validarHorarios(prova);
+            }
         }
         return provaRepositorio.save(prova);
     }
 
-    // Depois que algum aluno entregou a prova, a data/horário não pode mais mudar:
-    // reagendar reabriria a prova (com as mesmas questões) para quem ainda não fez.
-    private void garantirAgendamentoInalteradoComEntregas(Prova atual, Prova prova) {
-        boolean mudouAgendamento = !java.util.Objects.equals(atual.getData(), prova.getData())
-                || !java.util.Objects.equals(atual.getDataHora(), prova.getDataHora())
+    private boolean agendamentoAlterado(Prova atual, Prova prova) {
+        return !java.util.Objects.equals(atual.getDataHora(), prova.getDataHora())
                 || !java.util.Objects.equals(atual.getDataHoraFim(), prova.getDataHoraFim());
-        if (mudouAgendamento)
-            garantirSemEntregas(prova.getCodigo(), "reagendada");
     }
 
     public Prova buscarProva(String codigo) {
@@ -455,8 +454,20 @@ public class ProvaServico {
             throw new IllegalArgumentException("Prova não encontrada.");
         }
 
+        if (provaAlunoStorage != null && buscarRealizacaoAluno(codigoProva, registroAluno) == null) {
+            throw new IllegalArgumentException("Esta prova não está associada a você.");
+        }
+
         if (alunoJaRealizou(codigoProva, registroAluno)) {
             throw new IllegalStateException("Esta prova já foi realizada e entregue anteriormente.");
+        }
+
+        if (!"Disponível".equals(estadoParaAluno(prova))) {
+            throw new IllegalStateException("A prova está fora do período de realização e a entrega não foi registrada.");
+        }
+
+        if (respostas == null) {
+            throw new IllegalArgumentException("Informe as respostas da prova.");
         }
 
         List<QuestaoComPeso> questoesComPeso = listarQuestoes(codigoProva);
@@ -610,7 +621,7 @@ public class ProvaServico {
         return "PRV%03d".formatted(proximo);
     }
 
-    private void validar(Prova prova) {
+    private void validarDados(Prova prova) {
         if (prova == null)
             throw new IllegalArgumentException("Informe os dados da prova.");
         if (prova.getTitulo() == null || prova.getTitulo().isBlank())
@@ -623,6 +634,9 @@ public class ProvaServico {
             throw new IllegalArgumentException("O curso deve ter até " + MAX_CURSO + " caracteres.");
         if (prova.getBimestre() < 1 || prova.getBimestre() > 4)
             throw new IllegalArgumentException("O bimestre deve estar entre 1 e 4.");
+    }
+
+    private void validarHorarios(Prova prova) {
         LocalDateTime inicio = prova.getDataHora();
         LocalDateTime fim = prova.getDataHoraFim();
         if (inicio == null) {

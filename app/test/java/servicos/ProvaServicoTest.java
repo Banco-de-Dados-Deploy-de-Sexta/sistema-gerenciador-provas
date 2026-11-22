@@ -26,6 +26,7 @@ import modelos.PesoQuestao;
 import modelos.Prova;
 import modelos.ProvaAluno;
 import modelos.Questao;
+import modelos.RespostaAluno;
 
 // Casos de teste das regras de negócio de prova (PB02, PB03, PB04, PB07, PB08,
 // PB14) sem banco de dados: repositórios em memória e professor logado fixo.
@@ -617,6 +618,159 @@ class ProvaServicoTest {
             assertEquals("Disponível", servico.estadoParaAluno(prova));
             prova.setDataHora(agora.minusDays(1));
             assertEquals("Encerrada", servico.estadoParaAluno(prova));
+        }
+    }
+
+    @Nested
+    @DisplayName("Editar prova com data passada (PB03)")
+    class EditarProvaComDataPassada {
+
+        @Test
+        @DisplayName("permite corrigir os dados sem alterar o agendamento")
+        void editaSemReagendar() {
+            LocalDate passada = Relogio.hoje().minusDays(10);
+            provas.save(new Prova("PRV070", "Prova antiga", "Física", passada, null, 1, PROFESSOR));
+            Prova editada = new Prova("PRV070", "Prova antiga corrigida", "Física", passada, null, 1, PROFESSOR);
+            assertDoesNotThrow(() -> servico.salvarProva(editada));
+            assertEquals("Prova antiga corrigida", provas.findByKey("PRV070").getTitulo());
+        }
+
+        @Test
+        @DisplayName("continua validando quando a data é alterada")
+        void validaNovoAgendamento() {
+            LocalDate passada = Relogio.hoje().minusDays(10);
+            provas.save(new Prova("PRV071", "Prova antiga", "Física", passada, null, 1, PROFESSOR));
+            Prova editada = new Prova("PRV071", "Prova antiga", "Física", passada.minusDays(1), null, 1, PROFESSOR);
+            assertTrue(mensagem(() -> servico.salvarProva(editada)).contains("passada"));
+        }
+    }
+
+    @Nested
+    @DisplayName("Entregar prova (PB09)")
+    class EntregarProva {
+
+        private ProvaAlunoStorageMemoria entregas;
+        private ProvaServico servicoComEntregas;
+
+        @BeforeEach
+        void prepararEntrega() {
+            entregas = new ProvaAlunoStorageMemoria();
+            servicoComEntregas = new ProvaServico(provas, new QuestaoServico(questoes), entregas, null);
+            servicoComEntregas.definirProfessorLogado(() -> PROFESSOR);
+            multiplaEscolha(1, true);
+        }
+
+        private Prova provaNoPeriodo(String codigo, LocalDateTime inicio, LocalDateTime fim) {
+            Prova prova = provas.save(new Prova(codigo, "Prova", "Matemática", inicio, fim, null, 1, PROFESSOR));
+            provas.salvarQuestoes(codigo, List.of(new PesoQuestao(1, 1.0)));
+            return prova;
+        }
+
+        private List<RespostaAluno> respostaCorreta() {
+            RespostaAluno resposta = new RespostaAluno();
+            resposta.setIdQuestao(1);
+            resposta.setIdAlternativaEscolhida(1);
+            return new ArrayList<>(List.of(resposta));
+        }
+
+        @Test
+        @DisplayName("aceita a entrega do aluno associado dentro do período e calcula a nota")
+        void entregaNoPeriodo() {
+            LocalDateTime agora = Relogio.agora();
+            Prova prova = provaNoPeriodo("PRV080", agora.minusMinutes(30), agora.plusMinutes(30));
+            entregas.registrarEntrega(new ProvaAluno(prova.getCodigo(), "ALU001"));
+            assertDoesNotThrow(() -> servicoComEntregas.entregarProva(prova.getCodigo(), "ALU001", respostaCorreta()));
+            ProvaAluno entrega = entregas.buscar(prova.getCodigo(), "ALU001");
+            assertEquals("CORRIGIDA", entrega.getStatus());
+            assertEquals(10.0, entrega.getNotaFinal());
+        }
+
+        @Test
+        @DisplayName("recusa a entrega de aluno não associado à prova")
+        void alunoNaoAssociado() {
+            LocalDateTime agora = Relogio.agora();
+            Prova prova = provaNoPeriodo("PRV081", agora.minusMinutes(30), agora.plusMinutes(30));
+            assertTrue(mensagem(() -> servicoComEntregas.entregarProva(prova.getCodigo(), "ALU999", respostaCorreta()))
+                    .contains("não está associada"));
+        }
+
+        @Test
+        @DisplayName("recusa a entrega depois do horário de término")
+        void entregaForaDoPeriodo() {
+            LocalDateTime agora = Relogio.agora();
+            Prova prova = provaNoPeriodo("PRV082", agora.minusHours(2), agora.minusHours(1));
+            entregas.registrarEntrega(new ProvaAluno(prova.getCodigo(), "ALU001"));
+            IllegalStateException erro = assertThrows(IllegalStateException.class,
+                    () -> servicoComEntregas.entregarProva(prova.getCodigo(), "ALU001", respostaCorreta()));
+            assertTrue(erro.getMessage().contains("fora do período"));
+            assertFalse(entregas.buscar(prova.getCodigo(), "ALU001").isRealizada());
+        }
+    }
+
+    @Nested
+    @DisplayName("Validar questões (PB21, PB22, PB23, PB24, PB26)")
+    class ValidarQuestoes {
+
+        private QuestaoServico questaoServico;
+
+        @BeforeEach
+        void prepararQuestoes() {
+            questaoServico = new QuestaoServico(questoes);
+        }
+
+        private List<Alternativa> itens(int quantidade, boolean comCorreta) {
+            List<Alternativa> lista = new ArrayList<>();
+            for (int i = 1; i <= quantidade; i++)
+                lista.add(new Alternativa(i, "Item " + i, "Definição " + i, comCorreta && i == 1));
+            return lista;
+        }
+
+        @Test
+        @DisplayName("rejeita enunciado com menos de 5 caracteres")
+        void enunciadoCurto() {
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "abcd", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(4, true)))).contains("enunciado"));
+        }
+
+        @Test
+        @DisplayName("exige de 4 a 5 alternativas e exatamente uma correta na múltipla escolha")
+        void regrasMultiplaEscolha() {
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Pergunta válida", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(3, true)))).contains("pelo menos"));
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Pergunta válida", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(6, true)))).contains("no máximo"));
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Pergunta válida", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(4, false)))).contains("correta"));
+            assertDoesNotThrow(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Pergunta válida", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(4, true))));
+        }
+
+        @Test
+        @DisplayName("rejeita conceitos ou definições repetidos na correspondência")
+        void correspondenciaRepetida() {
+            List<Alternativa> pares = itens(4, false);
+            pares.get(1).setTextoCorrespondencia("definição 1");
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Associe as colunas", QuestaoServico.TIPO_CORRESPONDENCIA, pares))).contains("repetir"));
+        }
+
+        @Test
+        @DisplayName("aceita dissertativa apenas sem alternativas")
+        void dissertativa() {
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Explique o conceito", QuestaoServico.TIPO_DISSERTATIVA, itens(4, false)))).contains("dissertativas"));
+            assertDoesNotThrow(() -> questaoServico.salvarQuestao(
+                    new Questao(0, "Explique o conceito", QuestaoServico.TIPO_DISSERTATIVA, List.of())));
+        }
+
+        @Test
+        @DisplayName("bloqueia a edição de questão que está em prova aplicada")
+        void edicaoEmProvaAplicada() {
+            Questao questao = multiplaEscolha(5, true);
+            questoes.emProvaAplicada.add(5L);
+            Questao editada = new Questao(5, "Enunciado alterado", QuestaoServico.TIPO_MULTIPLA_ESCOLHA, itens(4, true));
+            assertTrue(mensagem(() -> questaoServico.salvarQuestao(editada)).contains("aplicada"));
+            assertEquals(questao.getTitulo(), questoes.findByKey(5L).getTitulo());
         }
     }
 }

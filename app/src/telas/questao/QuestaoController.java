@@ -140,6 +140,15 @@ public class QuestaoController {
     }
 
     private void abrirQuestao(Questao questao) {
+        try {
+            if (questaoServico.estaEmProvaAplicada(questao.getNumero())) {
+                mostrar(Alert.AlertType.WARNING, "Esta questão está em uma prova já aplicada a alunos e não pode mais ser alterada.");
+                return;
+            }
+        } catch (RuntimeException e) {
+            mostrar(Alert.AlertType.ERROR, "Não foi possível verificar se a questão está em uma prova aplicada.\n" + e.getMessage());
+            return;
+        }
         try { telas.questao.Questao.abrir((Stage) listaQuestoes.getScene().getWindow(), questao); }
         catch (Exception e) { mostrar(Alert.AlertType.ERROR, "Não foi possível abrir a questão."); }
     }
@@ -280,8 +289,7 @@ public class QuestaoController {
 
     @FXML
     private void confirmar() {
-        if (enunciadoCaixaTexto == null) return;
-        if (tipoQuestaoComboBox.getValue() == null) {
+        if (tipoQuestaoComboBox.getValue() == null || enunciadoCaixaTexto == null) {
             mostrar(Alert.AlertType.WARNING, "Selecione o tipo da questão.");
             return;
         }
@@ -399,8 +407,10 @@ public class QuestaoController {
         if (carregandoQuestao || tipoQuestaoComboBox == null || formularioContainer == null) return;
 
         String tipoSelecionado = tipoQuestaoComboBox.getValue();
+        String enunciadoDigitado = enunciadoCaixaTexto == null ? null : enunciadoCaixaTexto.getText();
         limparCamposFormulario();
         carregarFormulario(tipoSelecionado);
+        if (enunciadoCaixaTexto != null && enunciadoDigitado != null) enunciadoCaixaTexto.setText(enunciadoDigitado);
     }
 
     private void carregarFormulario(String tipoSelecionado) {

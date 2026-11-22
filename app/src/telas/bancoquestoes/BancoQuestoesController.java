@@ -125,7 +125,21 @@ public class BancoQuestoesController {
     }
 
     @FXML private void novaQuestao(ActionEvent event) { abrirFormulario(event, null); }
-    @FXML private void editarQuestao(ActionEvent event) { abrirFormulario(event, selecionada.get()); }
+    @FXML
+    private void editarQuestao(ActionEvent event) {
+        Questao questao = selecionada.get();
+        if (questao == null) return;
+        try {
+            if (questaoServico.estaEmProvaAplicada(questao.getNumero())) {
+                avisar("Esta questão está em uma prova já aplicada a alunos e não pode mais ser alterada.");
+                return;
+            }
+        } catch (RuntimeException e) {
+            mostrarErro("Não foi possível verificar se a questão está em uma prova aplicada.", e);
+            return;
+        }
+        abrirFormulario(event, questao);
+    }
 
     private void abrirFormulario(ActionEvent event, Questao questao) {
         try {

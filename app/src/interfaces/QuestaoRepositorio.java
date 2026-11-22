@@ -18,4 +18,6 @@ public interface QuestaoRepositorio {
 
     boolean estaEmAlgumaProva(Long numero);
 
+    boolean estaEmProvaAplicada(Long numero);
+
 }
