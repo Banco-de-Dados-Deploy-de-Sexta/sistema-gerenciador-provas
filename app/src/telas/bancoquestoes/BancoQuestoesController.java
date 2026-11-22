@@ -9,17 +9,28 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Separator;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import modelos.Questao;
 import servicos.QuestaoServico;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import telas.componentes.CardQuestao;
+import telas.componentes.TextoQuestao;
 import telas.prova.Prova;
 
 public class BancoQuestoesController {
@@ -149,6 +160,60 @@ public class BancoQuestoesController {
             avisar(e.getMessage());
         } catch (RuntimeException e) {
             mostrarErro("Não foi possível excluir a questão.", e);
+        }
+    }
+
+    // PB27: salva a questão selecionada ou todas as questões em um único arquivo,
+    // e o professor escolhe se a resposta correta vai indicada
+    @FXML
+    private void baixarQuestoes(ActionEvent event) {
+        if (questoes.isEmpty()) {
+            avisar("Não há questões cadastradas para baixar.");
+            return;
+        }
+        Questao marcada = selecionada.get();
+        ToggleGroup escopo = new ToggleGroup();
+        RadioButton somenteSelecionada = new RadioButton(marcada == null
+                ? "Questão selecionada (nenhuma selecionada)"
+                : "Questão selecionada (Questão " + marcada.getNumero() + ")");
+        somenteSelecionada.setToggleGroup(escopo);
+        somenteSelecionada.setDisable(marcada == null);
+        RadioButton todas = new RadioButton("Todas as questões do banco (" + questoes.size() + ")");
+        todas.setToggleGroup(escopo);
+        escopo.selectToggle(marcada == null ? todas : somenteSelecionada);
+        CheckBox comResposta = new CheckBox("Indicar as respostas corretas");
+
+        Dialog<ButtonType> dialogo = new Dialog<>();
+        dialogo.setTitle("Baixar questões");
+        dialogo.setHeaderText("O que deseja salvar?");
+        dialogo.getDialogPane().setContent(new VBox(10, somenteSelecionada, todas, new Separator(), comResposta));
+        dialogo.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        if (dialogo.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+
+        List<Questao> exportar = escopo.getSelectedToggle() == somenteSelecionada ? List.of(marcada) : questoes;
+        FileChooser seletor = new FileChooser();
+        seletor.setTitle("Baixar questões");
+        seletor.setInitialFileName(exportar.size() == 1 ? "questao-" + exportar.get(0).getNumero() + ".txt" : "questoes.txt");
+        seletor.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texto", "*.txt"));
+        File arquivo = seletor.showSaveDialog((Stage) ((Node) event.getSource()).getScene().getWindow());
+        if (arquivo == null) return;
+
+        StringBuilder texto = new StringBuilder();
+        for (Questao questao : exportar) {
+            texto.append("Questão ").append(questao.getNumero()).append('\n')
+                    .append("Tipo: ").append(CardQuestao.rotuloTipo(questao.getDescricao())).append('\n')
+                    .append(questao.getTitulo()).append('\n')
+                    .append(TextoQuestao.formatar(questao, comResposta.isSelected()))
+                    .append('\n');
+        }
+        try {
+            Files.writeString(arquivo.toPath(), texto.toString(), StandardCharsets.UTF_8);
+            Alert aviso = new Alert(Alert.AlertType.INFORMATION,
+                    (exportar.size() == 1 ? "Questão salva em " : exportar.size() + " questões salvas em ") + arquivo.getAbsolutePath());
+            aviso.setHeaderText(null);
+            aviso.showAndWait();
+        } catch (IOException e) {
+            mostrarErro("Não foi possível salvar o arquivo das questões.", e);
         }
     }
 

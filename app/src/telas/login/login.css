@@ -1,0 +1,162 @@
+/* Estilos exclusivos da tela de login; o restante vem de prova.css */
+
+.login-painel {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.login-sair {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-font-size: 10px;
+    -fx-text-fill: #9ca3af;
+    -fx-cursor: hand;
+}
+
+.login-sair:hover {
+    -fx-text-fill: #be123c;
+    -fx-underline: true;
+}
+
+.login-entrar {
+    -fx-background-color: #b6bcc6;
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+}
+
+.login-entrar:hover {
+    -fx-background-color: #a5acb7;
+}
+
+.login-entrar:pressed {
+    -fx-background-color: #959ca8;
+}
+
+.login-entrar-canto {
+    -fx-fill: #2563eb;
+}
+
+/* Campo só com uma linha embaixo */
+.login-campo,
+.login-campo:focused {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent transparent #9ca3af transparent;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-border-radius: 0;
+    -fx-padding: 8 0 6 0;
+    -fx-effect: null;
+}
+
+.login-campo:focused {
+    -fx-border-color: transparent transparent #2563eb transparent;
+}
+
+.login-campo.invalido {
+    -fx-border-color: transparent transparent #e11d48 transparent;
+}
+
+.login-info {
+    -fx-min-width: 18;
+    -fx-min-height: 18;
+    -fx-max-width: 18;
+    -fx-max-height: 18;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+    -fx-border-color: #9ca3af;
+    -fx-border-width: 1;
+    -fx-border-radius: 9;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.login-info:hover {
+    -fx-border-color: #2563eb;
+    -fx-text-fill: #2563eb;
+}
+
+.login-info-dica {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-effect: null;
+    -fx-text-fill: #374151;
+    -fx-font-size: 12px;
+    -fx-padding: 8 10;
+}
+
+.login-titulo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.login-erro {
+    -fx-font-size: 12px;
+    -fx-text-fill: #be123c;
+}
+
+/* Fundo desfocado: esboço da tela de provas atrás do formulário */
+
+.fundo-painel {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+}
+
+.fundo-lista {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.fundo-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-padding: 14 16;
+}
+
+.fundo-card.selecionado {
+    -fx-border-color: #2563eb;
+    -fx-border-width: 2;
+}
+
+.fundo-linha {
+    -fx-min-height: 10;
+    -fx-max-height: 10;
+    -fx-background-radius: 5;
+    -fx-background-color: #e5e7eb;
+}
+
+.fundo-linha.clara {
+    -fx-background-color: #e5e7eb;
+}
+
+.fundo-linha.forte {
+    -fx-min-height: 14;
+    -fx-max-height: 14;
+    -fx-background-color: #9ca3af;
+}
+
+.fundo-linha.azul {
+    -fx-min-height: 14;
+    -fx-max-height: 14;
+    -fx-background-color: #bfdbfe;
+}
+
+.fundo-divisor {
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-background-color: #e5e7eb;
+}
+
+.fundo-veu {
+    -fx-background-color: rgba(245, 247, 251, 0.45);
+}

@@ -37,6 +37,8 @@ public class AlunoController {
     @FXML
     private Button realizarButton;
     @FXML
+    private Button verProvaButton;
+    @FXML
     private VBox listaProvas;
     @FXML
     private VBox questoesProva;
@@ -223,10 +225,14 @@ public class AlunoController {
     private void atualizarBotaoRealizar(Prova prova) {
         if (prova == null) {
             realizarButton.setDisable(true);
+            verProvaButton.setDisable(true);
             return;
         }
         Usuario usuario = Sessao.getUsuarioLogado();
-        if (usuario != null && provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro())) {
+        boolean realizou = usuario != null && provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro());
+        // Ver e baixar a prova só depois de realizá-la (PB06 e PB11)
+        verProvaButton.setDisable(!realizou);
+        if (realizou) {
             realizarButton.setDisable(true);
             return;
         }
@@ -260,6 +266,25 @@ public class AlunoController {
             telas.realizarprova.RealizarProva.abrir(stage, prova, provaServico);
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Não foi possível abrir a tela de realização da prova: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void verMinhaProva(ActionEvent event) {
+        Prova prova = selecionada.get();
+        Usuario usuario = Sessao.getUsuarioLogado();
+        if (prova == null || usuario == null) {
+            return;
+        }
+        if (!provaServico.alunoJaRealizou(prova.getCodigo(), usuario.getRegistro())) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Você só pode ver e baixar as provas que já realizou.");
+            return;
+        }
+        try {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            telas.minhaprova.MinhaProva.abrir(stage, prova, provaServico);
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Não foi possível abrir a sua prova: " + e.getMessage());
         }
     }
 

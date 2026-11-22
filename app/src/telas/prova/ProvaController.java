@@ -36,9 +36,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import modelos.Alternativa;
 import modelos.Prova;
 import modelos.QuestaoComPeso;
 import modelos.Usuario;
@@ -46,6 +46,7 @@ import servicos.ProvaServico;
 import telas.alunoprova.AlunoProva;
 import telas.bancoquestoes.BancoQuestoes;
 import telas.componentes.CardQuestao;
+import telas.componentes.TextoQuestao;
 import telas.composicaoprova.ComposicaoProva;
 import telas.corrigirprova.CorrigirProva;
 import telas.corrigirdissertativas.CorrigirDissertativas;
@@ -552,37 +553,94 @@ public class ProvaController {
         if (arquivo == null)
             return;
 
-        String textoData = "";
+        try {
+            Files.writeString(arquivo.toPath(), textoProva(prova), StandardCharsets.UTF_8);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Prova salva em " + arquivo.getAbsolutePath());
+        } catch (IOException | RuntimeException e) {
+            erro("Não foi possível salvar o arquivo da prova.", e);
+        }
+    }
+
+    // PB10: salva todas as provas de uma vez, um arquivo por prova na pasta escolhida
+    @FXML
+    private void baixarTodasProvas(ActionEvent event) {
+        List<Prova> provas;
+        try {
+            provas = provaServico.listarProvas();
+        } catch (RuntimeException e) {
+            erro("Não foi possível listar as provas.", e);
+            return;
+        }
+        if (provas.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Não há provas cadastradas para baixar.");
+            return;
+        }
+        DirectoryChooser seletor = new DirectoryChooser();
+        seletor.setTitle("Escolha a pasta para salvar as provas");
+        File pasta = seletor.showDialog(palcoDe(event));
+        if (pasta == null)
+            return;
+
+        long existentes = provas.stream().filter(p -> new File(pasta, p.getCodigo() + ".txt").exists()).count();
+        if (existentes > 0) {
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                    existentes + " arquivo(s) de prova já existem nesta pasta e serão substituídos. Continuar?",
+                    ButtonType.CANCEL, ButtonType.OK);
+            confirmacao.setHeaderText("Substituir arquivos");
+            if (confirmacao.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK)
+                return;
+        }
+
+        int salvas = 0;
+        StringBuilder falhas = new StringBuilder();
+        for (Prova prova : provas) {
+            try {
+                Files.writeString(new File(pasta, prova.getCodigo() + ".txt").toPath(), textoProva(prova),
+                        StandardCharsets.UTF_8);
+                salvas++;
+            } catch (IOException | RuntimeException e) {
+                falhas.append("\n").append(prova.getCodigo()).append(": ").append(e.getMessage());
+            }
+        }
+        if (falhas.isEmpty())
+            mostrarAlerta(Alert.AlertType.INFORMATION,
+                    salvas + (salvas == 1 ? " prova salva em " : " provas salvas em ") + pasta.getAbsolutePath());
+        else
+            mostrarAlerta(Alert.AlertType.WARNING, salvas + " de " + provas.size() + " provas salvas em "
+                    + pasta.getAbsolutePath() + ".\nNão foi possível salvar:" + falhas);
+    }
+
+    // Conteúdo do arquivo: dados da prova e questões com pesos, sem indicar as respostas corretas
+    private String textoProva(Prova prova) {
+        String textoData = "Sem data";
         if (prova.getDataHora() != null) {
-            textoData = " — " + prova.getDataHora().format(FORMATO_DATA_HORA);
+            textoData = prova.getDataHora().format(FORMATO_DATA_HORA);
+            if (prova.getDataHoraFim() != null)
+                textoData += " até " + prova.getDataHoraFim().format(FORMATO_HORA);
         } else if (prova.getData() != null) {
-            textoData = " — " + prova.getData().format(FORMATO_DATA);
+            textoData = prova.getData().format(FORMATO_DATA);
         }
         StringBuilder texto = new StringBuilder()
-                .append(prova.getCodigo()).append(" — ").append(prova.getTitulo()).append('\n')
-                .append(descricao(prova))
-                .append(textoData)
+                .append("Código: ").append(prova.getCodigo()).append('\n')
+                .append("Título: ").append(prova.getTitulo()).append('\n')
+                .append("Curso: ").append(prova.getCurso() == null || prova.getCurso().isBlank() ? "-" : prova.getCurso()).append('\n')
+                .append("Matéria: ").append(prova.getMateria()).append('\n')
+                .append("Bimestre: ").append(prova.getBimestre()).append("º\n")
+                .append("Data: ").append(textoData)
                 .append("\n\n");
         List<QuestaoComPeso> questoes = provaServico.listarQuestoes(prova.getCodigo());
+        if (questoes.isEmpty())
+            texto.append("Esta prova ainda não tem questões.\n");
         for (int i = 0; i < questoes.size(); i++) {
             QuestaoComPeso item = questoes.get(i);
             texto.append(i + 1).append(") ").append(item.getQuestao().getTitulo())
-                    .append(String.format(Locale.forLanguageTag("pt-BR"), "  (peso %.1f)", item.getPeso()))
+                    .append(String.format(Locale.forLanguageTag("pt-BR"), "  (%s, peso %.1f)",
+                            CardQuestao.rotuloTipo(item.getQuestao().getDescricao()), item.getPeso()))
+                    .append('\n')
+                    .append(TextoQuestao.formatar(item.getQuestao(), false))
                     .append('\n');
-            List<Alternativa> alternativas = item.getQuestao().getAlternativas();
-            for (int j = 0; j < alternativas.size(); j++)
-                texto.append("   ").append(CardQuestao.letra(j)).append(' ').append(alternativas.get(j).getTexto())
-                        .append('\n');
-            texto.append('\n');
         }
-        try {
-            Files.writeString(arquivo.toPath(), texto.toString(), StandardCharsets.UTF_8);
-            Alert aviso = new Alert(Alert.AlertType.INFORMATION, "Prova salva em " + arquivo.getAbsolutePath());
-            aviso.setHeaderText(null);
-            aviso.showAndWait();
-        } catch (IOException e) {
-            erro("Não foi possível salvar o arquivo da prova.", e);
-        }
+        return texto.toString();
     }
 
     @FXML

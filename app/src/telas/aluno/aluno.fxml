@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.shape.SVGPath?>
 <?import telas.componentes.Icones?>
+<?import telas.componentes.Logo?>
 
 <StackPane
     stylesheets="@../componentes/tema.css"
@@ -26,6 +27,11 @@
         <VBox minWidth="268.0"
               prefWidth="268.0"
               styleClass="menu-lateral">
+
+            <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="marca-sistema">
+                <Logo tamanho="28.0" />
+                <Label styleClass="marca-sistema-nome" text="Gerenciador de Provas" />
+            </HBox>
 
             <VBox styleClass="usuario-logado">
                 <Label styleClass="usuario-logado-rotulo" text="Aluno(a)" />
@@ -50,6 +56,23 @@
                     <SVGPath styleClass="icone">
                         <content>
                             <Icones fx:constant="ADICIONAR" />
+                        </content>
+                    </SVGPath>
+                </graphic>
+
+            </Button>
+
+            <Button fx:id="verProvaButton"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#verMinhaProva"
+                    styleClass="botao-menu"
+                    text="Ver / baixar minha prova">
+
+                <graphic>
+                    <SVGPath styleClass="icone">
+                        <content>
+                            <Icones fx:constant="BAIXAR" />
                         </content>
                     </SVGPath>
                 </graphic>

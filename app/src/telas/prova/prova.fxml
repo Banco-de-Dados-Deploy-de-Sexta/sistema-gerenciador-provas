@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 <?import telas.componentes.Icones?>
+<?import telas.componentes.Logo?>
 <?import javafx.scene.layout.Region?>
 <HBox spacing="10.0" styleClass="tela" stylesheets="@../componentes/tema.css"
     xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -14,6 +15,10 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
     <VBox minWidth="268.0" prefWidth="268.0" styleClass="menu-lateral">
+        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="marca-sistema">
+            <Logo tamanho="28.0" />
+            <Label styleClass="marca-sistema-nome" text="Gerenciador de Provas" />
+        </HBox>
         <VBox styleClass="usuario-logado">
             <Label styleClass="usuario-logado-rotulo" text="Professor(a)" />
             <Label fx:id="nomeUsuario" styleClass="usuario-logado-nome" text="" wrapText="true" />
@@ -61,6 +66,16 @@
         </Button>
         <Button fx:id="baixarButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
             onAction="#baixarProva" styleClass="botao-menu" text="Baixar prova">
+            <graphic>
+                <SVGPath styleClass="icone">
+                    <content>
+                        <Icones fx:constant="BAIXAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+            onAction="#baixarTodasProvas" styleClass="botao-menu" text="Baixar todas as provas">
             <graphic>
                 <SVGPath styleClass="icone">
                     <content>
