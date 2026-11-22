@@ -70,6 +70,16 @@
             </graphic>
         </Button>
         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+            onAction="#baixarTodasProvas" styleClass="botao-menu" text="Baixar todas as provas">
+            <graphic>
+                <SVGPath styleClass="icone">
+                    <content>
+                        <Icones fx:constant="BAIXAR" />
+                    </content>
+                </SVGPath>
+            </graphic>
+        </Button>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
             onAction="#abrirBancoQuestoes" styleClass="botao-menu" text="Questões">
             <graphic>
                 <SVGPath styleClass="icone">

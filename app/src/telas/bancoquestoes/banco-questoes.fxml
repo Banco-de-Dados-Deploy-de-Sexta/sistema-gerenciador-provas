@@ -19,6 +19,9 @@
         <Button fx:id="excluirButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#excluirQuestao" styleClass="botao-menu" text="Excluir questão">
             <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="EXCLUIR" /></content></SVGPath></graphic>
         </Button>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#baixarQuestoes" styleClass="botao-menu" text="Baixar questões">
+            <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="BAIXAR" /></content></SVGPath></graphic>
+        </Button>
         <Region VBox.vgrow="ALWAYS" />
         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#voltar" styleClass="botao-menu" text="Voltar">
             <graphic><SVGPath styleClass="icone"><content><Icones fx:constant="VOLTAR" /></content></SVGPath></graphic>
