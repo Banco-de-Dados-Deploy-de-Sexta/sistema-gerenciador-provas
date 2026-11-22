@@ -587,3 +587,13 @@
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
+
+/* Minilogo e nome do sistema no topo do menu lateral */
+.marca-sistema {
+    -fx-padding: 2 14 12 14;
+}
+.marca-sistema-nome {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
