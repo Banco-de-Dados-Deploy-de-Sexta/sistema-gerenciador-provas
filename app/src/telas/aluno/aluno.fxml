@@ -56,6 +56,23 @@
 
             </Button>
 
+            <Button fx:id="verProvaButton"
+                    maxWidth="1.7976931348623157E308"
+                    mnemonicParsing="false"
+                    onAction="#verMinhaProva"
+                    styleClass="botao-menu"
+                    text="Ver / baixar minha prova">
+
+                <graphic>
+                    <SVGPath styleClass="icone">
+                        <content>
+                            <Icones fx:constant="BAIXAR" />
+                        </content>
+                    </SVGPath>
+                </graphic>
+
+            </Button>
+
             <Region VBox.vgrow="ALWAYS" />
 
             <Button maxWidth="1.7976931348623157E308"
