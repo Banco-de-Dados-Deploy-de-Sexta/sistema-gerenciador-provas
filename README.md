@@ -46,11 +46,11 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
 
 ## 📅 Cronograma de Sprints <a id="sprint"></a>
 
-| Sprint          |    Período    | Documentação                              | Vídeo     |
-| --------------- | :-----------: | :---------------------------------------: | :-------: |
-| 🔖 **SPRINT 1** | 07/09 - 27/09 | [Docs](./docs/sprints/sprint-1/README.md) | -  |
-| 🔖 **SPRINT 2** | 05/10 - 25/10 | [Docs](./docs/sprints/sprint-2/README.md) | -  |
-| 🔖 **SPRINT 3** | 02/11 - 22/11 | [Docs](./docs/sprints/sprint-3/README.md) | [Link](https://drive.google.com/drive/folders/1HGV2NwarDEGwTJot-8EvZ2oFijH18HQY) |
+| Sprint          |    Período    | Documentação                              | Vídeo     | Gráfico |
+| --------------- | :-----------: | :---------------------------------------: | :-------: | :-----: |
+| 🔖 **SPRINT 1** | 07/09 - 27/09 | [Docs](./docs/sprints/sprint-1/README.md) | -  | - |
+| 🔖 **SPRINT 2** | 05/10 - 25/10 | [Docs](./docs/sprints/sprint-2/README.md) | -  | - |
+| 🔖 **SPRINT 3** | 02/11 - 22/11 | [Docs](./docs/sprints/sprint-3/README.md) | [Link](https://drive.google.com/drive/folders/1HGV2NwarDEGwTJot-8EvZ2oFijH18HQY) | [Gráfico](./docs/sprints/sprint-3/grafico-burndown.pdf) |
 
 ---
 
@@ -89,6 +89,19 @@ Backlog detalhado: [Link](docs/backlog.md) 📄
       ┗ 📜 requisitos.md
     ┗ 📜 README.md
 ```
+
+---
+
+## 🌿 Estratégia de Branches <a id="branches"></a>
+
+O projeto segue o **Gitflow**:
+
+- **`main`**: versão estável, atualizada ao final de cada sprint.
+- **`developer`**: integração das funcionalidades durante a sprint.
+- **`feat/*`**: novas funcionalidades, criadas a partir da `developer` (ex.: `feat/embaralharProva`).
+- **`fix/*`**: correções, também criadas a partir da `developer` (ex.: `fix/finalAdjustments`).
+
+Cada branch volta para a `developer` por Pull Request e, ao fechar a sprint, a `developer` é mesclada na `main`.
 
 ---
 
